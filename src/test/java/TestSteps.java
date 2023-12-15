@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.time.LocalDate;
 import java.util.Random;
 
-public class EditBirthdaySteps {
+public class TestSteps {
     //    private WebDriver driver; // WebDriver instance
 //    private WebDriverWait wait; // Explicit wait
 //    private FluentWait<WebDriver> fluentWait;
@@ -41,11 +41,11 @@ public class EditBirthdaySteps {
     public void theUserNavigatesToTheAccountSettingsPage() {
         // Navigate to the account settings page
         TestBase.getDriver().findElement(By.id("ACCOUNT")).click(); // Replace with the actual ID or locator
-        TestBase.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class=\"gl-cta gl-cta--tertiary gl-vspace\"]"))).click(); // Replace with an actual element from account settings page
     }
 
     @When("the user changes the birth date to a random date")
     public void theUserChangesTheBirthDateToARandomDate() {
+        TestBase.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class=\"gl-cta gl-cta--tertiary gl-vspace\"]"))).click(); // Replace with an actual element from account settings page
         Random rand = new Random();
         // Generate a random month between 1 and 12
         randomMonth = rand.nextInt(12) + 1; // months: 1-12
@@ -95,6 +95,32 @@ public class EditBirthdaySteps {
 //        Assert.assertEquals("Month does not match", randomMonth, date.getMonthValue());
 //        Assert.assertEquals("Year does not match", randomYear, date.getYear());
     }
+
+
+
+
+
+
+
+
+
+
+    //test2
+
+    @When("the user goes to the preferences section")
+    public void the_user_goes_to_the_preferences_section() {
+
+    }
+    @When("the user changes preferences")
+    public void the_user_changes_preferences() {
+
+    }
+    @Then("the new preferences should be saved and displayed")
+    public void the_new_preferences_should_be_saved_and_displayed() {
+
+    }
+
+
 
 
 }
