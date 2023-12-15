@@ -7,7 +7,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class TestBase {
@@ -57,7 +60,19 @@ public class TestBase {
     }
 
     private void logIn() {
+        Properties prop = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                System.out.println("Sorry, unable to find config.properties");
+                return;
+            }
+            prop.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
+        String username = prop.getProperty("username");
+        String password = prop.getProperty("password");
 
         wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
 
@@ -68,9 +83,9 @@ public class TestBase {
         driver.findElement(By.xpath("//a[@data-auto-id=\"customer-info-button\"]")).click();
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("social-button-yahoo"))).click();
-        driver.findElement(By.id("login-username")).sendKeys("pero.peric64@yahoo.com");
+        driver.findElement(By.id("login-username")).sendKeys(username);
         driver.findElement(By.id("login-signin")).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("login-passwd"))).sendKeys("SifraSifric321");
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("login-passwd"))).sendKeys(password);
         driver.findElement(By.id("login-signin")).click();
         driver.findElement(By.id("oauth2-agree")).click();
 
