@@ -109,10 +109,48 @@ public class TestSteps {
 
     @When("the user goes to the preferences section")
     public void the_user_goes_to_the_preferences_section() {
-
+TestBase.getDriver().findElement(By.xpath("//a[@data-auto-id=\"members-home-account-preferences\"]")).click();
     }
     @When("the user changes preferences")
     public void the_user_changes_preferences() {
+        // Create a Random object
+        Random rand = new Random();
+
+        // Generate a random number between 1 and 4
+        int randomDivIndex = rand.nextInt(4) + 1;
+
+        // Construct the XPath with the random index
+        String xpath = "//div[@class='gl-carousel__slider']//div[" + randomDivIndex + "]";
+
+        // Find the element using the constructed XPath
+        WebElement randomDiv = TestBase.getDriver().findElement(By.xpath(xpath));
+
+        // Interact with the element as required, e.g., click
+        randomDiv.click();
+
+        TestBase.getDriver().findElement(By.id("preferences-update-CTA-product-categories")).click();
+
+
+
+        // Generate a random number between 1 and 9 for the fifth div
+        int randomFifthDivIndex = rand.nextInt(9) + 1;
+
+        // Generate a random number between 1 and 2 for the second div
+        int randomSecondDivIndex = rand.nextInt(2) + 1;
+
+        // Construct the XPath with the random indexes
+        String xpath2 = "//div[@class='gl-carousel gl-carousel--show-pagination profile-interests___5fonZ']/div/div/div["
+                + randomFifthDivIndex + "]/div/div[" + randomSecondDivIndex + "]";
+
+        // Find the element using the constructed XPath
+        WebElement randomElement = TestBase.getDriver().findElement(By.xpath(xpath2));
+
+        // Perform actions with the selected element
+        // For example, click the element
+        randomElement.click();
+
+        TestBase.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@data-auto-id=\"ma-interests-save-cta\"]"))).click();
+
 
     }
     @Then("the new preferences should be saved and displayed")
