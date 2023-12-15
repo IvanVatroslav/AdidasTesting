@@ -1,31 +1,32 @@
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.Scanner;
 
 public class TestBase {
-    private WebDriver driver;
+    private static WebDriver driver;
     private static Scanner scanner = new Scanner(System.in);
+    private static FluentWait<WebDriver> fluentWait;
 
-    private WebDriverWait wait;
+    private static WebDriverWait wait;
 
-    public WebDriver getDriver() {
+    public static WebDriver getDriver() {
         return driver;
     }
 
     public static Scanner getScanner() {
         return scanner;
     }
-
+    public static FluentWait<WebDriver> getFluentWait() {
+        return fluentWait;
+    }
     @Before
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
@@ -35,10 +36,14 @@ public class TestBase {
         driver.manage().window().maximize();
 
         driver.get("https://www.adidas.com/us");
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
+        fluentWait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(30))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(NoSuchElementException.class);
 
         logIn();
-
     }
 
     @After
@@ -47,13 +52,12 @@ public class TestBase {
 
     }
 
-    public WebDriverWait getWait() {
+    public static WebDriverWait getWait() {
         return wait;
     }
 
     private void logIn() {
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         wait.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
 
