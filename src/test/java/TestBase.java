@@ -64,31 +64,12 @@ public class TestBase {
         driver.findElement(By.xpath("//a[@data-auto-id=\"customer-info-button\"]")).click();
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("social-button-yahoo"))).click();
-        //driver.findElement(By.id("social-button-yahoo")).click();
         driver.findElement(By.id("login-username")).sendKeys("pero.peric64@yahoo.com");
         driver.findElement(By.id("login-signin")).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("login-passwd"))).sendKeys("SifraSifric321");
-        //driver.findElement(By.id("login-passwd")).sendKeys("SifraSifric321");
         driver.findElement(By.id("login-signin")).click();
         driver.findElement(By.id("oauth2-agree")).click();
-//
-//        WebElement EmailTextBox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id=\"email\"]")));
-//
-//
-//
-//        EmailTextBox.sendKeys("ivan.v.zeljeznjak@hotmail.com");
-//
-//        //driver.findElement(By.xpath("//input[@id=\"email\"]")).sendKeys("ivan.v.zeljeznjak@hotmail.com");
-//        driver.findElement(By.xpath("//span[@data-testid=\"arrow-right-long\"]")).click();
-//
-//
-//        WebElement PasswordTextBox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id=\"password\"]")));
-//        PasswordTextBox.sendKeys("Pa$$w0rd123");
-//
-//        //driver.findElement(By.xpath("///input[@id=\"password\"]")).sendKeys("Pa$$w0rd123");
 
-
-        // Additional setup can be done here (like maximizing window, setting timeouts, etc.)
     }
 
 
