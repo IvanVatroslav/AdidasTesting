@@ -1,3 +1,6 @@
+package stepdefinitions;
+
+import ObjectPage.Base;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -8,7 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.time.LocalDate;
 import java.util.Random;
 
-public class TestSteps {
+public class Steps {
     //    private WebDriver driver; // WebDriver instance
 //    private WebDriverWait wait; // Explicit wait
 //    private FluentWait<WebDriver> fluentWait;
@@ -26,10 +29,10 @@ public class TestSteps {
 
     @Given("the user is logged in and on the main page")
     public void theUserIsLoggedInAndOnTheMainPage() {
-        TestBase.getFluentWait().until(ExpectedConditions.visibilityOfElementLocated(By.id("side-panel-container")));
+        Base.getFluentWait().until(ExpectedConditions.visibilityOfElementLocated(By.id("side-panel-container")));
 
         // Wait for the account link to be clickable using FluentWait
-        WebElement accountLink = TestBase.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"cta-test-id-delete\"]/div/div[1]/a/span")));
+        WebElement accountLink = Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"cta-test-id-delete\"]/div/div[1]/a/span")));
         accountLink.click();
 
         // TestBase.getDriver().navigate().to("https://www.adidas.com/us/my-account");
@@ -40,12 +43,12 @@ public class TestSteps {
     @When("the user navigates to the account settings page")
     public void theUserNavigatesToTheAccountSettingsPage() {
         // Navigate to the account settings page
-        TestBase.getDriver().findElement(By.id("ACCOUNT")).click(); // Replace with the actual ID or locator
+        Base.getDriver().findElement(By.id("ACCOUNT")).click(); // Replace with the actual ID or locator
     }
 
     @When("the user changes the birth date to a random date")
     public void theUserChangesTheBirthDateToARandomDate() {
-        TestBase.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class=\"gl-cta gl-cta--tertiary gl-vspace\"]"))).click(); // Replace with an actual element from account settings page
+        Base.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class=\"gl-cta gl-cta--tertiary gl-vspace\"]"))).click(); // Replace with an actual element from account settings page
         Random rand = new Random();
         // Generate a random month between 1 and 12
         randomMonth = rand.nextInt(12) + 1; // months: 1-12
@@ -67,19 +70,19 @@ public class TestSteps {
         // Generate a random year (example range: 1900 - current year)
         randomYear = rand.nextInt(LocalDate.now().getYear() - 1900) + 1900;
         // Enter the random date
-        WebElement dayField = TestBase.getDriver().findElement(By.id("date-of-birth-day"));
+        WebElement dayField = Base.getDriver().findElement(By.id("date-of-birth-day"));
         dayField.clear();
         dayField.sendKeys(Integer.toString(randomDay));
 
-        WebElement monthField = TestBase.getDriver().findElement(By.id("date-of-birth-month"));
+        WebElement monthField = Base.getDriver().findElement(By.id("date-of-birth-month"));
         monthField.clear();
         monthField.sendKeys(Integer.toString(randomMonth));
 
-        WebElement yearField = TestBase.getDriver().findElement(By.id("date-of-birth-year"));
+        WebElement yearField = Base.getDriver().findElement(By.id("date-of-birth-year"));
         yearField.clear();
         yearField.sendKeys(Integer.toString(randomYear));
         // Click the save or submit button
-        TestBase.getDriver().findElement(By.xpath("//*[@id=\"modal-root\"]/div/div/div/div[2]/form/div[2]/button[1]/span[1]")).click(); // Replace with actual ID or locator
+        Base.getDriver().findElement(By.xpath("//*[@id=\"modal-root\"]/div/div/div/div[2]/form/div[2]/button[1]/span[1]")).click(); // Replace with actual ID or locator
     }
 
     @Then("the new birth date should be saved and displayed")
@@ -97,20 +100,13 @@ public class TestSteps {
     }
 
 
-
-
-
-
-
-
-
-
     //test2
 
     @When("the user goes to the preferences section")
     public void the_user_goes_to_the_preferences_section() {
-TestBase.getDriver().findElement(By.xpath("//a[@data-auto-id=\"members-home-account-preferences\"]")).click();
+        Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-auto-id=\"members-home-account-preferences\"]"))).click();
     }
+
     @When("the user changes preferences")
     public void the_user_changes_preferences() {
         // Create a Random object
@@ -123,13 +119,10 @@ TestBase.getDriver().findElement(By.xpath("//a[@data-auto-id=\"members-home-acco
         String xpath = "//div[@class='gl-carousel__slider']//div[" + randomDivIndex + "]";
 
         // Find the element using the constructed XPath
-        WebElement randomDiv = TestBase.getDriver().findElement(By.xpath(xpath));
+        WebElement randomDiv = Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
 
         // Interact with the element as required, e.g., click
         randomDiv.click();
-
-        TestBase.getDriver().findElement(By.id("preferences-update-CTA-product-categories")).click();
-
 
 
         // Generate a random number between 1 and 9 for the fifth div
@@ -143,22 +136,22 @@ TestBase.getDriver().findElement(By.xpath("//a[@data-auto-id=\"members-home-acco
                 + randomFifthDivIndex + "]/div/div[" + randomSecondDivIndex + "]";
 
         // Find the element using the constructed XPath
-        WebElement randomElement = TestBase.getDriver().findElement(By.xpath(xpath2));
-
+        WebElement randomElement = Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath(xpath2)));
+        randomElement.click();
         // Perform actions with the selected element
         // For example, click the element
-        randomElement.click();
 
-        TestBase.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@data-auto-id=\"ma-interests-save-cta\"]"))).click();
 
 
     }
+
     @Then("the new preferences should be saved and displayed")
     public void the_new_preferences_should_be_saved_and_displayed() {
+        Base.getWait().until(ExpectedConditions.elementToBeClickable(By.id("preferences-update-CTA-product-categories"))).click();
+
+        Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@data-auto-id=\"ma-interests-save-cta\"]"))).click();
 
     }
-
-
 
 
 }
