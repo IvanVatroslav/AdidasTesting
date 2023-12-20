@@ -11,12 +11,13 @@ import org.junit.BeforeClass;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +41,7 @@ public class Base {
         return fluentWaitThreadLocal.get();
     }
 
+
     @Before
     public void setUp() {
         WebDriverManager.chromedriver().setup();
@@ -58,7 +60,6 @@ public class Base {
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
 
-        // Set WebDriver instances to thread local variables
         driverThreadLocal.set(driver);
         waitThreadLocal.set(wait);
         fluentWaitThreadLocal.set(fluentWait);
@@ -69,7 +70,6 @@ public class Base {
     @SneakyThrows
     @After
     public void tearDown() {
-        // Quit the WebDriver instance and remove from the thread local
         Thread.sleep(10000);
         getDriver().quit();
         driverThreadLocal.remove();
@@ -94,16 +94,15 @@ public class Base {
             // Perform the login process using the username and password
             getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
 
-            WebElement cookiesAcceptButton = getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class=\"gl-cta gl-cta--tertiary\"]")));
-            cookiesAcceptButton.click();
+            MainPage.acceptCookies();
 
-            getDriver().findElement(By.xpath("//a[@data-auto-id=\"customer-info-button\"]")).click();
-            getWait().until(ExpectedConditions.elementToBeClickable(By.id("social-button-yahoo"))).click();
-            getDriver().findElement(By.id("login-username")).sendKeys(username);
-            getDriver().findElement(By.id("login-signin")).click();
-            getWait().until(ExpectedConditions.elementToBeClickable(By.id("login-passwd"))).sendKeys(password);
-            getDriver().findElement(By.id("login-signin")).click();
-            getDriver().findElement(By.id("oauth2-agree")).click();
+            MainPage.openCustomerInfo();
+            MainPage.clickYahooButton();
+            YahooPage.getLoginTextBox().sendKeys(username);
+            YahooPage.clickNextButtonLogin();
+            YahooPage.getPasswordTextBox().sendKeys(password);
+            YahooPage.clickLoginButton();
+            YahooPage.clickAuthButton();
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -112,7 +111,6 @@ public class Base {
 
     @BeforeClass
     public static void setUpClass() {
-        // Initialize ExtentReports and attach the HtmlReporter
         ExtentSparkReporter spark = new ExtentSparkReporter("C:\\Users\\ivan.zeljeznjak\\Desktop\\AdidasTesting\\target\\test-classes\\extent-report.html");
         extent = new ExtentReports();
         extent.attachReporter(spark);
@@ -120,11 +118,23 @@ public class Base {
 
     @AfterClass
     public static void tearDownClass() {
-        // Write the report to file at the end of the test suite
         if (extent != null) {
             extent.flush();
         }
     }
+
+    public static byte[] getScreenshot() {
+        try {
+            System.out.println("Taking screenshot...");
+            System.out.println("Current URL: " + driverThreadLocal.get().getCurrentUrl());
+            System.out.println("Page Title: " + driverThreadLocal.get().getTitle());
+            System.out.println("Window Size: " + driverThreadLocal.get().manage().window().getSize());
+
+            File scrFile = ((TakesScreenshot) driverThreadLocal.get()).getScreenshotAs(OutputType.FILE);
+            return Files.readAllBytes(scrFile.toPath());
+        } catch (WebDriverException | IOException e) {
+            System.out.println("Exception during screenshot capture: " + e.getMessage());
+        }
+        return null;
+    }
 }
-
-
