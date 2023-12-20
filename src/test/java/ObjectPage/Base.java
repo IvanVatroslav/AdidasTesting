@@ -56,7 +56,7 @@ public class Base {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         FluentWait<WebDriver> fluentWait = new FluentWait<>(driver)
-                .withTimeout(Duration.ofSeconds(30))
+                .withTimeout(Duration.ofSeconds(15))
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
 
