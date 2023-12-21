@@ -3,11 +3,17 @@ package stepdefinitions;
 import ObjectPage.Base;
 import ObjectPage.MainPage;
 import ObjectPage.YahooPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -57,7 +63,6 @@ public class Helper {
             // Perform the login process using the username and password
             Base.getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
 
-            MainPage.acceptCookies();
             MainPage.openCustomerInfo();
             MainPage.clickYahooButton();
             YahooPage.getLoginTextBox().sendKeys(username);
@@ -70,4 +75,37 @@ public class Helper {
             ex.printStackTrace();
         }
     }
+    public static void testNavigationMenuItems() {
+        WebDriver driver = Base.getDriver();
+        WebDriverWait wait = Base.getWait();
+        // Navigate to the page where the menu is located
+        List<WebElement> menuItems = driver.findElements(By.xpath("//ul[@data-auto-id='main-menu']/li"));
+        int itemCount = menuItems.size();
+        for (int i = 1; i <= driver.findElements(By.xpath("//ul[@data-auto-id='main-menu']/li")).size(); i++) {
+
+
+
+            List<WebElement> closeElements = driver.findElements(By.xpath("//span[@data-testid='close']"));
+            if (!closeElements.isEmpty()) { //close stupid popup
+                WebElement closeElement = closeElements.get(0);
+                if (closeElement.isDisplayed()) {
+                    closeElement.click(); // Close the element
+                    wait.until(ExpectedConditions.invisibilityOf(closeElement)); // Wait for the element to disappear
+                }
+            }
+
+
+            // Refresh the element reference to avoid stale element reference issues
+            WebElement item = driver.findElement(By.xpath("//ul[@data-auto-id='main-menu']/li[" + i + "]"));
+
+            wait.until(ExpectedConditions.elementToBeClickable(item)).click();
+            // Wait for the page to load and perform your checks here
+            // ... additional verification logic ...
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@data-auto-id='main-menu']")));
+        }
+    }
+
+
+
 }

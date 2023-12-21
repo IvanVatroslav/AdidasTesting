@@ -61,6 +61,8 @@ public class Base {
         driverThreadLocal.set(driver);
         waitThreadLocal.set(wait);
         fluentWaitThreadLocal.set(fluentWait);
+        MainPage.acceptCookies();
+
 
     }
 
