@@ -33,7 +33,7 @@ public class Steps {
         //accountLink.click();
 
         // TestBase.getDriver().navigate().to("https://www.adidas.com/us/my-account");
-
+        Helper.logIn();
         MainPage.clickAccountLink();
 
     }

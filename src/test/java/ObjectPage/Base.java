@@ -16,10 +16,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.Duration;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class Base {
@@ -64,7 +62,6 @@ public class Base {
         waitThreadLocal.set(wait);
         fluentWaitThreadLocal.set(fluentWait);
 
-        logIn();
     }
 
     @SneakyThrows
@@ -77,37 +74,7 @@ public class Base {
         fluentWaitThreadLocal.remove();
     }
 
-    private void logIn() {
-        Properties prop = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
-            if (input == null) {
-                System.out.println("Sorry, unable to find config.properties");
-                return;
-            }
-            // Load the properties file
-            prop.load(input);
 
-            // Get username and password from properties file
-            String username = prop.getProperty("username");
-            String password = prop.getProperty("password");
-
-            // Perform the login process using the username and password
-            getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
-
-            MainPage.acceptCookies();
-
-            MainPage.openCustomerInfo();
-            MainPage.clickYahooButton();
-            YahooPage.getLoginTextBox().sendKeys(username);
-            YahooPage.clickNextButtonLogin();
-            YahooPage.getPasswordTextBox().sendKeys(password);
-            YahooPage.clickLoginButton();
-            YahooPage.clickAuthButton();
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @BeforeClass
     public static void setUpClass() {

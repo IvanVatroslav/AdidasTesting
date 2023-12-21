@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
         },
         monochrome = true,
-        tags = "@test1"
+        tags = "@test1 or @test2"
 )
 public class RunCucumberTest {
 

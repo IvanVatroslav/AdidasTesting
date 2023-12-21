@@ -1,6 +1,14 @@
 package stepdefinitions;
 
+import ObjectPage.Base;
+import ObjectPage.MainPage;
+import ObjectPage.YahooPage;
+import org.openqa.selenium.JavascriptExecutor;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Properties;
 import java.util.Random;
 
 public class Helper {
@@ -32,5 +40,34 @@ public class Helper {
         randomYear = rand.nextInt(LocalDate.now().getYear() - 1900) + 1900;
     return new int[]{randomDay, randomMonth, randomYear};
     }
+    public static void logIn() {
+        Properties prop = new Properties();
+        try (InputStream input = Helper.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                System.out.println("Sorry, unable to find config.properties");
+                return;
+            }
+            // Load the properties file
+            prop.load(input);
 
+            // Get username and password from properties file
+            String username = prop.getProperty("username");
+            String password = prop.getProperty("password");
+
+            // Perform the login process using the username and password
+            Base.getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+
+            MainPage.acceptCookies();
+            MainPage.openCustomerInfo();
+            MainPage.clickYahooButton();
+            YahooPage.getLoginTextBox().sendKeys(username);
+            YahooPage.clickNextButtonLogin();
+            YahooPage.getPasswordTextBox().sendKeys(password);
+            YahooPage.clickLoginButton();
+            YahooPage.clickAuthButton();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
