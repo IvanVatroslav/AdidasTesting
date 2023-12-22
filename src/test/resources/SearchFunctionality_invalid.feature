@@ -1,4 +1,4 @@
-@YZT4
+@SearchFunctionality_invalid
 Feature: Search Functionality Verification
 
   Scenario: Verify search results for an invalid keyword

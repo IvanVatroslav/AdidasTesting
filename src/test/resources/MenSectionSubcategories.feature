@@ -1,4 +1,4 @@
-@YZT2
+@MenSectionSubcategories
 Feature: Verify Sub-Categories under Men's Section
 
   Scenario: Sequentially check each sub-category under Men's section

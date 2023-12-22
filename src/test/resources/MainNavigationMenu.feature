@@ -1,4 +1,4 @@
-@YZT1
+@MainNavigationMenu
 Feature: Verify Main Navigation Menu Functionality
 
   Scenario: Each main navigation menu item should be clickable and lead to the correct page

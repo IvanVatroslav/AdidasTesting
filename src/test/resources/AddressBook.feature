@@ -1,4 +1,4 @@
-@YZT5
+@AddressBook
 Feature: Add Addresses to Address Book
 
   Scenario: User adds two different addresses to their address book

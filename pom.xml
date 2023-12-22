@@ -97,7 +97,7 @@
         <version>2.22.2</version> <!-- Use the latest version that supports JUnit 4 -->
         <configuration>
           <parallel>classesAndMethods</parallel>
-          <threadCount>4</threadCount>
+          <threadCount>5</threadCount>
           <useUnlimitedThreads>true</useUnlimitedThreads>
           <perCoreThreadCount>true</perCoreThreadCount>
           <includes>

@@ -69,7 +69,7 @@ public class Base {
     @SneakyThrows
     @After
     public void tearDown() {
-        Thread.sleep(10000);
+        Thread.sleep(3000);
         getDriver().quit();
         driverThreadLocal.remove();
         waitThreadLocal.remove();

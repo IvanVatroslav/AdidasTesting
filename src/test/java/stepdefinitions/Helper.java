@@ -141,7 +141,8 @@ public class Helper {
     }
 
     public static void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
-        driver.findElement(By.xpath("//span[@data-testid=\"plus\"]")).click();
+       // driver.findElement(By.xpath("//span[@data-testid=\"plus\"]")).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@data-testid=\"plus\"]"))).click();
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name=\"firstName\"]"))).sendKeys(firstName);
         driver.findElement(By.xpath("//input[@name=\"lastName\"]")).sendKeys(lastName);
