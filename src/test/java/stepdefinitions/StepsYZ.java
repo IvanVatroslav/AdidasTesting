@@ -107,4 +107,19 @@ public class StepsYZ {
         }
     }
 
+    //YZT4
+    @When("I search for 'invalid_keyword'")
+    public void i_search_for_invalid_keyword() {
+        WebElement searchBox = driver.findElement(By.xpath("//input[@class='_input_1f3oz_13']"));
+        searchBox.sendKeys("invalid_keyword"+ Keys.ENTER);
+    }
+
+    @Then("a no results page should be displayed")
+    public void a_no_results_page_should_be_displayed() {
+
+        WebElement noResultsElement = driver.findElement(By.xpath("//h4[contains(@class, 'nohits_title___3kFIK') and contains(text(), 'NO RESULTS')]"));
+        assertTrue("No results page is not displayed", noResultsElement.isDisplayed());
+    }
+
+
 }
