@@ -3,10 +3,7 @@ package stepdefinitions;
 import ObjectPage.Base;
 import ObjectPage.MainPage;
 import ObjectPage.YahooPage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -18,8 +15,8 @@ import java.util.Properties;
 import java.util.Random;
 
 public class Helper {
-    WebDriver driver = Base.getDriver();
-    WebDriverWait wait = Base.getWait();
+    static WebDriver driver = Base.getDriver();
+    static WebDriverWait wait = Base.getWait();
     private static int randomMonth;
     private static int randomDay;
     private static int randomYear;
@@ -111,5 +108,72 @@ public class Helper {
             }
         }
     }
+
+
+    public static void removeAllAddresses() {
+        while (true) {
+            List<WebElement> removeButtons = driver.findElements(By.xpath("//button[@data-auto-id='delete_address']"));
+
+            if (removeButtons.isEmpty()) {
+                break;
+            }
+
+            try {
+                WebElement firstRemoveButton = removeButtons.get(0);
+                firstRemoveButton.click();
+
+                // Wait for the confirmation button to be clickable after clicking "Remove"
+                WebElement confirmDeleteButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@data-auto-id='confirm-delete']")));
+                confirmDeleteButton.click();
+
+                // Wait for the DOM to update after the address has been deleted
+                // Replace Thread.sleep with dynamic wait if possible
+                Thread.sleep(1000);
+            } catch (StaleElementReferenceException e) {
+                // Element reference is stale, refresh the elements list by continuing the loop
+                System.out.println("Caught a stale element exception, retrying...");
+            } catch (InterruptedException e) {
+                // Restore the interrupted status
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
+        driver.findElement(By.xpath("//span[@data-testid=\"plus\"]")).click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name=\"firstName\"]"))).sendKeys(firstName);
+        driver.findElement(By.xpath("//input[@name=\"lastName\"]")).sendKeys(lastName);
+        driver.findElement(By.xpath("//input[@name=\"address1\"]")).sendKeys(streetAddress);
+        driver.findElement(By.xpath("//input[@name=\"city\"]")).sendKeys(city);
+        selectRandomState();
+        driver.findElement(By.xpath("//input[@name=\"zipcode\"]")).sendKeys(zipCode);
+        driver.findElement(By.xpath("//input[@name=\"phoneNumber\"]")).sendKeys(phoneNumber);
+
+        driver.findElement(By.xpath("//span[@data-testid=\"arrow-right-long\"]")).click();
+    }
+
+
+    public static void selectRandomState() {
+        // Click the dropdown to display the options
+        WebElement dropdown = driver.findElement(By.xpath("//div[@role='combobox']"));
+        dropdown.click();
+
+        // Wait for the dropdown options to appear
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("gl-dropdown-custom__listbox--checkout-dropdown")));
+
+        // Find all dropdown options
+        List<WebElement> stateOptions = driver.findElements(By.xpath("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li"));
+
+        // Generate a random index to select
+        Random rand = new Random();
+        WebElement randomOption = stateOptions.get(rand.nextInt(stateOptions.size()));
+
+        // Scroll into view of the random option and click it
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", randomOption);
+        randomOption.click();
+    }
+
 
 }
