@@ -21,6 +21,14 @@ public class SettingsPage {
     static private By saveInterests_xpath = By.xpath("//*[@id=\"preferences-update-CTA-interests\"]/span[2]");
 
     // Update the XPath as needed
+
+    static private By addressBookLink_xpath = By.xpath("//a[@data-auto-id='members-home-account-address-book']");
+
+    public static void navigateToAddressBookPage() {
+        WebElement addressBookLink = Base.getWait().until(ExpectedConditions.elementToBeClickable(addressBookLink_xpath));
+        addressBookLink.click();
+    }
+
     public static void clickEditDetails() {
         WebElement editDetails = Base.getWait().until(ExpectedConditions.visibilityOfElementLocated(editDetailsButton_xpath));
         editDetails.click();

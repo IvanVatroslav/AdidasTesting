@@ -2,6 +2,8 @@ package stepdefinitions;
 
 import ObjectPage.Base;
 import ObjectPage.Header;
+import ObjectPage.SearchPage;
+import ObjectPage.SettingsPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -85,10 +87,10 @@ public class StepsYZ {
 
     @Then("all products should have the name 'SAMBA OG SHOES'")
     public void all_products_should_have_the_name_samba_og_shoes() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main-content\"]/div/div[2]/div/div/div[2]/div[1]")));
+      //  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main-content\"]/div/div[2]/div/div/div[2]/div[1]")));
 
         // Find all div elements that are children of the container div which contains the products
-        List<WebElement> productContainers = driver.findElements(By.xpath("//*[@id=\"main-content\"]/div/div[2]/div/div/div[2]/div[1]"));
+        List<WebElement> productContainers = SearchPage.getSearchResults();
 
         // Verify that the product container list is not empty
         assertFalse("Product list is empty", productContainers.isEmpty());
@@ -108,22 +110,19 @@ public class StepsYZ {
     //YZT4
     @When("I search for 'invalid_keyword'")
     public void i_search_for_invalid_keyword() {
-        WebElement searchBox = driver.findElement(By.xpath("//input[@class='_input_1f3oz_13']"));
-        searchBox.sendKeys("invalid_keyword" + Keys.ENTER);
+        SearchPage.searchFor("invalid_keyword");
     }
 
     @Then("a no results page should be displayed")
     public void a_no_results_page_should_be_displayed() {
-
-        WebElement noResultsElement = driver.findElement(By.xpath("//h4[contains(@class, 'nohits_title___3kFIK') and contains(text(), 'NO RESULTS')]"));
-        assertTrue("No results page is not displayed", noResultsElement.isDisplayed());
+        assertTrue("No results page is not displayed", SearchPage.isNoResultsDisplayed());
     }
 
     //YZT5
     @When("the user navigates to the address book page")
     public void the_user_navigates_to_the_address_book_page() {
-        WebElement addressBookLink = driver.findElement(By.xpath("//a[@data-auto-id=\"members-home-account-address-book\"]"));
-        addressBookLink.click();
+        SettingsPage.navigateToAddressBookPage();
+
     }
 
     // Example usage within a step definition
