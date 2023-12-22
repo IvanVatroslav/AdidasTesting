@@ -18,7 +18,8 @@ import java.util.Properties;
 import java.util.Random;
 
 public class Helper {
-
+WebDriver driver = Base.getDriver();
+WebDriverWait wait = Base.getWait();
     private static int randomMonth;
     private static int randomDay;
     private static int randomYear;
@@ -85,14 +86,7 @@ public class Helper {
 
 
 
-            List<WebElement> closeElements = driver.findElements(By.xpath("//span[@data-testid='close']"));
-            if (!closeElements.isEmpty()) { //close stupid popup
-                WebElement closeElement = closeElements.get(0);
-                if (closeElement.isDisplayed()) {
-                    closeElement.click(); // Close the element
-                    wait.until(ExpectedConditions.invisibilityOf(closeElement)); // Wait for the element to disappear
-                }
-            }
+            closeStupidLoginPopup();
 
 
             // Refresh the element reference to avoid stale element reference issues
@@ -106,6 +100,15 @@ public class Helper {
         }
     }
 
-
+public static void closeStupidLoginPopup(){
+    List<WebElement> closeElements = Base.getDriver().findElements(By.xpath("//*[@id=\"account-portal-modal\"]/div/div/button/span"));
+    if (!closeElements.isEmpty()) { //close stupid popup
+        WebElement closeElement = closeElements.get(0);
+        if (closeElement.isDisplayed()) {
+            closeElement.click(); // Close the element
+            Base.getWait().until(ExpectedConditions.invisibilityOf(closeElement)); // Wait for the element to disappear
+        }
+    }
+}
 
 }
