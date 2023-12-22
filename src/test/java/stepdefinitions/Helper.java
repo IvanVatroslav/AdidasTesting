@@ -18,8 +18,8 @@ import java.util.Properties;
 import java.util.Random;
 
 public class Helper {
-WebDriver driver = Base.getDriver();
-WebDriverWait wait = Base.getWait();
+    WebDriver driver = Base.getDriver();
+    WebDriverWait wait = Base.getWait();
     private static int randomMonth;
     private static int randomDay;
     private static int randomYear;
@@ -45,8 +45,9 @@ WebDriverWait wait = Base.getWait();
 
         // Generate a random year (example range: 1900 - current year)
         randomYear = rand.nextInt(LocalDate.now().getYear() - 1900) + 1900;
-    return new int[]{randomDay, randomMonth, randomYear};
+        return new int[]{randomDay, randomMonth, randomYear};
     }
+
     public static void logIn() {
         Properties prop = new Properties();
         try (InputStream input = Helper.class.getClassLoader().getResourceAsStream("config.properties")) {
@@ -76,6 +77,7 @@ WebDriverWait wait = Base.getWait();
             ex.printStackTrace();
         }
     }
+
     public static void testNavigationMenuItems() {
         WebDriver driver = Base.getDriver();
         WebDriverWait wait = Base.getWait();
@@ -83,7 +85,6 @@ WebDriverWait wait = Base.getWait();
         List<WebElement> menuItems = driver.findElements(By.xpath("//ul[@data-auto-id='main-menu']/li"));
         int itemCount = menuItems.size();
         for (int i = 1; i <= driver.findElements(By.xpath("//ul[@data-auto-id='main-menu']/li")).size(); i++) {
-
 
 
             closeStupidLoginPopup();
@@ -100,15 +101,15 @@ WebDriverWait wait = Base.getWait();
         }
     }
 
-public static void closeStupidLoginPopup(){
-    List<WebElement> closeElements = Base.getDriver().findElements(By.xpath("//*[@id=\"account-portal-modal\"]/div/div/button/span"));
-    if (!closeElements.isEmpty()) { //close stupid popup
-        WebElement closeElement = closeElements.get(0);
-        if (closeElement.isDisplayed()) {
-            closeElement.click(); // Close the element
-            Base.getWait().until(ExpectedConditions.invisibilityOf(closeElement)); // Wait for the element to disappear
+    public static void closeStupidLoginPopup() {
+        List<WebElement> closeElements = Base.getDriver().findElements(By.xpath("//*[@id=\"account-portal-modal\"]/div/div/button/span"));
+        if (!closeElements.isEmpty()) { //close stupid popup
+            WebElement closeElement = closeElements.get(0);
+            if (closeElement.isDisplayed()) {
+                closeElement.click(); // Close the element
+                Base.getWait().until(ExpectedConditions.invisibilityOf(closeElement)); // Wait for the element to disappear
+            }
         }
     }
-}
 
 }
