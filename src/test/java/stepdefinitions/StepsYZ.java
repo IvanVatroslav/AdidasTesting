@@ -25,7 +25,7 @@ public class StepsYZ {
 
     @Given("I am on the homepage")
     public void i_am_on_the_homepage() {
-        // Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//ul[@data-auto-id='main-menu']/li[2]/a"))).click();
+        helper.checkWebPage("https://www.adidas.com/us");
     }
 
     @Then("I verify navigation menu functionality")
@@ -42,23 +42,15 @@ public class StepsYZ {
 
     @Then("I should see the dropdown with sub-categories")
     public void i_should_see_the_dropdown_with_sub_categories() {
-        // Write code here that turns the phrase above into concrete actions
     }
 
     @Then("I sequentially navigate through each sub-category in Men's section")
     public void i_sequentially_navigate_through_each_sub_category_in_men_s_section() {
         header.navigateToSubCategory();
-
-        // Add verification for each sub-category here
-        // ...
-
-        // Navigate back to the Men's section to hover again
-
     }
 
     @Then("I should see the relevant products and content for each sub-category")
     public void i_should_see_the_relevant_products_and_content_for_each_sub_category() {
-        // Write code here that turns the phrase above into concrete actions
     }
 
     //YZT3
@@ -68,7 +60,6 @@ public class StepsYZ {
     public void i_search_for_samba_og_shoes() {
         WebElement searchBox = header.getSearchTextBox();
         searchBox.sendKeys("SAMBA OG SHOES" + Keys.ENTER);
-        //searchBox.submit();
     }
 
     @Then("the search results page should open")
@@ -86,12 +77,9 @@ public class StepsYZ {
 
     @Then("all products should have the name 'SAMBA OG SHOES'")
     public void all_products_should_have_the_name_samba_og_shoes() {
-      //  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"main-content\"]/div/div[2]/div/div/div[2]/div[1]")));
-
         // Find all div elements that are children of the container div which contains the products
         List<WebElement> productContainers = SearchPage.getSearchResults();
 
-        // Verify that the product container list is not empty
         assertFalse("Product list is empty", productContainers.isEmpty());
 
         // Iterate over each product container and check the product name
@@ -124,7 +112,6 @@ public class StepsYZ {
 
     }
 
-    // Example usage within a step definition
     @And("the user removes any old addresses")
     public void the_user_removes_any_old_addresses() {
         helper.removeAllAddresses();

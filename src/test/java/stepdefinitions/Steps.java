@@ -9,16 +9,7 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.WebDriver;
 
 public class Steps {
-    //    private WebDriver driver; // WebDriver instance
-//    private WebDriverWait wait; // Explicit wait
-//    private FluentWait<WebDriver> fluentWait;
-//
-//    public EditBirthdaySteps(WebDriver driver) {
-//        this.driver = TestBase.getDriver();
-//        this.wait = TestBase.getWait();
-//        this.fluentWait = TestBase.getFluentWait();
-//
-//    }
+
     private int randomDay;
     private int randomMonth;
     private int randomYear;
@@ -28,13 +19,7 @@ public class Steps {
 
     @Given("the user is logged in and on the main page")
     public void theUserIsLoggedInAndOnTheMainPage() {
-        //Base.getFluentWait().until(ExpectedConditions.visibilityOfElementLocated(By.id("side-panel-container")));
-
-        // Wait for the account link to be clickable using FluentWait
-        //WebElement accountLink = Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"cta-test-id-delete\"]/div/div[1]/a/span")));
-        //accountLink.click();
-
-        // TestBase.getDriver().navigate().to("https://www.adidas.com/us/my-account");
+        helper.checkWebPage("https://www.adidas.com/us");
         helper.logIn();
         MainPage.clickAccountLink();
 
@@ -42,49 +27,20 @@ public class Steps {
 
     @When("the user navigates to the account settings page")
     public void theUserNavigatesToTheAccountSettingsPage() {
-        // Navigate to the account settings page
-        //Base.getDriver().findElement(By.id("ACCOUNT")).click(); // Replace with the actual ID or locator
-        MainPage.clickAccountSettings();
+    MainPage.clickAccountSettings();
     }
 
     @When("the user changes the birth date to a random date")
     public void theUserChangesTheBirthDateToARandomDate() {
-//        Base.getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class=\"gl-cta gl-cta--tertiary gl-vspace\"]"))).click(); // Replace with an actual element from account settings page
         SettingsPage.clickEditDetails();
-//        Random rand = new Random();
-//        // Generate a random month between 1 and 12
-//        randomMonth = rand.nextInt(12) + 1; // months: 1-12
-//
-//        // Generate a random day. Days range from 1-28/30/31 depending on the month
-//        if (randomMonth == 2) { // February
-//            // Check for leap year
-//            if (randomYear % 4 == 0 && (randomYear % 100 != 0 || randomYear % 400 == 0)) {
-//                randomDay = rand.nextInt(29) + 1; // 1-29 for leap year February
-//            } else {
-//                randomDay = rand.nextInt(28) + 1; // 1-28 for non-leap year February
-//            }
-//        } else if (randomMonth == 4 || randomMonth == 6 || randomMonth == 9 || randomMonth == 11) {
-//            randomDay = rand.nextInt(30) + 1; // 1-30 for April, June, September, November
-//        } else {
-//            randomDay = rand.nextInt(31) + 1; // 1-31 for all other months
-//        }
-//
-//        // Generate a random year (example range: 1900 - current year)
-//        randomYear = rand.nextInt(LocalDate.now().getYear() - 1900) + 1900;
-        // Enter the random date
 
         int[] randomDate = helper.getRandomDate();
         randomDay = randomDate[0];
         randomMonth = randomDate[1];
         randomYear = randomDate[2];
-
         SettingsPage.getDayField().sendKeys(Integer.toString(randomDay));
-
-
         SettingsPage.getMonthField().sendKeys(Integer.toString(randomMonth));
-
         SettingsPage.getYearField().sendKeys(Integer.toString(randomYear));
-        // Click the save or submit button
         SettingsPage.clickSaveButton();
     }
 
@@ -114,8 +70,6 @@ public class Steps {
     public void the_user_changes_preferences() {
 
         SettingsPage.randomProductCategoriesPreferencesClick();
-
-
         SettingsPage.randomProductInterestsPreferencesClick();
 
     }

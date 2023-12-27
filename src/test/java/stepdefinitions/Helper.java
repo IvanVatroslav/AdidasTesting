@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
+
 public class Helper {
 
     private static int randomMonth;
@@ -185,5 +187,14 @@ public class Helper {
         randomOption.click();
     }
 
+    public void checkWebPage(String url) {
+        wait.until(ExpectedConditions.urlToBe(url));
+
+        // Get the current URL
+        String currentUrl = driver.getCurrentUrl();
+
+        // Assert that the current URL matches the expected URL
+        assertEquals("The user is not on the Adidas main page", "https://www.adidas.com/us", currentUrl);
+    }
 
 }
