@@ -1,9 +1,6 @@
 package stepdefinitions;
 
-import ObjectPage.Base;
-import ObjectPage.Header;
-import ObjectPage.SearchPage;
-import ObjectPage.SettingsPage;
+import ObjectPage.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -23,6 +20,8 @@ public class StepsYZ {
     //YZT1
     WebDriver driver = Base.getDriver();
     WebDriverWait wait = Base.getWait();
+    Helper helper = new Helper(driver);
+    Header header = new Header(driver);
 
     @Given("I am on the homepage")
     public void i_am_on_the_homepage() {
@@ -31,14 +30,14 @@ public class StepsYZ {
 
     @Then("I verify navigation menu functionality")
     public void i_verify_navigation_menu_functionality() {
-        Helper.testNavigationMenuItems();
+        helper.testNavigationMenuItems();
     }
     //YZT2
 
 
     @When("I hover over the Men's section in the main menu")
     public void i_hover_over_the_men_s_section_in_the_main_menu() {
-        Header.hoverOverMensSection();
+        header.hoverOverMensSection();
     }
 
     @Then("I should see the dropdown with sub-categories")
@@ -48,7 +47,7 @@ public class StepsYZ {
 
     @Then("I sequentially navigate through each sub-category in Men's section")
     public void i_sequentially_navigate_through_each_sub_category_in_men_s_section() {
-        Header.navigateToSubCategory();
+        header.navigateToSubCategory();
 
         // Add verification for each sub-category here
         // ...
@@ -67,14 +66,14 @@ public class StepsYZ {
 
     @When("I search for 'SAMBA OG SHOES'")
     public void i_search_for_samba_og_shoes() {
-        WebElement searchBox = Header.getSearchTextBox();
+        WebElement searchBox = header.getSearchTextBox();
         searchBox.sendKeys("SAMBA OG SHOES" + Keys.ENTER);
         //searchBox.submit();
     }
 
     @Then("the search results page should open")
     public void the_search_results_page_should_open() {
-        WebElement searchTitleElement = Header.getSearchResultTitle();
+        WebElement searchTitleElement = header.getSearchResultTitle();
         String actualText = searchTitleElement.getText().toLowerCase(); // Convert to lower case
         assertEquals("Search title does not match", "“samba og shoes”", actualText); // Compare with lower case
     }
@@ -128,17 +127,17 @@ public class StepsYZ {
     // Example usage within a step definition
     @And("the user removes any old addresses")
     public void the_user_removes_any_old_addresses() {
-        Helper.removeAllAddresses();
+        helper.removeAllAddresses();
     }
 
     @And("the user adds a new address with specific details")
     public void the_user_adds_a_new_address_with_specific_details() {
-        Helper.addNewAddress("John", "Doe", "123 Main St", "Anytown", "Anystate", "12345", "1234567890");
+        helper.addNewAddress("John", "Doe", "123 Main St", "Anytown", "Anystate", "12345", "1234567890");
     }
 
     @When("the user adds another new address with different details")
     public void the_user_adds_another_new_address_with_different_details() {
-        Helper.addNewAddress("Jane", "Roe", "456 Elm Street", "Difftown", "Diffstate", "67890", "0987654321");
+        helper.addNewAddress("Jane", "Roe", "456 Elm Street", "Difftown", "Diffstate", "67890", "0987654321");
     }
 
     @Then("both new addresses should be saved and displayed in the address book")

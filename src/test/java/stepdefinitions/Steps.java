@@ -1,12 +1,12 @@
 package stepdefinitions;
 
+import ObjectPage.Base;
 import ObjectPage.MainPage;
 import ObjectPage.SettingsPage;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
-import java.util.Random;
+import org.openqa.selenium.WebDriver;
 
 public class Steps {
     //    private WebDriver driver; // WebDriver instance
@@ -23,6 +23,8 @@ public class Steps {
     private int randomMonth;
     private int randomYear;
 
+    private static WebDriver driver = Base.getDriver();
+    Helper helper = new Helper(driver);
 
     @Given("the user is logged in and on the main page")
     public void theUserIsLoggedInAndOnTheMainPage() {
@@ -33,7 +35,7 @@ public class Steps {
         //accountLink.click();
 
         // TestBase.getDriver().navigate().to("https://www.adidas.com/us/my-account");
-        Helper.logIn();
+        helper.logIn();
         MainPage.clickAccountLink();
 
     }
@@ -71,7 +73,7 @@ public class Steps {
 //        randomYear = rand.nextInt(LocalDate.now().getYear() - 1900) + 1900;
         // Enter the random date
 
-        int[] randomDate = Helper.getRandomDate();
+        int[] randomDate = helper.getRandomDate();
         randomDay = randomDate[0];
         randomMonth = randomDate[1];
         randomYear = randomDate[2];
@@ -110,35 +112,10 @@ public class Steps {
 
     @When("the user changes preferences")
     public void the_user_changes_preferences() {
-        // Create a Random object
-        Random rand = new Random();
 
-//        // Generate a random number between 1 and 4
-//
-//        // Construct the XPath with the random index
-//        String xpath = "//div[@class='gl-carousel__slider']//div[" + randomDivIndex + "]";
-//
-//        // Find the element using the constructed XPath
-//        WebElement randomDiv = Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
-
-        // Interact with the element as required, e.g., click
         SettingsPage.randomProductCategoriesPreferencesClick();
 
-//        // Generate a random number between 1 and 9 for the fifth div
-//        int randomFifthDivIndex = rand.nextInt(9) + 1;
-//
-//        // Generate a random number between 1 and 2 for the second div
-//        int randomSecondDivIndex = rand.nextInt(2) + 1;
-//
-//        // Construct the XPath with the random indexes
-//        String xpath2 = "//div[@class='gl-carousel gl-carousel--show-pagination profile-interests___5fonZ']/div/div/div["
-//                + randomFifthDivIndex + "]/div/div[" + randomSecondDivIndex + "]";
-//
-//        // Find the element using the constructed XPath
-//        WebElement randomElement = Base.getWait().until(ExpectedConditions.elementToBeClickable(By.xpath(xpath2)));
-//        randomElement.click();
-        // Perform actions with the selected element
-        // For example, click the element
+
         SettingsPage.randomProductInterestsPreferencesClick();
 
     }

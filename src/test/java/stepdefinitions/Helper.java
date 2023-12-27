@@ -15,14 +15,23 @@ import java.util.Properties;
 import java.util.Random;
 
 public class Helper {
-    static WebDriver driver = Base.getDriver();
-    static WebDriverWait wait = Base.getWait();
+
     private static int randomMonth;
     private static int randomDay;
     private static int randomYear;
+    private Random rand;
 
-    public static int[] getRandomDate() {
-        Random rand = new Random();
+    private WebDriver driver;
+    private WebDriverWait wait;
+    public Helper(WebDriver driver) {
+        this.driver = driver;
+        this.wait = Base.getWait();
+        this.rand = new Random();
+
+    }
+
+
+    public int[] getRandomDate() {
         // Generate a random month between 1 and 12
         randomMonth = rand.nextInt(12) + 1; // months: 1-12
 
@@ -45,7 +54,7 @@ public class Helper {
         return new int[]{randomDay, randomMonth, randomYear};
     }
 
-    public static void logIn() {
+    public void logIn() {
         Properties prop = new Properties();
         try (InputStream input = Helper.class.getClassLoader().getResourceAsStream("config.properties")) {
             if (input == null) {
@@ -75,7 +84,7 @@ public class Helper {
         }
     }
 
-    public static void testNavigationMenuItems() {
+    public void testNavigationMenuItems() {
         WebDriver driver = Base.getDriver();
         WebDriverWait wait = Base.getWait();
         // Navigate to the page where the menu is located
@@ -98,7 +107,7 @@ public class Helper {
         }
     }
 
-    public static void closeStupidLoginPopup() {
+    public void closeStupidLoginPopup() {
         List<WebElement> closeElements = Base.getDriver().findElements(By.xpath("//*[@id=\"account-portal-modal\"]/div/div/button/span"));
         if (!closeElements.isEmpty()) { //close stupid popup
             WebElement closeElement = closeElements.get(0);
@@ -110,7 +119,7 @@ public class Helper {
     }
 
 
-    public static void removeAllAddresses() {
+    public void removeAllAddresses() {
         while (true) {
             List<WebElement> removeButtons = driver.findElements(By.xpath("//button[@data-auto-id='delete_address']"));
 
@@ -140,7 +149,7 @@ public class Helper {
         }
     }
 
-    public static void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
+    public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
        // driver.findElement(By.xpath("//span[@data-testid=\"plus\"]")).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@data-testid=\"plus\"]"))).click();
 
@@ -156,7 +165,7 @@ public class Helper {
     }
 
 
-    public static void selectRandomState() {
+    public void selectRandomState() {
         // Click the dropdown to display the options
         WebElement dropdown = driver.findElement(By.xpath("//div[@role='combobox']"));
         dropdown.click();
