@@ -129,34 +129,11 @@ public class StepsYZ {
 
     @Then("both new addresses should be saved and displayed in the address book")
     public void both_new_addresses_should_be_saved_and_displayed_in_the_address_book() {
-    /*    // Find all the address elements on the page
-        List<WebElement> addresses = driver.findElements(By.xpath("//div[contains(@class, 'address-card__overflow-guard___')]"));
-
-        // Initialize flags to check if addresses are present
-        boolean isFirstAddressPresent = false;
-        boolean isSecondAddressPresent = false;
-
-        // Iterate through the list of addresses and check if the text matches the expected address lines
-        for (WebElement address : addresses) {
-            String addressText = address.getText();
-            if (addressText.contains("123 Main St")) {
-                isFirstAddressPresent = true;
-            }
-            if (addressText.contains("456 Elm Street")) {
-                isSecondAddressPresent = true;
-            }
-
-            // If both addresses are found, no need to continue checking
-            if (isFirstAddressPresent && isSecondAddressPresent) {
-                break;
-            }
-        }
-
-        // Assert that both addresses have been found and displayed
-        assertTrue("First address is not displayed in the address book", isFirstAddressPresent);
-        assertTrue("Second address is not displayed in the address book", isSecondAddressPresent);
-    } */
+        helper.assertAddresses();
     }
 
 
 }
+
+
+

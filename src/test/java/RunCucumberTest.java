@@ -17,10 +17,10 @@ import org.junit.runner.RunWith;
         dryRun = false,
         tags = "" +
               //  " @MainNavigationMenu " +
-                "@MenSectionSubcategories"+
-                " or @SearchFunctionality"+
+             //   "@MenSectionSubcategories"+
+             //   " or @SearchFunctionality"+
               //  " or @SearchFunctionality_invalid"+
-                " or @AddressBook"
+                " @AddressBook"
 )
 public class RunCucumberTest {
 

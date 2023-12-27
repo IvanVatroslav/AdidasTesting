@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class Helper {
 
@@ -25,6 +26,7 @@ public class Helper {
 
     private WebDriver driver;
     private WebDriverWait wait;
+
     public Helper(WebDriver driver) {
         this.driver = driver;
         this.wait = Base.getWait();
@@ -152,7 +154,7 @@ public class Helper {
     }
 
     public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
-       // driver.findElement(By.xpath("//span[@data-testid=\"plus\"]")).click();
+        // driver.findElement(By.xpath("//span[@data-testid=\"plus\"]")).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@data-testid=\"plus\"]"))).click();
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name=\"firstName\"]"))).sendKeys(firstName);
@@ -194,7 +196,31 @@ public class Helper {
         String currentUrl = driver.getCurrentUrl();
 
         // Assert that the current URL matches the expected URL
-        assertEquals("The user is not on the Adidas main page", "https://www.adidas.com/us", currentUrl);
+        assertEquals("The user is not on the" + url + "page", "https://www.adidas.com/us", currentUrl);
+    }
+
+
+    public void assertAddresses(){
+        // Define the XPaths for the address lines within the first and second address elements
+        String firstAddressLineXPath = "//div[@class='row address-card-listing__grid___1dFIN']/div[2]//div[@class='gl-vspace-bpall-small']/div";
+        String secondAddressLineXPath = "//div[@class='row address-card-listing__grid___1dFIN']/div[3]//div[@class='gl-vspace-bpall-small']/div";
+
+        // Wait for and retrieve the first address line element
+        WebElement firstAddressLineElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(firstAddressLineXPath)));
+        String firstAddressLine = firstAddressLineElement.getText();
+
+        // Wait for and retrieve the second address line element
+        WebElement secondAddressLineElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(secondAddressLineXPath)));
+        String secondAddressLine = secondAddressLineElement.getText();
+
+
+        // Check if the address lines contain the expected addresses
+        boolean isFirstAddressPresent = firstAddressLine.contains("123 Main St");
+        boolean isSecondAddressPresent = secondAddressLine.contains("456 Elm Street");
+
+        // Assert that both addresses are present
+        assertTrue("First address (123 Main St) is not displayed in the address book", isFirstAddressPresent);
+        assertTrue("Second address (456 Elm Street) is not displayed in the address book", isSecondAddressPresent);
     }
 
 }
