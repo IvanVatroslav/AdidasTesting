@@ -2,7 +2,6 @@ package stepdefinitions;
 
 import ObjectPage.Base;
 import ObjectPage.MainPage;
-import ObjectPage.SettingsPage;
 import ObjectPage.YahooPage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,12 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class Helper {
 
@@ -32,10 +28,17 @@ public class Helper {
         this.rand = new Random();
 
     }
+    public void checkWebPage(String url) {
+        wait.until(ExpectedConditions.urlToBe(url));
+
+        String currentUrl = driver.getCurrentUrl();
+
+        assertEquals("The user is not on the" + url + "page", "https://www.adidas.com/us", currentUrl);
+    }
 
 
     public int[] getRandomDate() {
-        int randomMonth = rand.nextInt(12) + 1; // months: 1-12
+        int randomMonth = rand.nextInt(12) + 1;
 
         int randomDay;
         if (randomMonth == 2) {
@@ -135,18 +138,22 @@ public class Helper {
         }
     }
 
-    public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String zipCode, String phoneNumber) {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@data-testid=\"plus\"]"))).click();
+    public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='gl-modal__main']")));
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name=\"firstName\"]"))).sendKeys(firstName);
-        driver.findElement(By.xpath("//input[@name=\"lastName\"]")).sendKeys(lastName);
-        driver.findElement(By.xpath("//input[@name=\"address1\"]")).sendKeys(streetAddress);
-        driver.findElement(By.xpath("//input[@name=\"city\"]")).sendKeys(city);
-        selectRandomState();
-        driver.findElement(By.xpath("//input[@name=\"zipcode\"]")).sendKeys(zipCode);
-        driver.findElement(By.xpath("//input[@name=\"phoneNumber\"]")).sendKeys(phoneNumber);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@data-testid='plus']"))).click();
 
-        driver.findElement(By.xpath("//span[@data-testid=\"arrow-right-long\"]")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='firstName']"))).sendKeys(firstName);
+        driver.findElement(By.xpath("//input[@name='lastName']")).sendKeys(lastName);
+        driver.findElement(By.xpath("//input[@name='address1']")).sendKeys(streetAddress);
+        driver.findElement(By.xpath("//input[@name='city']")).sendKeys(city);
+
+        selectSpecificState(state);
+
+        driver.findElement(By.xpath("//input[@name='zipcode']")).sendKeys(zipCode);
+        driver.findElement(By.xpath("//input[@name='phoneNumber']")).sendKeys(phoneNumber);
+
+        driver.findElement(By.xpath("//span[@data-testid='arrow-right-long']")).click();
     }
 
 
@@ -166,31 +173,55 @@ public class Helper {
         randomOption.click();
     }
 
-    public void checkWebPage(String url) {
-        wait.until(ExpectedConditions.urlToBe(url));
+    public void selectSpecificState(String stateName) {
+        WebElement dropdown = driver.findElement(By.xpath("//div[@role='combobox']"));
+        dropdown.click();
 
-        String currentUrl = driver.getCurrentUrl();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("gl-dropdown-custom__listbox--checkout-dropdown")));
 
-        assertEquals("The user is not on the" + url + "page", "https://www.adidas.com/us", currentUrl);
+        WebElement stateOption = driver.findElement(By.xpath("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '" + stateName + "')]"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", stateOption);
+        stateOption.click();
     }
 
 
-    public void assertAddresses(){
+    public void assertAddresses(List<Map<String, String>> expectedAddresses) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='gl-modal__main']")));
 
 
-        WebElement firstAddressLineElement = wait.until(ExpectedConditions.visibilityOfElementLocated(SettingsPage.getFirstAddressLineXPath()));
-        String firstAddressLine = firstAddressLineElement.getText();
+        List<WebElement> addressElements = driver.findElements(By.xpath("//div[@data-auto-id='saved_address']"));
 
-        WebElement secondAddressLineElement = wait.until(ExpectedConditions.visibilityOfElementLocated(SettingsPage.getSecondAddressLineXPath()));
-        String secondAddressLine = secondAddressLineElement.getText();
+        assertEquals("Number of addresses does not match", expectedAddresses.size(), addressElements.size());
 
+        for (int i = 0; i < expectedAddresses.size(); i++) {
+            Map<String, String> expectedAddress = expectedAddresses.get(i);
+            WebElement addressElement = addressElements.get(i);
 
-        // Check if the address lines contain the expected addresses
-        boolean isFirstAddressPresent = firstAddressLine.contains("123 Main St");
-        boolean isSecondAddressPresent = secondAddressLine.contains("456 Elm Street");
+            assertEquals(expectedAddress.get("FirstName") + " " + expectedAddress.get("LastName"),
+                    addressElement.findElement(By.xpath(".//strong")).getText());
 
-        assertTrue("First address (123 Main St) is not displayed in the address book", isFirstAddressPresent);
-        assertTrue("Second address (456 Elm Street) is not displayed in the address book", isSecondAddressPresent);
+            String fullAddress = addressElement.findElement(By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]")).getText();
+            String[] addressParts = fullAddress.split("\n");
+
+            assertEquals(expectedAddress.get("Address"), addressParts[0]);
+            String expectedStateAbbreviation = convertStateNameToAbbreviation(expectedAddress.get("State"));
+            assertEquals(expectedAddress.get("City") + ", " + expectedStateAbbreviation + ", " + expectedAddress.get("Zip") + ", US", addressParts[1]);
+            assertEquals(expectedAddress.get("Phone"), addressParts[2]);
+        }
     }
+
+
+
+    private String convertStateNameToAbbreviation(String stateName) {
+        Map<String, String> stateAbbreviations = new HashMap<>();
+        stateAbbreviations.put("Florida", "FL");
+        stateAbbreviations.put("Maine", "ME");
+
+        return stateAbbreviations.getOrDefault(stateName, stateName);
+    }
+
 
 }
+
+
+

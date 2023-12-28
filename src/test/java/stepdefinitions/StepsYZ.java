@@ -1,6 +1,10 @@
 package stepdefinitions;
 
-import ObjectPage.*;
+import ObjectPage.Base;
+import ObjectPage.Header;
+import ObjectPage.SearchPage;
+import ObjectPage.SettingsPage;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -13,6 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -22,6 +27,7 @@ public class StepsYZ {
     WebDriverWait wait = Base.getWait();
     Helper helper = new Helper(driver);
     Header header = new Header(driver);
+    private List<Map<String, String>> storedAddresses;
 
     @Given("I am on the homepage")
     public void i_am_on_the_homepage() {
@@ -113,19 +119,18 @@ public class StepsYZ {
         helper.removeAllAddresses();
     }
 
-    @And("the user adds a new address with specific details")
-    public void the_user_adds_a_new_address_with_specific_details() {
-        helper.addNewAddress("John", "Doe", "123 Main St", "Anytown", "12345", "1234567890");
+    @And("the user adds new addresses")
+    public void the_user_adds_new_addresses(DataTable addressTable) {
+        storedAddresses = addressTable.asMaps(String.class, String.class);
+        for (Map<String, String> address : storedAddresses) {
+            helper.addNewAddress(address.get("FirstName"), address.get("LastName"), address.get("Address"), address.get("City"), address.get("State"), address.get("Zip"), address.get("Phone"));
+        }
     }
 
-    @When("the user adds another new address with different details")
-    public void the_user_adds_another_new_address_with_different_details() {
-        helper.addNewAddress("Jane", "Roe", "456 Elm Street", "Difftown", "67890", "0987654321");
-    }
 
-    @Then("both new addresses should be saved and displayed in the address book")
-    public void both_new_addresses_should_be_saved_and_displayed_in_the_address_book() {
-        helper.assertAddresses();
+    @Then("the new addresses should be saved and displayed in the address book")
+    public void the_new_addresses_should_be_saved_and_displayed_in_the_address_book() {
+        helper.assertAddresses(storedAddresses);
     }
 
 
