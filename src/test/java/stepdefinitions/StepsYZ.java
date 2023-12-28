@@ -77,19 +77,15 @@ public class StepsYZ {
 
     @Then("all products should have the name 'SAMBA OG SHOES'")
     public void all_products_should_have_the_name_samba_og_shoes() {
-        // Find all div elements that are children of the container div which contains the products
         List<WebElement> productContainers = SearchPage.getSearchResults();
 
         assertFalse("Product list is empty", productContainers.isEmpty());
 
-        // Iterate over each product container and check the product name
         for (WebElement container : productContainers) {
-            // Find the product name within the container using the provided class
             WebElement productNameElement = container.findElement(By.xpath(".//p[@class='glass-product-card__title']"));
             wait.until(ExpectedConditions.visibilityOf(productNameElement)); // Wait for the product name element to be visible
             String actualProductName = productNameElement.getText().toLowerCase(); // Convert product name to lower case
 
-            // Assert that the actual product name contains the expected text
             assertTrue("Product name does not match: " + actualProductName, actualProductName.contains("samba og shoes"));
         }
     }
@@ -119,12 +115,12 @@ public class StepsYZ {
 
     @And("the user adds a new address with specific details")
     public void the_user_adds_a_new_address_with_specific_details() {
-        helper.addNewAddress("John", "Doe", "123 Main St", "Anytown", "Anystate", "12345", "1234567890");
+        helper.addNewAddress("John", "Doe", "123 Main St", "Anytown", "12345", "1234567890");
     }
 
     @When("the user adds another new address with different details")
     public void the_user_adds_another_new_address_with_different_details() {
-        helper.addNewAddress("Jane", "Roe", "456 Elm Street", "Difftown", "Diffstate", "67890", "0987654321");
+        helper.addNewAddress("Jane", "Roe", "456 Elm Street", "Difftown", "67890", "0987654321");
     }
 
     @Then("both new addresses should be saved and displayed in the address book")

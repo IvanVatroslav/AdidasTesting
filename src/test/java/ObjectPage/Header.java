@@ -13,7 +13,6 @@ public class Header {
     private WebDriverWait wait;
     private Helper helper;
 
-    // Constructor
     public Header(WebDriver driver) {
         this.driver = driver;
         this.wait = Base.getWait();
@@ -39,7 +38,7 @@ public class Header {
             WebElement subCategoryElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='" + href + "']")));
             subCategoryElement.click();
             helper.closeStupidLoginPopup();
-            hoverOverMensSection(); // Now an instance method, not static
+            hoverOverMensSection();
         }
     }
 

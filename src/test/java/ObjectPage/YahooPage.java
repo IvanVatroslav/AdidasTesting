@@ -5,19 +5,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class YahooPage {
-//    private WebElement loginTextBox;
-//    private WebElement nextButton;
-//    private WebElement passwordTextBox;
-//    private WebElement loginButton;
-//    private WebElement authAgreeButton;
-//
-//    public YahooPage(WebElement loginTextBox, WebElement nextButton, WebElement passwordTextBox, WebElement loginButton, WebElement authAgreeButton) {
-//        this.loginTextBox =  Base.getDriver().findElement(By.id("login-username"));
-//        this.nextButton = Base.getDriver().findElement(By.id("login-signin"));
-//        this.passwordTextBox = Base.getWait().until(ExpectedConditions.elementToBeClickable(By.id("login-passwd")));
-//        this.loginButton = Base.getDriver().findElement(By.id("login-signin"));
-//        this.authAgreeButton = Base.getDriver().findElement(By.id("oauth2-agree"));
-//    }
 
 
     static By usernameTextBox_id = By.id("login-username");
@@ -29,9 +16,8 @@ public class YahooPage {
 
     static By authAgreeButton_id = By.id("oauth2-agree");
     public static WebElement getLoginTextBox() {
-        WebElement loginTextBox = Base.getDriver().findElement(usernameTextBox_id);
 
-        return loginTextBox;
+        return Base.getDriver().findElement(usernameTextBox_id);
     }
 
     public static void clickNextButtonLogin() {
@@ -40,8 +26,7 @@ public class YahooPage {
     }
 
     public static WebElement getPasswordTextBox() {
-        WebElement passwordTextBox =Base.getWait().until(ExpectedConditions.elementToBeClickable(passwordTextBox_id));
-        return passwordTextBox;
+        return Base.getWait().until(ExpectedConditions.elementToBeClickable(passwordTextBox_id));
     }
 
     public static void clickLoginButton() {
