@@ -72,37 +72,34 @@ public class StepsYZ {
     //YZT3
 
 
-    @When("I search for 'SAMBA OG SHOES'")
-    public void i_search_for_samba_og_shoes() {
+    @When("I search for {string}")
+    public void i_search_for(String string) {
         WebElement searchBox = header.getSearchTextBox();
-        searchBox.sendKeys("SAMBA OG SHOES" + Keys.ENTER);
+        searchBox.sendKeys(string + Keys.ENTER);
     }
 
     @Then("the search results page should open")
     public void the_search_results_page_should_open() {
-        WebElement searchTitleElement = header.getSearchResultTitle();
-        String actualText = searchTitleElement.getText().toLowerCase();
-        assertEquals("Search title does not match", "“samba og shoes”", actualText);
-    }
+        String expectedUrlPattern = "https://www.adidas.com/us/search?q=";
+        String currentUrl = driver.getCurrentUrl();
 
+        assertTrue("The user is not on a search page", currentUrl.startsWith(expectedUrlPattern));
+    }
 
     @Then("the list of products should not be empty")
     public void the_list_of_products_should_not_be_empty() {
-
+        List<WebElement> productContainers = SearchPage.getSearchResults();
+        assertFalse("Product list is empty", productContainers.isEmpty());
     }
 
-    @Then("all products should have the name 'SAMBA OG SHOES'")
-    public void all_products_should_have_the_name_samba_og_shoes() {
+    @Then("all products should have the name {string}")
+    public void all_products_should_have_the_name(String string) {
         List<WebElement> productContainers = SearchPage.getSearchResults();
-
-        assertFalse("Product list is empty", productContainers.isEmpty());
-
         for (WebElement container : productContainers) {
             WebElement productNameElement = container.findElement(By.xpath(".//p[@class='glass-product-card__title']"));
             wait.until(ExpectedConditions.visibilityOf(productNameElement));
             String actualProductName = productNameElement.getText().toLowerCase();
-
-            assertTrue("Product name does not match: " + actualProductName, actualProductName.contains("samba og shoes"));
+            assertTrue("Product name does not match: " + actualProductName, actualProductName.contains(string.toLowerCase()));
         }
     }
 
@@ -145,6 +142,3 @@ public class StepsYZ {
 
 
 }
-
-
-

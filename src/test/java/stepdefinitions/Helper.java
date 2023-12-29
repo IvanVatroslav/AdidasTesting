@@ -55,7 +55,7 @@ public class Helper {
             randomDay = rand.nextInt(31) + 1;
         }
 
-        randomYear = rand.nextInt(LocalDate.now().getYear() - 1900) + 1900;
+        randomYear = rand.nextInt(LocalDate.now().getYear() - 1900) + 1900 - 13;    // 13 years old or older
         return new int[]{randomDay, randomMonth, randomYear};
     }
 
