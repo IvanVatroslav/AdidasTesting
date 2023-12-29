@@ -49,4 +49,7 @@ public class Header {
     public WebElement getSearchResultTitle() {
         return driver.findElement(By.xpath("//h1[@class=\"gl-vspace heading___3g-L_ heading--search\"]"));
     }
+
+
 }
+

@@ -9,10 +9,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -34,10 +31,13 @@ public class StepsYZ {
         helper.checkWebPage("https://www.adidas.com/us");
     }
 
-    @Then("I verify navigation menu functionality")
-    public void i_verify_navigation_menu_functionality() {
-        helper.testNavigationMenuItems();
+    @Then("I verify the visibility and correctness of each item in the navigation menu")
+    public void i_verify_the_visibility_and_correctness_of_each_item_in_the_navigation_menu(DataTable dataTable) {
+        List<String> expectedMenuItems = dataTable.asList(String.class);
+        helper.testNavigationMenuItems(expectedMenuItems);
     }
+
+
     //YZT2
 
 
@@ -48,16 +48,26 @@ public class StepsYZ {
 
     @Then("I should see the dropdown with sub-categories")
     public void i_should_see_the_dropdown_with_sub_categories() {
+        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@data-auto-id='header-flyout']")));
+
+        assertTrue("Dropdown with sub-categories is not visible", dropdown.isDisplayed());
     }
 
-    @Then("I sequentially navigate through each sub-category in Men's section")
-    public void i_sequentially_navigate_through_each_sub_category_in_men_s_section() {
-        header.navigateToSubCategory();
+    @Then("I verify the following sub-categories are correct")
+    public void i_verify_the_following_sub_categories_are_correct(List<String> subcategoryTexts) {
+        for (String expectedText : subcategoryTexts) {
+            try {
+                WebElement subCategoryElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(@href, '/us/men')]/div[text()='" + expectedText + "']")));
+                String actualText = subCategoryElement.getText();
+                assertEquals("Expected text not found: " + expectedText, expectedText, actualText);
+            } catch (TimeoutException e) {
+                System.out.println("Failed to find subcategory with text: " + expectedText);
+                throw e;
+            }
+        }
     }
 
-    @Then("I should see the relevant products and content for each sub-category")
-    public void i_should_see_the_relevant_products_and_content_for_each_sub_category() {
-    }
+
 
     //YZT3
 
@@ -71,8 +81,8 @@ public class StepsYZ {
     @Then("the search results page should open")
     public void the_search_results_page_should_open() {
         WebElement searchTitleElement = header.getSearchResultTitle();
-        String actualText = searchTitleElement.getText().toLowerCase(); // Convert to lower case
-        assertEquals("Search title does not match", "“samba og shoes”", actualText); // Compare with lower case
+        String actualText = searchTitleElement.getText().toLowerCase();
+        assertEquals("Search title does not match", "“samba og shoes”", actualText);
     }
 
 
@@ -89,8 +99,8 @@ public class StepsYZ {
 
         for (WebElement container : productContainers) {
             WebElement productNameElement = container.findElement(By.xpath(".//p[@class='glass-product-card__title']"));
-            wait.until(ExpectedConditions.visibilityOf(productNameElement)); // Wait for the product name element to be visible
-            String actualProductName = productNameElement.getText().toLowerCase(); // Convert product name to lower case
+            wait.until(ExpectedConditions.visibilityOf(productNameElement));
+            String actualProductName = productNameElement.getText().toLowerCase();
 
             assertTrue("Product name does not match: " + actualProductName, actualProductName.contains("samba og shoes"));
         }

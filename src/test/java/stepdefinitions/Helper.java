@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class Helper {
 
@@ -85,21 +86,21 @@ public class Helper {
         }
     }
 
-    public void testNavigationMenuItems() {
-        WebDriver driver = Base.getDriver();
-        WebDriverWait wait = Base.getWait();
-        for (int i = 1; i <= driver.findElements(By.xpath("//ul[@data-auto-id='main-menu']/li")).size(); i++) {
+    public void testNavigationMenuItems(List<String> menuItems) {
+        List<WebElement> foundMenuItems = driver.findElements(By.xpath("//ul[@data-auto-id='main-menu']/li/a"));
 
+        assertEquals("Number of menu items should match", menuItems.size(), foundMenuItems.size());
 
-            closeStupidLoginPopup();
+        for (int i = 0; i < menuItems.size(); i++) {
+            WebElement menuItem = foundMenuItems.get(i);
+            String actualText = menuItem.getText().trim();
+            String expectedText = menuItems.get(i);
 
-            WebElement item = driver.findElement(By.xpath("//ul[@data-auto-id='main-menu']/li[" + i + "]"));
-
-            wait.until(ExpectedConditions.elementToBeClickable(item)).click();
-
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@data-auto-id='main-menu']")));
+            assertTrue("Menu item should be visible", menuItem.isDisplayed());
+            assertEquals("Menu item text should match", expectedText, actualText);
         }
     }
+
 
     public void closeStupidLoginPopup() {
         List<WebElement> closeElements = Base.getDriver().findElements(By.xpath("//*[@id=\"account-portal-modal\"]/div/div/button/span"));
