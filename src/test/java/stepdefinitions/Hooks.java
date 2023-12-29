@@ -1,6 +1,6 @@
 package stepdefinitions;
 
-import ObjectPage.Base;
+import objectpage.Base;
 import io.cucumber.java.AfterStep;
 import io.cucumber.java.Scenario;
 

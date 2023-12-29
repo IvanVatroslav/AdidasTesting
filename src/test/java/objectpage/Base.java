@@ -1,4 +1,4 @@
-package ObjectPage;
+package objectpage;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;

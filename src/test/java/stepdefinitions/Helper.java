@@ -1,8 +1,8 @@
 package stepdefinitions;
 
-import ObjectPage.Base;
-import ObjectPage.MainPage;
-import ObjectPage.YahooPage;
+import objectpage.Base;
+import objectpage.MainPage;
+import objectpage.YahooPage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;

@@ -1,8 +1,8 @@
 package stepdefinitions;
 
-import ObjectPage.Base;
-import ObjectPage.MainPage;
-import ObjectPage.SettingsPage;
+import objectpage.Base;
+import objectpage.MainPage;
+import objectpage.SettingsPage;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -25,20 +25,19 @@ public class Steps {
     Helper helper = new Helper(driver);
 
     @Given("the user is logged in and on the main page")
-    public void theUserIsLoggedInAndOnTheMainPage() {
+    public void userIsLoggedInAndOnMainPage() {
         helper.checkWebPage("https://www.adidas.com/us");
         helper.logIn();
         MainPage.clickAccountLink();
-
     }
 
     @When("the user navigates to the account settings page")
-    public void theUserNavigatesToTheAccountSettingsPage() {
-    MainPage.clickAccountSettings();
+    public void userNavigatesToAccountSettingsPage() {
+        MainPage.clickAccountSettings();
     }
 
     @When("the user changes the birth date to a random date")
-    public void theUserChangesTheBirthDateToARandomDate() {
+    public void userChangesBirthDateToRandomDate() {
         SettingsPage.clickEditDetails();
 
         int[] randomDate = helper.getRandomDate();
@@ -52,7 +51,7 @@ public class Steps {
     }
 
     @Then("the new birth date should be saved and displayed")
-    public void theNewBirthDateShouldBeSavedAndDisplayed() {
+    public void newBirthDateShouldBeSavedAndDisplayed() {
         // Wait for the modal to disappear
         Base.getWait().until(ExpectedConditions.invisibilityOfElementLocated(
                 By.xpath("//div[@class='gl-modal__main']")));
@@ -72,29 +71,20 @@ public class Steps {
         Assert.assertEquals("Year does not match", randomYear, date.getYear());
     }
 
-
-
-
-    //test2
-
     @When("the user goes to the preferences section")
-    public void the_user_goes_to_the_preferences_section() {
+    public void userGoesToPreferencesSection() {
         SettingsPage.clicksPreferencesButton();
     }
 
     @When("the user changes preferences")
-    public void the_user_changes_preferences() {
-
+    public void userChangesPreferences() {
         SettingsPage.randomProductCategoriesPreferencesClick();
         SettingsPage.randomProductInterestsPreferencesClick();
-
     }
 
     @Then("the new preferences should be saved and displayed")
-    public void the_new_preferences_should_be_saved_and_displayed() {
+    public void newPreferencesShouldBeSavedAndDisplayed() {
         SettingsPage.savePreferencesClick();
         SettingsPage.saveInterestsClick();
     }
-
-
 }
