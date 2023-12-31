@@ -21,8 +21,16 @@ public class Steps {
     private int randomMonth;
     private int randomYear;
 
-    private static WebDriver driver = Base.getDriver();
-    Helper helper = new Helper(driver);
+    private WebDriver driver;
+    private Helper helper;
+
+    private static final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
+    private static final By DATE_OF_BIRTH_OVERVIEW_XPATH = By.xpath("//div[@data-auto-id='ma-dateOfBirth-overview']");
+
+    public Steps() {
+        this.driver = Base.getDriver();
+        this.helper = new Helper(driver);
+    }
 
     @Given("the user is logged in and on the main page")
     public void userIsLoggedInAndOnMainPage() {
@@ -52,14 +60,11 @@ public class Steps {
 
     @Then("the new birth date should be saved and displayed")
     public void newBirthDateShouldBeSavedAndDisplayed() {
-        // Wait for the modal to disappear
-        Base.getWait().until(ExpectedConditions.invisibilityOfElementLocated(
-                By.xpath("//div[@class='gl-modal__main']")));
+        Base.getWait().until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
 
-        WebElement dateElement = Base.getDriver().findElement(By.xpath("//div[@data-auto-id='ma-dateOfBirth-overview']"));
+        WebElement dateElement = driver.findElement(DATE_OF_BIRTH_OVERVIEW_XPATH);
         String dateString = dateElement.getText();
 
-        // Split the date string and rearrange it into a standard format
         String[] dateParts = dateString.split("-");
         String reformattedDate = dateParts[0] + "-" + dateParts[2] + "-" + dateParts[1];
 

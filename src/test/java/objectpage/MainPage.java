@@ -40,5 +40,8 @@ public class MainPage {
     }
 
 
-
+    public static void clickGoogleButton() {
+        WebElement googleButton = Base.getWait().until(ExpectedConditions.elementToBeClickable(By.id("social-button-google")));
+        googleButton.click();
+    }
 }

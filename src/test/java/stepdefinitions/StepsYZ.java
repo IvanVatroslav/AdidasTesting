@@ -26,6 +26,10 @@ public class StepsYZ {
     Header header = new Header(driver);
     private List<Map<String, String>> storedAddresses;
 
+
+    private static final By HEADER_FLYOUT = By.xpath("//div[@data-auto-id='header-flyout']");
+    private static final String MEN_SUBCATEGORY_XPATH = "//a[contains(@href, '/us/men')]/div";
+
     @Given("I am on the homepage")
     public void onHomepage() {
         helper.checkWebPage("https://www.adidas.com/us");
@@ -46,21 +50,17 @@ public class StepsYZ {
 
     @Then("I should see the dropdown with sub-categories")
     public void verifyDropdownWithSubCategoriesIsVisible() {
-        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@data-auto-id='header-flyout']")));
+        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(HEADER_FLYOUT));
         assertTrue("Dropdown with sub-categories is not visible", dropdown.isDisplayed());
     }
 
     @Then("I verify the following sub-categories are correct")
     public void verifyFollowingSubCategoriesAreCorrect(List<String> subcategoryTexts) {
         for (String expectedText : subcategoryTexts) {
-            try {
-                WebElement subCategoryElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(@href, '/us/men')]/div[text()='" + expectedText + "']")));
-                String actualText = subCategoryElement.getText();
-                assertEquals("Expected text not found: " + expectedText, expectedText, actualText);
-            } catch (TimeoutException e) {
-                System.out.println("Failed to find subcategory with text: " + expectedText);
-                throw e;
-            }
+            String subCategoryXPath = MEN_SUBCATEGORY_XPATH + "[text()='" + expectedText + "']";
+            WebElement subCategoryElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(subCategoryXPath)));
+            String actualText = subCategoryElement.getText();
+            assertEquals("Expected text not found: " + expectedText, expectedText, actualText);
         }
     }
 

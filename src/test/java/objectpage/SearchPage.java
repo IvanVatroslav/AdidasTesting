@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 public class SearchPage {
-    private static final By searchBoxLocator = By.xpath("//input[@class='_input_1f3oz_13']");
+    private static final By searchBoxLocator = By.xpath("//input[@data-auto-id=\"searchinput-desktop\"]");
 
     private static final By noResultsMessageLocator = By.xpath("//h4[contains(@class, 'nohits_title___3kFIK') and contains(text(), 'NO RESULTS')]");
 

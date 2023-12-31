@@ -1,6 +1,7 @@
 package stepdefinitions;
 
 import objectpage.Base;
+import objectpage.GooglePage;
 import objectpage.MainPage;
 import objectpage.YahooPage;
 import org.openqa.selenium.*;
@@ -19,22 +20,42 @@ public class Helper {
 
     private static int randomYear;
     private Random rand;
-
     private WebDriver driver;
     private WebDriverWait wait;
 
+    private static final By NAV_MENU_ITEMS_XPATH = By.xpath("//ul[@data-auto-id='main-menu']/li/a");
+    private static final By ACCOUNT_PORTAL_MODAL_CLOSE_XPATH = By.xpath("//*[@id='account-portal-modal']/div/div/button/span");
+    private static final By DELETE_ADDRESS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='delete_address']");
+    private static final By CONFIRM_DELETE_BUTTON_XPATH = By.xpath("//button[@data-auto-id='confirm-delete']");
+    private static final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
+    private static final By PLUS_BUTTON_XPATH = By.xpath("//span[@data-testid='plus']");
+    private static final By FIRST_NAME_INPUT_XPATH = By.xpath("//input[@name='firstName']");
+    private static final By LAST_NAME_INPUT_XPATH = By.xpath("//input[@name='lastName']");
+    private static final By ADDRESS_INPUT_XPATH = By.xpath("//input[@name='address1']");
+    private static final By CITY_INPUT_XPATH = By.xpath("//input[@name='city']");
+    private static final By ZIPCODE_INPUT_XPATH = By.xpath("//input[@name='zipcode']");
+    private static final By PHONE_NUMBER_INPUT_XPATH = By.xpath("//input[@name='phoneNumber']");
+    private static final By ARROW_RIGHT_LONG_BUTTON_XPATH = By.xpath("//span[@data-testid='arrow-right-long']");
+    private static final By COMBOBOX_DIV_XPATH = By.xpath("//div[@role='combobox']");
+    private static final By CHECKOUT_DROPDOWN_LIST_XPATH = By.id("gl-dropdown-custom__listbox--checkout-dropdown");
+    private static final By SAVED_ADDRESS_DIV_XPATH = By.xpath("//div[@data-auto-id='saved_address']");
+    private static final By STRONG_TAG_XPATH = By.xpath(".//strong");
+    private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]");
+    private static final By STATE_LIST_ITEM_XPATH = By.xpath("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li");
+    private static String getStateXPath(String stateName) {
+        return String.format("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '%s')]", stateName);
+    }
     public Helper(WebDriver driver) {
         this.driver = driver;
         this.wait = Base.getWait();
         this.rand = new Random();
 
     }
+
     public void checkWebPage(String url) {
         wait.until(ExpectedConditions.urlToBe(url));
-
         String currentUrl = driver.getCurrentUrl();
-
-        assertEquals("The user is not on the" + url + "page", "https://www.adidas.com/us", currentUrl);
+        assertEquals("The user is not on the " + url + " page", "https://www.adidas.com/us", currentUrl);
     }
 
 
@@ -68,149 +89,151 @@ public class Helper {
             }
             prop.load(input);
 
-            String username = prop.getProperty("username");
-            String password = prop.getProperty("password");
+            String loginMethod = prop.getProperty("loginMethod");
+            String username;
+            String password;
 
-            Base.getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
-
-            MainPage.openCustomerInfo();
-            MainPage.clickYahooButton();
-            YahooPage.getLoginTextBox().sendKeys(username);
-            YahooPage.clickNextButtonLogin();
-            YahooPage.getPasswordTextBox().sendKeys(password);
-            YahooPage.clickLoginButton();
-            YahooPage.clickAuthButton();
+            switch (loginMethod) {
+                case "yahoo":
+                    username = prop.getProperty("username_yahoo");
+                    password = prop.getProperty("password_yahoo");
+                    performYahooLogin(username, password);
+                    break;
+                case "google":
+                    username = prop.getProperty("username_google");
+                    password = prop.getProperty("password_google");
+                    performGoogleLogin(username, password);
+                    break;
+                default:
+                    System.out.println("Invalid login method specified");
+            }
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
+    private void performYahooLogin(String username, String password) {
+        Base.getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+        MainPage.openCustomerInfo();
+        MainPage.clickYahooButton();
+        YahooPage.getLoginTextBox().sendKeys(username);
+        YahooPage.clickNextButtonLogin();
+        YahooPage.getPasswordTextBox().sendKeys(password);
+        YahooPage.clickLoginButton();
+        YahooPage.clickAuthButton();
+    }
+
+    private void performGoogleLogin(String username, String password) {
+        GooglePage googlePage = new GooglePage(driver);
+
+        Base.getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+        MainPage.openCustomerInfo();
+        MainPage.clickGoogleButton();
+        googlePage.getLoginTextBox().sendKeys(username);
+        googlePage.clickNextButtonLogin();
+        googlePage.getPasswordTextBox().sendKeys(password);
+        googlePage.clickLogin();
+
+    }
+
     public void testNavigationMenuItems(List<String> menuItems) {
-        List<WebElement> foundMenuItems = driver.findElements(By.xpath("//ul[@data-auto-id='main-menu']/li/a"));
-
+        List<WebElement> foundMenuItems = driver.findElements(NAV_MENU_ITEMS_XPATH);
         assertEquals("Number of menu items should match", menuItems.size(), foundMenuItems.size());
-
         for (int i = 0; i < menuItems.size(); i++) {
             WebElement menuItem = foundMenuItems.get(i);
-            String actualText = menuItem.getText().trim();
-            String expectedText = menuItems.get(i);
-
             assertTrue("Menu item should be visible", menuItem.isDisplayed());
-            assertEquals("Menu item text should match", expectedText, actualText);
+            assertEquals("Menu item text should match", menuItems.get(i), menuItem.getText().trim());
         }
     }
 
 
     public void closeStupidLoginPopup() {
-        List<WebElement> closeElements = Base.getDriver().findElements(By.xpath("//*[@id=\"account-portal-modal\"]/div/div/button/span"));
+        List<WebElement> closeElements = driver.findElements(ACCOUNT_PORTAL_MODAL_CLOSE_XPATH);
         if (!closeElements.isEmpty()) {
             WebElement closeElement = closeElements.get(0);
             if (closeElement.isDisplayed()) {
                 closeElement.click();
-                Base.getWait().until(ExpectedConditions.invisibilityOf(closeElement));
+                wait.until(ExpectedConditions.invisibilityOf(closeElement));
             }
         }
     }
-
 
     public void removeAllAddresses() {
         while (true) {
-            List<WebElement> removeButtons = driver.findElements(By.xpath("//button[@data-auto-id='delete_address']"));
-
+            List<WebElement> removeButtons = driver.findElements(DELETE_ADDRESS_BUTTON_XPATH);
             if (removeButtons.isEmpty()) {
                 break;
             }
-
             try {
-                WebElement firstRemoveButton = removeButtons.get(0);
-                firstRemoveButton.click();
-
-                WebElement confirmDeleteButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@data-auto-id='confirm-delete']")));
+                removeButtons.get(0).click();
+                WebElement confirmDeleteButton = wait.until(ExpectedConditions.elementToBeClickable(CONFIRM_DELETE_BUTTON_XPATH));
                 confirmDeleteButton.click();
-
-                Thread.sleep(1000);
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
             } catch (StaleElementReferenceException e) {
                 System.out.println("Caught a stale element exception, retrying...");
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
             }
         }
     }
 
+
     public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='gl-modal__main']")));
-
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@data-testid='plus']"))).click();
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='firstName']"))).sendKeys(firstName);
-        driver.findElement(By.xpath("//input[@name='lastName']")).sendKeys(lastName);
-        driver.findElement(By.xpath("//input[@name='address1']")).sendKeys(streetAddress);
-        driver.findElement(By.xpath("//input[@name='city']")).sendKeys(city);
-
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
+        wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH)).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(FIRST_NAME_INPUT_XPATH)).sendKeys(firstName);
+        driver.findElement(LAST_NAME_INPUT_XPATH).sendKeys(lastName);
+        driver.findElement(ADDRESS_INPUT_XPATH).sendKeys(streetAddress);
+        driver.findElement(CITY_INPUT_XPATH).sendKeys(city);
         selectSpecificState(state);
-
-        driver.findElement(By.xpath("//input[@name='zipcode']")).sendKeys(zipCode);
-        driver.findElement(By.xpath("//input[@name='phoneNumber']")).sendKeys(phoneNumber);
-
-        driver.findElement(By.xpath("//span[@data-testid='arrow-right-long']")).click();
+        driver.findElement(ZIPCODE_INPUT_XPATH).sendKeys(zipCode);
+        driver.findElement(PHONE_NUMBER_INPUT_XPATH).sendKeys(phoneNumber);
+        driver.findElement(ARROW_RIGHT_LONG_BUTTON_XPATH).click();
     }
 
 
     public void selectRandomState() {
-        WebElement dropdown = driver.findElement(By.xpath("//div[@role='combobox']"));
+        WebElement dropdown = driver.findElement(COMBOBOX_DIV_XPATH);
         dropdown.click();
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("gl-dropdown-custom__listbox--checkout-dropdown")));
-
-        List<WebElement> stateOptions = driver.findElements(By.xpath("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li"));
-
-        Random rand = new Random();
-        WebElement randomOption = stateOptions.get(rand.nextInt(stateOptions.size()));
-
-        // Scroll into view of the random option and click it
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", randomOption);
-        randomOption.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(CHECKOUT_DROPDOWN_LIST_XPATH));
+        List<WebElement> stateOptions = driver.findElements(STATE_LIST_ITEM_XPATH);
+        stateOptions.get(rand.nextInt(stateOptions.size())).click();
     }
 
     public void selectSpecificState(String stateName) {
-        WebElement dropdown = driver.findElement(By.xpath("//div[@role='combobox']"));
+        WebElement dropdown = driver.findElement(COMBOBOX_DIV_XPATH);
         dropdown.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(CHECKOUT_DROPDOWN_LIST_XPATH));
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("gl-dropdown-custom__listbox--checkout-dropdown")));
-
-        WebElement stateOption = driver.findElement(By.xpath("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '" + stateName + "')]"));
+        String stateXPath = getStateXPath(stateName);
+        WebElement stateOption = driver.findElement(By.xpath(stateXPath));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", stateOption);
         stateOption.click();
     }
 
 
     public void assertAddresses(List<Map<String, String>> expectedAddresses) {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='gl-modal__main']")));
-
-
-        List<WebElement> addressElements = driver.findElements(By.xpath("//div[@data-auto-id='saved_address']"));
-
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
+        List<WebElement> addressElements = driver.findElements(SAVED_ADDRESS_DIV_XPATH);
         assertEquals("Number of addresses does not match", expectedAddresses.size(), addressElements.size());
 
         for (int i = 0; i < expectedAddresses.size(); i++) {
             Map<String, String> expectedAddress = expectedAddresses.get(i);
             WebElement addressElement = addressElements.get(i);
 
-            assertEquals(expectedAddress.get("FirstName") + " " + expectedAddress.get("LastName"),
-                    addressElement.findElement(By.xpath(".//strong")).getText());
+            String expectedFullName = expectedAddress.get("FirstName") + " " + expectedAddress.get("LastName");
+            assertEquals(expectedFullName, addressElement.findElement(STRONG_TAG_XPATH).getText());
 
-            String fullAddress = addressElement.findElement(By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]")).getText();
+            // Using the ADDRESS_DETAIL_DIV_XPATH constant
+            String fullAddress = addressElement.findElement(ADDRESS_DETAIL_DIV_XPATH).getText();
             String[] addressParts = fullAddress.split("\n");
 
             assertEquals(expectedAddress.get("Address"), addressParts[0]);
             String expectedStateAbbreviation = convertStateNameToAbbreviation(expectedAddress.get("State"));
-            assertEquals(expectedAddress.get("City") + ", " + expectedStateAbbreviation + ", " + expectedAddress.get("Zip") + ", US", addressParts[1]);
+            String expectedCityStateZip = expectedAddress.get("City") + ", " + expectedStateAbbreviation + ", " + expectedAddress.get("Zip") + ", US";
+            assertEquals(expectedCityStateZip, addressParts[1]);
             assertEquals(expectedAddress.get("Phone"), addressParts[2]);
         }
     }
-
 
 
     private String convertStateNameToAbbreviation(String stateName) {
