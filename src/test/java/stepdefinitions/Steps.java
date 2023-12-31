@@ -1,16 +1,14 @@
 package stepdefinitions;
 
-import objectpage.Base;
-import objectpage.MainPage;
-import objectpage.SettingsPage;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import objectpage.Base;
+import objectpage.MainPage;
+import objectpage.SettingsPage;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,8 +22,6 @@ public class Steps {
     private WebDriver driver;
     private Helper helper;
 
-    private static final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
-    private static final By DATE_OF_BIRTH_OVERVIEW_XPATH = By.xpath("//div[@data-auto-id='ma-dateOfBirth-overview']");
 
     public Steps() {
         this.driver = Base.getDriver();
@@ -60,9 +56,8 @@ public class Steps {
 
     @Then("the new birth date should be saved and displayed")
     public void newBirthDateShouldBeSavedAndDisplayed() {
-        Base.getWait().until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
-
-        WebElement dateElement = driver.findElement(DATE_OF_BIRTH_OVERVIEW_XPATH);
+        Base.waitForModalInvisibility();
+        WebElement dateElement = SettingsPage.getDateOfBirthOverview();
         String dateString = dateElement.getText();
 
         String[] dateParts = dateString.split("-");

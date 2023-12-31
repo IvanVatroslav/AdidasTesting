@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -27,6 +28,8 @@ public class Base {
 
     private static ExtentReports extent;
 
+
+    private static final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
     public static WebDriver getDriver() {
         return driverThreadLocal.get();
     }
@@ -105,5 +108,11 @@ public class Base {
             System.out.println("Exception during screenshot capture: " + e.getMessage());
         }
         return null;
+    }
+
+
+
+    public static void waitForModalInvisibility() {
+        getWait().until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
     }
 }

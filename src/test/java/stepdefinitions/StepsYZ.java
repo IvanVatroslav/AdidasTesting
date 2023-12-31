@@ -27,8 +27,6 @@ public class StepsYZ {
     private List<Map<String, String>> storedAddresses;
 
 
-    private static final By HEADER_FLYOUT = By.xpath("//div[@data-auto-id='header-flyout']");
-    private static final String MEN_SUBCATEGORY_XPATH = "//a[contains(@href, '/us/men')]/div";
 
     @Given("I am on the homepage")
     public void onHomepage() {
@@ -50,15 +48,16 @@ public class StepsYZ {
 
     @Then("I should see the dropdown with sub-categories")
     public void verifyDropdownWithSubCategoriesIsVisible() {
-        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(HEADER_FLYOUT));
+        WebElement dropdown = header.getHeaderFlyout();
+        wait.until(ExpectedConditions.visibilityOf(dropdown));
         assertTrue("Dropdown with sub-categories is not visible", dropdown.isDisplayed());
     }
 
     @Then("I verify the following sub-categories are correct")
     public void verifyFollowingSubCategoriesAreCorrect(List<String> subcategoryTexts) {
         for (String expectedText : subcategoryTexts) {
-            String subCategoryXPath = MEN_SUBCATEGORY_XPATH + "[text()='" + expectedText + "']";
-            WebElement subCategoryElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(subCategoryXPath)));
+            WebElement subCategoryElement = header.getMenSubcategoryElement(expectedText);
+            wait.until(ExpectedConditions.visibilityOf(subCategoryElement));
             String actualText = subCategoryElement.getText();
             assertEquals("Expected text not found: " + expectedText, expectedText, actualText);
         }

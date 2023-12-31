@@ -22,19 +22,13 @@ public class SettingsPage {
 
     static private final By addressBookLink_xpath = By.xpath("//a[@data-auto-id='members-home-account-address-book']");
 
-    public static By getFirstAddressLineXPath() {
-        return firstAddressLineXPath;
+    private static final By DATE_OF_BIRTH_OVERVIEW_XPATH = By.xpath("//div[@data-auto-id='ma-dateOfBirth-overview']");
+
+    static private final Random rand = new Random();
+
+    public static WebElement getDateOfBirthOverview() {
+        return Base.getDriver().findElement(DATE_OF_BIRTH_OVERVIEW_XPATH);
     }
-
-    public static By getSecondAddressLineXPath() {
-        return secondAddressLineXPath;
-    }
-
-    static private final By firstAddressLineXPath = By.xpath("//div[@class='row address-card-listing__grid___1dFIN']/div[2]//div[@class='gl-vspace-bpall-small']/div");
-    static private final By secondAddressLineXPath = By.xpath("//div[@class='row address-card-listing__grid___1dFIN']/div[3]//div[@class='gl-vspace-bpall-small']/div");
-
-    static private Random rand = new Random();
-
     public static void navigateToAddressBookPage() {
         WebElement addressBookLink = Base.getWait().until(ExpectedConditions.elementToBeClickable(addressBookLink_xpath));
         addressBookLink.click();

@@ -27,7 +27,6 @@ public class Helper {
     private static final By ACCOUNT_PORTAL_MODAL_CLOSE_XPATH = By.xpath("//*[@id='account-portal-modal']/div/div/button/span");
     private static final By DELETE_ADDRESS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='delete_address']");
     private static final By CONFIRM_DELETE_BUTTON_XPATH = By.xpath("//button[@data-auto-id='confirm-delete']");
-    private static final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
     private static final By PLUS_BUTTON_XPATH = By.xpath("//span[@data-testid='plus']");
     private static final By FIRST_NAME_INPUT_XPATH = By.xpath("//input[@name='firstName']");
     private static final By LAST_NAME_INPUT_XPATH = By.xpath("//input[@name='lastName']");
@@ -169,7 +168,7 @@ public class Helper {
                 removeButtons.get(0).click();
                 WebElement confirmDeleteButton = wait.until(ExpectedConditions.elementToBeClickable(CONFIRM_DELETE_BUTTON_XPATH));
                 confirmDeleteButton.click();
-                wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
+                Base.waitForModalInvisibility();
             } catch (StaleElementReferenceException e) {
                 System.out.println("Caught a stale element exception, retrying...");
             }
@@ -178,7 +177,7 @@ public class Helper {
 
 
     public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
+        Base.waitForModalInvisibility();
         wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH)).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(FIRST_NAME_INPUT_XPATH)).sendKeys(firstName);
         driver.findElement(LAST_NAME_INPUT_XPATH).sendKeys(lastName);
@@ -212,7 +211,7 @@ public class Helper {
 
 
     public void assertAddresses(List<Map<String, String>> expectedAddresses) {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
+        Base.waitForModalInvisibility();
         List<WebElement> addressElements = driver.findElements(SAVED_ADDRESS_DIV_XPATH);
         assertEquals("Number of addresses does not match", expectedAddresses.size(), addressElements.size());
 
