@@ -4,6 +4,7 @@ import objectpage.Base;
 import objectpage.GooglePage;
 import objectpage.MainPage;
 import objectpage.YahooPage;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -24,7 +25,6 @@ public class Helper {
     private WebDriverWait wait;
 
     private static final By NAV_MENU_ITEMS_XPATH = By.xpath("//ul[@data-auto-id='main-menu']/li/a");
-    private static final By ACCOUNT_PORTAL_MODAL_CLOSE_XPATH = By.xpath("//*[@id='account-portal-modal']/div/div/button/span");
     private static final By DELETE_ADDRESS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='delete_address']");
     private static final By CONFIRM_DELETE_BUTTON_XPATH = By.xpath("//button[@data-auto-id='confirm-delete']");
     private static final By PLUS_BUTTON_XPATH = By.xpath("//span[@data-testid='plus']");
@@ -49,6 +49,14 @@ public class Helper {
         this.wait = Base.getWait();
         this.rand = new Random();
 
+    }
+    public boolean doesElementExist(By locator) {
+        try {
+            driver.findElement(locator);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public void checkWebPage(String url) {
@@ -147,16 +155,6 @@ public class Helper {
     }
 
 
-    public void closeStupidLoginPopup() {
-        List<WebElement> closeElements = driver.findElements(ACCOUNT_PORTAL_MODAL_CLOSE_XPATH);
-        if (!closeElements.isEmpty()) {
-            WebElement closeElement = closeElements.get(0);
-            if (closeElement.isDisplayed()) {
-                closeElement.click();
-                wait.until(ExpectedConditions.invisibilityOf(closeElement));
-            }
-        }
-    }
 
     public void removeAllAddresses() {
         while (true) {

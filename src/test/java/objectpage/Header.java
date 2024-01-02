@@ -4,23 +4,31 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Header {
-    private WebDriver driver;
+    private static WebDriver driver;
+    private static WebDriverWait wait;
+
     private static final By HEADER_FLYOUT = By.xpath("//div[@data-auto-id='header-flyout']");
-    private static final String MEN_SUBCATEGORY_XPATH = "//a[contains(@href, '/us/men')]/div";
+    private static final By MENS_SECTION_LOCATOR = By.xpath("//a[@role='menu' and @href='/us/men']");
+    private static final By SEARCH_TEXTBOX_LOCATOR = By.xpath("//input[@data-auto-id='searchinput-desktop']");
+    private static final String MEN_SUBCATEGORY_XPATH_TEMPLATE = "//a[contains(@href, '/us/men')]/div[text()='%s']";
 
     public Header(WebDriver driver) {
         this.driver = driver;
+        this.wait = Base.getWait();
     }
 
     public void hoverOverMensSection() {
-        WebElement mensSection = driver.findElement(By.xpath("//a[@role='menu' and @href='/us/men']"));
+        WebElement mensSection = driver.findElement(MENS_SECTION_LOCATOR);
         new Actions(driver).moveToElement(mensSection).perform();
     }
 
-    public WebElement getSearchTextBox() {
-        return driver.findElement(By.xpath("//input[@data-auto-id=\"searchinput-desktop\"]"));
+    public static WebElement getSearchTextBox() {
+        wait.until(ExpectedConditions.elementToBeClickable(SEARCH_TEXTBOX_LOCATOR));
+        return driver.findElement(SEARCH_TEXTBOX_LOCATOR);
     }
 
     public WebElement getHeaderFlyout() {
@@ -28,7 +36,7 @@ public class Header {
     }
 
     public WebElement getMenSubcategoryElement(String subcategoryText) {
-        String xpath = MEN_SUBCATEGORY_XPATH + "[text()='" + subcategoryText + "']";
+        String xpath = String.format(MEN_SUBCATEGORY_XPATH_TEMPLATE, subcategoryText);
         return driver.findElement(By.xpath(xpath));
     }
 }

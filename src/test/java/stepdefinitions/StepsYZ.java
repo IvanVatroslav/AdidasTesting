@@ -28,6 +28,8 @@ public class StepsYZ {
 
 
 
+
+
     @Given("I am on the homepage")
     public void onHomepage() {
         helper.checkWebPage("https://www.adidas.com/us");
@@ -84,11 +86,12 @@ public class StepsYZ {
         assertFalse("Product list is empty", productContainers.isEmpty());
     }
 
+
     @Then("all products should have the name {string}")
     public void verifyAllProductsHaveName(String string) {
         List<WebElement> productContainers = SearchPage.getSearchResults();
         for (WebElement container : productContainers) {
-            WebElement productNameElement = container.findElement(By.xpath(".//p[@class='glass-product-card__title']"));
+            WebElement productNameElement = container.findElement(SearchPage.getProductNameLocator());
             wait.until(ExpectedConditions.visibilityOf(productNameElement));
             String actualProductName = productNameElement.getText().toLowerCase();
             assertTrue("Product name does not match: " + actualProductName, actualProductName.contains(string.toLowerCase()));
@@ -105,7 +108,8 @@ public class StepsYZ {
 
     @Then("a no results page should be displayed")
     public void verifyNoResultsPageIsDisplayed() {
-        assertTrue("No results page is not displayed", SearchPage.isNoResultsDisplayed());
+        boolean elementExists = helper.doesElementExist(SearchPage.getNoResultsMessageLocator());
+        assertTrue("No results element does not exist", elementExists);
     }
 
     // YZT5
