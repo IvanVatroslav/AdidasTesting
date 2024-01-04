@@ -1,15 +1,19 @@
 package stepdefinitions;
 
-import objectpage.Base;
-import objectpage.Header;
-import objectpage.SearchPage;
-import objectpage.SettingsPage;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.*;
+import lombok.SneakyThrows;
+import objectpage.Base;
+import objectpage.Header;
+import objectpage.SearchPage;
+import objectpage.SettingsPage;
+import org.junit.Assert;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -25,9 +29,6 @@ public class StepsYZ {
     Helper helper = new Helper(driver);
     Header header = new Header(driver);
     private List<Map<String, String>> storedAddresses;
-
-
-
 
 
     @Given("I am on the homepage")
@@ -138,4 +139,62 @@ public class StepsYZ {
     }
 
 
+    // YZT6
+    @SneakyThrows
+    @When("the user attempts to change birth dates and names according to the following data")
+    public void theUserAttemptsToChangeBirthDatesAndNames(DataTable dataTable) {
+        SettingsPage.clickEditDetails();
+
+        List<Map<String, String>> entries = dataTable.asMaps(String.class, String.class);
+        for (Map<String, String> entry : entries) {
+            String date = entry.get("Date");
+            String name = entry.get("Name");
+            String outcome = entry.get("Outcome");
+
+            String[] nameParts = name.split(" ", 2);
+            String firstName = nameParts[0];
+            String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
+            String[] dateParts = date.split("-");
+            String day = dateParts[1];
+            String month = dateParts[2];
+            String year = dateParts[0];
+
+
+            WebElement firstNameField = SettingsPage.getFirstNameField();
+            Helper.replaceText(firstNameField, firstName);
+
+            WebElement lastNameField = SettingsPage.getLastNameField();
+            Helper.replaceText(lastNameField, lastName);
+
+            WebElement dayField = SettingsPage.getDayField();
+            dayField.sendKeys(day);
+
+            WebElement monthField = SettingsPage.getMonthField();
+            monthField.sendKeys(month);
+
+            WebElement yearField = SettingsPage.getYearField();
+            yearField.sendKeys(year);
+
+
+            switch (outcome) {
+                case "save and display":
+                    SettingsPage.clickSaveButton();
+                    Base.waitForModalInvisibility();
+                    String actualName = SettingsPage.getDisplayedName();
+                    String actualDate = SettingsPage.getDisplayedDate();
+
+                    Assert.assertEquals("Displayed name should match expected name",
+                            name.toLowerCase(),
+                            actualName.toLowerCase());
+                    Assert.assertEquals("Displayed date should match expected date", date, actualDate);
+                    break;
+                case "reject":
+                    Assert.assertTrue(SettingsPage.isErrorMessageDisplayed());
+                    break;
+            }
+
+        }
+
+    }
 }

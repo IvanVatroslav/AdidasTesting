@@ -1,9 +1,6 @@
 package stepdefinitions;
 
-import objectpage.Base;
-import objectpage.GooglePage;
-import objectpage.MainPage;
-import objectpage.YahooPage;
+import objectpage.*;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -24,32 +21,34 @@ public class Helper {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    private static final By NAV_MENU_ITEMS_XPATH = By.xpath("//ul[@data-auto-id='main-menu']/li/a");
-    private static final By DELETE_ADDRESS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='delete_address']");
-    private static final By CONFIRM_DELETE_BUTTON_XPATH = By.xpath("//button[@data-auto-id='confirm-delete']");
-    private static final By PLUS_BUTTON_XPATH = By.xpath("//span[@data-testid='plus']");
-    private static final By FIRST_NAME_INPUT_XPATH = By.xpath("//input[@name='firstName']");
-    private static final By LAST_NAME_INPUT_XPATH = By.xpath("//input[@name='lastName']");
-    private static final By ADDRESS_INPUT_XPATH = By.xpath("//input[@name='address1']");
-    private static final By CITY_INPUT_XPATH = By.xpath("//input[@name='city']");
-    private static final By ZIPCODE_INPUT_XPATH = By.xpath("//input[@name='zipcode']");
-    private static final By PHONE_NUMBER_INPUT_XPATH = By.xpath("//input[@name='phoneNumber']");
-    private static final By ARROW_RIGHT_LONG_BUTTON_XPATH = By.xpath("//span[@data-testid='arrow-right-long']");
-    private static final By COMBOBOX_DIV_XPATH = By.xpath("//div[@role='combobox']");
-    private static final By CHECKOUT_DROPDOWN_LIST_XPATH = By.id("gl-dropdown-custom__listbox--checkout-dropdown");
-    private static final By SAVED_ADDRESS_DIV_XPATH = By.xpath("//div[@data-auto-id='saved_address']");
-    private static final By STRONG_TAG_XPATH = By.xpath(".//strong");
-    private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]");
-    private static final By STATE_LIST_ITEM_XPATH = By.xpath("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li");
-    private static String getStateXPath(String stateName) {
+    //temporary place for these constants
+    private static final By DELETE_ADDRESS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='delete_address']"); // AddressBookPage class
+    private static final By CONFIRM_DELETE_BUTTON_XPATH = By.xpath("//button[@data-auto-id='confirm-delete']"); // AddressBookPage class
+    private static final By PLUS_BUTTON_XPATH = By.xpath("//span[@data-testid='plus']"); // AddressBookPage class
+    private static final By FIRST_NAME_INPUT_XPATH = By.xpath("//input[@name='firstName']"); // AddressBookPage class
+    private static final By LAST_NAME_INPUT_XPATH = By.xpath("//input[@name='lastName']"); // AddressBookPage class
+    private static final By ADDRESS_INPUT_XPATH = By.xpath("//input[@name='address1']"); // AddressBookPage class
+    private static final By CITY_INPUT_XPATH = By.xpath("//input[@name='city']"); // AddressBookPage class
+    private static final By ZIPCODE_INPUT_XPATH = By.xpath("//input[@name='zipcode']"); // AddressBookPage class
+    private static final By PHONE_NUMBER_INPUT_XPATH = By.xpath("//input[@name='phoneNumber']"); // AddressBookPage class
+    private static final By ARROW_RIGHT_LONG_BUTTON_XPATH = By.xpath("//span[@data-testid='arrow-right-long']"); // AddressBookPage class
+    private static final By COMBOBOX_DIV_XPATH = By.xpath("//div[@role='combobox']"); // AddressBookPage class
+    private static final By CHECKOUT_DROPDOWN_LIST_XPATH = By.id("gl-dropdown-custom__listbox--checkout-dropdown"); // AddressBookPage class
+    private static final By SAVED_ADDRESS_DIV_XPATH = By.xpath("//div[@data-auto-id='saved_address']"); // AddressBookPage class
+    private static final By STRONG_TAG_XPATH = By.xpath(".//strong"); // AddressBookPage class
+    private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]"); // AddressBookPage class
+
+    private static String getStateXPath(String stateName) { //AddressBookPage class
         return String.format("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '%s')]", stateName);
     }
+
     public Helper(WebDriver driver) {
         this.driver = driver;
         this.wait = Base.getWait();
         this.rand = new Random();
 
     }
+
     public boolean doesElementExist(By locator) {
         try {
             driver.findElement(locator);
@@ -145,12 +144,11 @@ public class Helper {
     }
 
     public void testNavigationMenuItems(List<String> menuItems) {
-        List<WebElement> foundMenuItems = driver.findElements(NAV_MENU_ITEMS_XPATH);
-        assertEquals("Number of menu items should match", menuItems.size(), foundMenuItems.size());
-        for (int i = 0; i < menuItems.size(); i++) {
-            WebElement menuItem = foundMenuItems.get(i);
+        for (String menuItemText : menuItems) {
+            By menuItemXPath = Header.getMenSubcategoryXPath(menuItemText);
+            WebElement menuItem = driver.findElement(menuItemXPath);
             assertTrue("Menu item should be visible", menuItem.isDisplayed());
-            assertEquals("Menu item text should match", menuItems.get(i), menuItem.getText().trim());
+            assertEquals("Menu item text should match", menuItemText, menuItem.getText().trim());
         }
     }
 
@@ -187,14 +185,6 @@ public class Helper {
         driver.findElement(ARROW_RIGHT_LONG_BUTTON_XPATH).click();
     }
 
-
-    public void selectRandomState() {
-        WebElement dropdown = driver.findElement(COMBOBOX_DIV_XPATH);
-        dropdown.click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(CHECKOUT_DROPDOWN_LIST_XPATH));
-        List<WebElement> stateOptions = driver.findElements(STATE_LIST_ITEM_XPATH);
-        stateOptions.get(rand.nextInt(stateOptions.size())).click();
-    }
 
     public void selectSpecificState(String stateName) {
         WebElement dropdown = driver.findElement(COMBOBOX_DIV_XPATH);
@@ -241,7 +231,9 @@ public class Helper {
         return stateAbbreviations.getOrDefault(stateName, stateName);
     }
 
-
+    public static void replaceText(WebElement element, String text) {
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
+    }
 }
 
 

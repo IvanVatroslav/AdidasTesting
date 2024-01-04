@@ -15,7 +15,6 @@ public class Header {
     private static final By MENS_SECTION_LOCATOR = By.xpath("//a[@role='menu' and @href='/us/men']");
     private static final By SEARCH_TEXTBOX_LOCATOR = By.xpath("//input[@data-auto-id='searchinput-desktop']");
     private static final String MEN_SUBCATEGORY_XPATH_TEMPLATE = "//a[contains(@href, '/us/men')]/div[text()='%s']";
-
     public Header(WebDriver driver) {
         this.driver = driver;
         this.wait = Base.getWait();
@@ -39,4 +38,9 @@ public class Header {
         String xpath = String.format(MEN_SUBCATEGORY_XPATH_TEMPLATE, subcategoryText);
         return driver.findElement(By.xpath(xpath));
     }
+    public static By getMenSubcategoryXPath(String category) {
+        String xpath = String.format(MEN_SUBCATEGORY_XPATH_TEMPLATE, category);
+        return By.xpath(xpath);
+    }
+
 }

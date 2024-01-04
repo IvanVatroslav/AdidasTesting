@@ -1,8 +1,10 @@
 package objectpage;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.Random;
@@ -30,6 +32,12 @@ public class SettingsPage {
     private static final String INTEREST_TILES_XPATH = INTERESTS_CONTAINER_XPATH + "//div[contains(@data-auto-id, 'interest_')]";
     static private final Random rand = new Random();
 
+    private static final By FIRST_NAME_ERROR_XPATH = By.xpath("//div[@data-auto-id='personal-info:firstName-error']");
+    private static final By LAST_NAME_ERROR_XPATH = By.xpath("//div[@data-auto-id='personal-info:lastName-error']");
+    private static final By DATE_ERROR_XPATH = By.xpath("//div[contains(text(),'Sorry, the date you entered is not valid')]");
+
+    private static final By DISPLAYED_NAME_LOCATOR = By.xpath("//div[@data-auto-id='ma-name-overview']");
+    private static final By DISPLAYED_DATE_LOCATOR = By.xpath("//div[@data-auto-id='ma-dateOfBirth-overview']");
     public static WebElement getDateOfBirthOverview() {
         Base.getWait().until(ExpectedConditions.visibilityOfElementLocated(DATE_OF_BIRTH_OVERVIEW_XPATH));
         return Base.getDriver().findElement(DATE_OF_BIRTH_OVERVIEW_XPATH);
@@ -119,4 +127,49 @@ public class SettingsPage {
     }
 
 
+
+
+
+
+    public static boolean isErrorMessageDisplayed() {
+        return waitForElement(FIRST_NAME_ERROR_XPATH) ||
+                waitForElement(LAST_NAME_ERROR_XPATH) ||
+                waitForElement(DATE_ERROR_XPATH);
+    }
+
+
+
+    private static boolean waitForElement(By locator) {
+        WebDriverWait wait = Base.getWait();
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public static WebElement getFirstNameField() {
+        By firstNameLocator = By.id("personal-info:firstName");
+        return Base.getWait().until(ExpectedConditions.visibilityOfElementLocated(firstNameLocator));
+    }
+
+    public static WebElement getLastNameField() {
+        By lastNameLocator = By.id("personal-info:lastName");
+        return Base.getWait().until(ExpectedConditions.visibilityOfElementLocated(lastNameLocator));
+    }
+
+    public static String getDisplayedName() {
+        WebDriverWait wait = Base.getWait();
+        WebElement nameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(DISPLAYED_NAME_LOCATOR));
+        return nameElement.getText();
+    }
+
+    public static String getDisplayedDate() {
+        WebDriverWait wait = Base.getWait();
+        WebElement dateElement = wait.until(ExpectedConditions.visibilityOfElementLocated(DISPLAYED_DATE_LOCATOR));
+        return dateElement.getText();
+    }
 }
+
+

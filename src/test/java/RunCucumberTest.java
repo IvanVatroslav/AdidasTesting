@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/test/resources",
-        glue = {"ObjectPage", "stepdefinitions"},
+        glue = {"objectpage", "stepdefinitions"},
         plugin = {
                 "pretty",
                 "html:target/cucumber-reports.html",
@@ -16,11 +16,13 @@ import org.junit.runner.RunWith;
         monochrome = true,
         dryRun = false,
         tags = "" +
-              //  " @MainNavigationMenu " +
-             //   "@MenSectionSubcategories"+
-             //   " or @SearchFunctionality"+
-              //  " or @SearchFunctionality_invalid"+
-                " @AddressBook"
+               // "@MainNavigationMenu"+
+             //   " or @MenSectionSubcategories"
+             // "@SearchFunctionality"+
+             // " or @SearchFunctionality_invalid"
+            // "@AddressBook"
+        //"@test1 or @test2"
+        "@test3"
 )
 public class RunCucumberTest {
 
