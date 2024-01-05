@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 
@@ -34,14 +35,16 @@ public class SettingsPage {
 
     private static final By FIRST_NAME_ERROR_XPATH = By.xpath("//div[@data-auto-id='personal-info:firstName-error']");
     private static final By LAST_NAME_ERROR_XPATH = By.xpath("//div[@data-auto-id='personal-info:lastName-error']");
-    private static final By DATE_ERROR_XPATH = By.xpath("//div[contains(text(),'Sorry, the date you entered is not valid')]");
+    private static final By DATE_ERROR_XPATH = By.xpath("//div[@class='gl-form-hint gl-form-hint--error']");
 
     private static final By DISPLAYED_NAME_LOCATOR = By.xpath("//div[@data-auto-id='ma-name-overview']");
     private static final By DISPLAYED_DATE_LOCATOR = By.xpath("//div[@data-auto-id='ma-dateOfBirth-overview']");
+
     public static WebElement getDateOfBirthOverview() {
         Base.getWait().until(ExpectedConditions.visibilityOfElementLocated(DATE_OF_BIRTH_OVERVIEW_XPATH));
         return Base.getDriver().findElement(DATE_OF_BIRTH_OVERVIEW_XPATH);
     }
+
     public static void navigateToAddressBookPage() {
         WebElement addressBookLink = Base.getWait().until(ExpectedConditions.elementToBeClickable(ADDRESS_BOOK_LINK_XPATH));
         addressBookLink.click();
@@ -114,8 +117,6 @@ public class SettingsPage {
     }
 
 
-
-
     public static void savePreferencesClick() {
         WebElement savePreferences = Base.getWait().until(ExpectedConditions.elementToBeClickable(SAVE_PREFERENCES_ID));
         savePreferences.click();
@@ -127,10 +128,6 @@ public class SettingsPage {
     }
 
 
-
-
-
-
     public static boolean isErrorMessageDisplayed() {
         return waitForElement(FIRST_NAME_ERROR_XPATH) ||
                 waitForElement(LAST_NAME_ERROR_XPATH) ||
@@ -138,11 +135,10 @@ public class SettingsPage {
     }
 
 
-
     private static boolean waitForElement(By locator) {
-        WebDriverWait wait = Base.getWait();
+        WebDriverWait newWait = new WebDriverWait(Base.getDriver(), Duration.ofSeconds(2));
         try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            newWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
             return true;
         } catch (TimeoutException e) {
             return false;
