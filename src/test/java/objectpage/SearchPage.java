@@ -4,38 +4,50 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 public class SearchPage {
-    private static final WebElement SEARCH_BOX_LOCATOR = Header.getSearchTextBox();
+    private WebDriver driver;
+    private WebDriverWait wait;
 
-    private static final By PRODUCT_NAME_LOCATOR = By.xpath(".//p[@class='glass-product-card__title']");
-    private static final By NO_RESULTS_LOCATOR = By.xpath("//h4[contains(text(), 'OOPS – NO RESULTS FOR')]");
-    private static final By SEARCH_RESULTS_LOCATOR = By.xpath("//div[@id='main-content']//div[@data-auto-id='product_container']");
-    private static WebDriver driver;
-    private static WebDriverWait wait;
+    @FindBy(xpath = "//input[@data-auto-id='searchinput-desktop']")
+    private static WebElement searchBox;
 
-    static {
-        driver = Base.getDriver();
-        wait = Base.getWait();
-    }
+    @FindBy(xpath = "//div[@id='main-content']//div[@data-auto-id='product_container']")
+    private static List<WebElement> searchResults;
 
-    public static List<WebElement> getSearchResults() {
-        return driver.findElements(SEARCH_RESULTS_LOCATOR);
+    @FindBy(xpath = "//h4[contains(text(), 'OOPS – NO RESULTS FOR')]")
+    private WebElement noResultsMessage;
+
+    @FindBy(xpath = ".//p[@class='glass-product-card__title']")
+    private WebElement productNameElement;
+
+    public SearchPage(WebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        PageFactory.initElements(driver, this);
     }
 
     public static void searchFor(String keyword) {
-        WebElement searchBox = SEARCH_BOX_LOCATOR;
         searchBox.sendKeys(keyword + Keys.ENTER);
     }
 
-    public static final By getProductNameLocator() {
-        return PRODUCT_NAME_LOCATOR;
+    public By getNoResultsMessageLocator() {
+        return (By) noResultsMessage;
     }
 
-    public static final By getNoResultsMessageLocator() {
-        return NO_RESULTS_LOCATOR;
+    public WebElement getProductNameLocator() {
+        return productNameElement;
     }
+
+    public static List<WebElement> getSearchResults() {
+        return searchResults;
+    }
+
+
 }

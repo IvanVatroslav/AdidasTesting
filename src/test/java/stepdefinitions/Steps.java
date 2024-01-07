@@ -3,12 +3,13 @@ package stepdefinitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import objectpage.Base;
-import objectpage.MainPage;
-import objectpage.SettingsPage;
+import objectpage.BasePage;
+import objectpage.PreferencesPage;
+import objectpage.ProfilePage;
+import objectpage.SidePanelPage;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import services.LoginService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,52 +20,53 @@ public class Steps {
     private int randomMonth;
     private int randomYear;
 
-    private WebDriver driver;
-    private Helper helper;
+    private final WebDriver driver;
+    private final Helper helper;
+    private final SidePanelPage sidePanelPage;
+    private final ProfilePage profilePage;
+    private final PreferencesPage preferencesPage;
+    private final LoginService loginService;
 
-
-    public Steps() {
-        this.driver = Base.getDriver();
+    public Steps(WebDriver driver) {
+        this.driver = driver;
         this.helper = new Helper(driver);
+        this.sidePanelPage = new SidePanelPage(driver);
+        this.profilePage = new ProfilePage(driver);
+        this.preferencesPage = new PreferencesPage(driver);
+        this.loginService = new LoginService(driver);
     }
 
     @Given("the user is logged in and on the main page")
     public void userIsLoggedInAndOnMainPage() {
         helper.checkWebPage("https://www.adidas.com/us");
-        helper.logIn();
-        MainPage.clickAccountLink();
+        loginService.logIn();
+        sidePanelPage.clickAccountLink();
     }
 
     @When("the user navigates to the account settings page")
     public void userNavigatesToAccountSettingsPage() {
-        MainPage.clickAccountSettings();
+
     }
 
     @When("the user changes the birth date to a random date")
     public void userChangesBirthDateToRandomDate() {
-        SettingsPage.clickEditDetails();
+        profilePage.clickEditDetails();
 
         int[] randomDate = helper.getRandomDate();
         randomDay = randomDate[0];
         randomMonth = randomDate[1];
         randomYear = randomDate[2];
-        SettingsPage.getDayField().sendKeys(Integer.toString(randomDay));
-        SettingsPage.getMonthField().sendKeys(Integer.toString(randomMonth));
-        SettingsPage.getYearField().sendKeys(Integer.toString(randomYear));
-        SettingsPage.clickSaveButton();
+        profilePage.enterBirthDate(randomDay, randomMonth, randomYear);
+        profilePage.clickSaveButton();
     }
 
     @Then("the new birth date should be saved and displayed")
     public void newBirthDateShouldBeSavedAndDisplayed() {
-        Base.waitForModalInvisibility();
-        WebElement dateElement = SettingsPage.getDateOfBirthOverview();
-        String dateString = dateElement.getText();
-
-        String[] dateParts = dateString.split("-");
-        String reformattedDate = dateParts[0] + "-" + dateParts[2] + "-" + dateParts[1];
+        BasePage.waitForModalInvisibility();
+        String dateString = profilePage.getDisplayedDate();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(reformattedDate, formatter);
+        LocalDate date = LocalDate.parse(dateString, formatter);
 
         Assert.assertEquals("Day does not match", randomDay, date.getDayOfMonth());
         Assert.assertEquals("Month does not match", randomMonth, date.getMonthValue());
@@ -73,18 +75,18 @@ public class Steps {
 
     @When("the user goes to the preferences section")
     public void userGoesToPreferencesSection() {
-        SettingsPage.clicksPreferencesButton();
+        preferencesPage.clicksPreferencesButton();
     }
 
     @When("the user changes preferences")
     public void userChangesPreferences() {
-        SettingsPage.randomProductCategoriesPreferencesClick();
-        SettingsPage.randomProductInterestsPreferencesClick();
+        preferencesPage.randomProductCategoriesPreferencesClick();
+        preferencesPage.randomProductInterestsPreferencesClick();
     }
 
     @Then("the new preferences should be saved and displayed")
     public void newPreferencesShouldBeSavedAndDisplayed() {
-        SettingsPage.savePreferencesClick();
-        SettingsPage.saveInterestsClick();
+        preferencesPage.savePreferencesClick();
+        preferencesPage.saveInterestsClick();
     }
 }

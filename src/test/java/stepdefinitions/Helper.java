@@ -1,15 +1,17 @@
 package stepdefinitions;
 
-import objectpage.*;
-import org.openqa.selenium.NoSuchElementException;
+import objectpage.BasePage;
+import objectpage.HeaderPage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.time.Duration;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -42,13 +44,13 @@ public class Helper {
         return String.format("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '%s')]", stateName);
     }
 
+
+
     public Helper(WebDriver driver) {
         this.driver = driver;
-        this.wait = Base.getWait();
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Example timeout
         this.rand = new Random();
-
     }
-
     public boolean doesElementExist(By locator) {
         try {
             driver.findElement(locator);
@@ -86,66 +88,12 @@ public class Helper {
         return new int[]{randomDay, randomMonth, randomYear};
     }
 
-    public void logIn() {
-        Properties prop = new Properties();
-        try (InputStream input = Helper.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (input == null) {
-                System.out.println("Sorry, unable to find config.properties");
-                return;
-            }
-            prop.load(input);
 
-            String loginMethod = prop.getProperty("loginMethod");
-            String username;
-            String password;
 
-            switch (loginMethod) {
-                case "yahoo":
-                    username = prop.getProperty("username_yahoo");
-                    password = prop.getProperty("password_yahoo");
-                    performYahooLogin(username, password);
-                    break;
-                case "google":
-                    username = prop.getProperty("username_google");
-                    password = prop.getProperty("password_google");
-                    performGoogleLogin(username, password);
-                    break;
-                default:
-                    System.out.println("Invalid login method specified");
-            }
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void performYahooLogin(String username, String password) {
-        Base.getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
-        MainPage.openCustomerInfo();
-        MainPage.clickYahooButton();
-        YahooPage.getLoginTextBox().sendKeys(username);
-        YahooPage.clickNextButtonLogin();
-        YahooPage.getPasswordTextBox().sendKeys(password);
-        YahooPage.clickLoginButton();
-        YahooPage.clickAuthButton();
-    }
-
-    private void performGoogleLogin(String username, String password) {
-        GooglePage googlePage = new GooglePage(driver);
-
-        Base.getWait().until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
-        MainPage.openCustomerInfo();
-        MainPage.clickGoogleButton();
-        googlePage.getLoginTextBox().sendKeys(username);
-        googlePage.clickNextButtonLogin();
-        googlePage.getPasswordTextBox().sendKeys(password);
-        googlePage.clickLogin();
-
-    }
 
     public void testNavigationMenuItems(List<String> menuItems) {
         for (String menuItemText : menuItems) {
-            By menuItemXPath = Header.getMenSubcategoryXPath(menuItemText);
+            By menuItemXPath = HeaderPage.getMenSubcategoryXPath(menuItemText);
             WebElement menuItem = driver.findElement(menuItemXPath);
             assertTrue("Menu item should be visible", menuItem.isDisplayed());
             assertEquals("Menu item text should match", menuItemText, menuItem.getText().trim());
@@ -164,7 +112,7 @@ public class Helper {
                 removeButtons.get(0).click();
                 WebElement confirmDeleteButton = wait.until(ExpectedConditions.elementToBeClickable(CONFIRM_DELETE_BUTTON_XPATH));
                 confirmDeleteButton.click();
-                Base.waitForModalInvisibility();
+                BasePage.waitForModalInvisibility();
             } catch (StaleElementReferenceException e) {
                 System.out.println("Caught a stale element exception, retrying...");
             }
@@ -173,7 +121,7 @@ public class Helper {
 
 
     public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
-        Base.waitForModalInvisibility();
+        BasePage.waitForModalInvisibility();
         wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH)).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(FIRST_NAME_INPUT_XPATH)).sendKeys(firstName);
         driver.findElement(LAST_NAME_INPUT_XPATH).sendKeys(lastName);
@@ -199,7 +147,7 @@ public class Helper {
 
 
     public void assertAddresses(List<Map<String, String>> expectedAddresses) {
-        Base.waitForModalInvisibility();
+        BasePage.waitForModalInvisibility();
         List<WebElement> addressElements = driver.findElements(SAVED_ADDRESS_DIV_XPATH);
         assertEquals("Number of addresses does not match", expectedAddresses.size(), addressElements.size());
 

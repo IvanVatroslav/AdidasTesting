@@ -9,9 +9,9 @@ public class AddressBookPage {
     private final WebDriverWait wait;
 
 
-    public AddressBookPage() {
-        this.driver = Base.getDriver();
-        this.wait = Base.getWait();
+    public AddressBookPage(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
     }
 
 
