@@ -1,4 +1,4 @@
-package stepdefinitions;
+package services;
 
 import objectpage.BasePage;
 import objectpage.HeaderPage;

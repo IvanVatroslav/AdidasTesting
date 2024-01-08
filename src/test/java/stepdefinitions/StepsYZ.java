@@ -13,6 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import services.Helper;
 import services.LoginService;
 
 import java.util.List;
@@ -27,7 +28,6 @@ public class StepsYZ {
     private final HeaderPage headerPage;
     private final SearchPage searchPage;
     private final ProfilePage profilePage;
-    private final PreferencesPage preferencesPage;
     private final LoginService loginService;
     private List<Map<String, String>> storedAddresses;
 
@@ -38,7 +38,6 @@ public class StepsYZ {
         this.headerPage = new HeaderPage(driver);
         this.searchPage = new SearchPage(driver);
         this.profilePage = new ProfilePage(driver);
-        this.preferencesPage = new PreferencesPage(driver);
         this.loginService = new LoginService(driver);
     }
 

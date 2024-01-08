@@ -18,7 +18,7 @@ public class BasePage {
 
     public BasePage(WebDriver driver) {
         BasePage.driver = driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Corrected to use Duration
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
         PageFactory.initElements(driver, this);
     }
@@ -41,8 +41,19 @@ public class BasePage {
                 .until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
     }
 
+    public static void setDriver(WebDriver webDriver) {
+        driver = webDriver;
+    }
+
+    public static void setWait(WebDriverWait webDriverWait) {
+        wait = webDriverWait;
+    }
+
     public static void acceptCookies() {
-        WebElement cookiesAcceptButton = wait.until(ExpectedConditions.elementToBeClickable(COOKIES_ACCEPT_BUTTON));
+        if (wait == null) {
+            throw new IllegalStateException("WebDriverWait is not initialized.");
+        }
+        WebElement cookiesAcceptButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='gl-cta gl-cta--tertiary']")));
         cookiesAcceptButton.click();
     }
 

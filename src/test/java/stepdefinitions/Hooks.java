@@ -20,15 +20,48 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class Hooks {
-    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
-    private static final ThreadLocal<WebDriverWait> waitThreadLocal = new ThreadLocal<>();
-    private static final ThreadLocal<FluentWait<WebDriver>> fluentWaitThreadLocal = new ThreadLocal<>();
-    private static final ExtentReports extent;
+    private static WebDriver driver;
+    private static WebDriverWait wait;
+    private static FluentWait<WebDriver> fluentWait;
+    private static ExtentReports extent;
 
     static {
         ExtentSparkReporter spark = new ExtentSparkReporter("path/to/extent-report.html");
         extent = new ExtentReports();
         extent.attachReporter(spark);
+    }
+
+    @Before
+    public void setUp() {
+        if (driver == null) {
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--disable-blink-features=AutomationControlled");
+            driver = new ChromeDriver(options);
+            driver.manage().window().maximize();
+            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+            driver.get("https://www.adidas.com/us");
+
+            wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+            fluentWait = new FluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(15))
+                    .pollingEvery(Duration.ofSeconds(5))
+                    .ignoring(NoSuchElementException.class);
+
+            BasePage.setDriver(driver);
+            BasePage.setWait(wait);
+            BasePage.acceptCookies();
+        }
+    }
+
+    @SneakyThrows
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            Thread.sleep(5000);
+            driver.quit();
+            driver = null;
+        }
     }
 
     @AfterStep
@@ -41,42 +74,19 @@ public class Hooks {
         }
     }
 
-    @Before
-    public void setUp() {
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-blink-features=AutomationControlled");
-        WebDriver driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.get("https://www.adidas.com/us");
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-        FluentWait<WebDriver> fluentWait = new FluentWait<>(driver)
-                .withTimeout(Duration.ofSeconds(15))
-                .pollingEvery(Duration.ofSeconds(5))
-                .ignoring(NoSuchElementException.class);
-
-        driverThreadLocal.set(driver);
-        waitThreadLocal.set(wait);
-        fluentWaitThreadLocal.set(fluentWait);
-        BasePage.acceptCookies();
+    public static WebDriver getDriver() {
+        return driver;
     }
 
-    @SneakyThrows
-    @After
-    public void tearDown() {
-        Thread.sleep(3000);
-        WebDriver driver = driverThreadLocal.get();
-        if (driver != null) {
-            driver.quit();
-        }
-        driverThreadLocal.remove();
-        waitThreadLocal.remove();
-        fluentWaitThreadLocal.remove();
+    public static WebDriverWait getWait() {
+        return wait;
     }
 
-    public  ExtentReports getExtent() {
+    public static FluentWait<WebDriver> getFluentWait() {
+        return fluentWait;
+    }
+
+    public static ExtentReports getExtent() {
         return extent;
     }
 }

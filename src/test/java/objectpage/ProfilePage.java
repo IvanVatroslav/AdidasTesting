@@ -6,14 +6,14 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class ProfilePage {
+public class ProfilePage extends BasePage {
     private static WebDriver driver;
-    private final WebDriverWait wait;
 
     private final By EDIT_DETAILS_BUTTON_XPATH = By.xpath("//button[@class='gl-cta gl-cta--tertiary gl-vspace']");
     private final By DAY_FIELD_ID = By.id("date-of-birth-day");
@@ -37,8 +37,8 @@ public class ProfilePage {
     @FindBy(id = "personal-info:lastName")
     private WebElement lastNameField;
     public ProfilePage(WebDriver driver) {
-        ProfilePage.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        super(driver);
+        PageFactory.initElements(driver, this);
     }
 
     public void clickEditDetails() {

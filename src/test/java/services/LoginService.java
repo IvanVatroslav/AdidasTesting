@@ -45,7 +45,7 @@ public class LoginService {
 
     private void performYahooLogin(String username, String password) {
         HeaderPage headerPage = new HeaderPage(driver);
-        headerPage.openAccountPortal(); // Method to open the account portal modal
+        headerPage.openAccountPortal();
 
         AccountPortalModalPage accountPortalModal = new AccountPortalModalPage(driver);
         YahooLoginPage yahooLoginPage = accountPortalModal.clickYahooLogin();
@@ -58,7 +58,7 @@ public class LoginService {
 
     private void performGoogleLogin(String username, String password) {
         HeaderPage headerPage = new HeaderPage(driver);
-        headerPage.openAccountPortal(); // Method to open the account portal modal
+        headerPage.openAccountPortal();
 
         AccountPortalModalPage accountPortalModal = new AccountPortalModalPage(driver);
         GoogleLoginPage googleLoginPage = accountPortalModal.clickGoogleLogin();

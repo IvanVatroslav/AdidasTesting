@@ -8,10 +8,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 
-public class SearchPage {
+public class SearchPage extends BasePage {
     private WebDriver driver;
     private WebDriverWait wait;
 
@@ -28,8 +27,7 @@ public class SearchPage {
     private WebElement productNameElement;
 
     public SearchPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        super(driver);
         PageFactory.initElements(driver, this);
     }
 

@@ -5,12 +5,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 public class GoogleLoginPage extends BasePage {
-    private final WebDriverWait wait;
 
     @FindBy(id = "identifierId")
     private WebElement loginTextBox;
@@ -26,7 +22,6 @@ public class GoogleLoginPage extends BasePage {
 
     public GoogleLoginPage(WebDriver driver) {
         super(driver);
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Assuming 10 seconds wait
         PageFactory.initElements(driver, this);
     }
 

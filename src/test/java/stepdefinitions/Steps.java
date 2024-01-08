@@ -3,12 +3,10 @@ package stepdefinitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import objectpage.BasePage;
-import objectpage.PreferencesPage;
-import objectpage.ProfilePage;
-import objectpage.SidePanelPage;
+import objectpage.*;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
+import services.Helper;
 import services.LoginService;
 
 import java.time.LocalDate;
@@ -20,32 +18,35 @@ public class Steps {
     private int randomMonth;
     private int randomYear;
 
-    private final WebDriver driver;
     private final Helper helper;
     private final SidePanelPage sidePanelPage;
     private final ProfilePage profilePage;
     private final PreferencesPage preferencesPage;
     private final LoginService loginService;
+    private final MyAccountPage myAccountPage;
 
-    public Steps(WebDriver driver) {
-        this.driver = driver;
+
+    public Steps() {
+        WebDriver driver = Hooks.getDriver();
         this.helper = new Helper(driver);
         this.sidePanelPage = new SidePanelPage(driver);
         this.profilePage = new ProfilePage(driver);
         this.preferencesPage = new PreferencesPage(driver);
         this.loginService = new LoginService(driver);
+        this.myAccountPage = new MyAccountPage(driver);
+
     }
 
     @Given("the user is logged in and on the main page")
     public void userIsLoggedInAndOnMainPage() {
         helper.checkWebPage("https://www.adidas.com/us");
         loginService.logIn();
-        sidePanelPage.clickAccountLink();
     }
 
     @When("the user navigates to the account settings page")
     public void userNavigatesToAccountSettingsPage() {
-
+        sidePanelPage.clickAccountLink();
+        myAccountPage.clickOnAccountSection();
     }
 
     @When("the user changes the birth date to a random date")

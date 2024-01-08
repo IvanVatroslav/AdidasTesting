@@ -24,7 +24,8 @@ public class HeaderPage {
     @FindBy(xpath = "//input[@data-auto-id='searchinput-desktop']")
     private WebElement searchTextbox;
 
-    @FindBy(xpath = "//button[@data-auto-id='account-portal-trigger']")
+    //@FindBy(xpath = "//button[@data-auto-id='account-portal-trigger']")
+    @FindBy(xpath = "//a[@data-auto-id='customer-info-button']")
     private WebElement accountPortalTrigger;
 
     private static final String MEN_SUBCATEGORY_XPATH_TEMPLATE = "//a[contains(@href, '/us/men')]/div[text()='%s']";
