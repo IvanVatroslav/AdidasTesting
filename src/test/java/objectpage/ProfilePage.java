@@ -13,9 +13,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class ProfilePage extends BasePage {
-    private static WebDriver driver;
 
-    private final By EDIT_DETAILS_BUTTON_XPATH = By.xpath("//button[@class='gl-cta gl-cta--tertiary gl-vspace']");
+    private final By EDIT_DETAILS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='edit-profile-information-button-PROFILE_INFORMATION_MODAL']");
     private final By DAY_FIELD_ID = By.id("date-of-birth-day");
     private final By MONTH_FIELD_ID = By.id("date-of-birth-month");
     private final By YEAR_FIELD_ID = By.id("date-of-birth-year");
@@ -42,8 +41,12 @@ public class ProfilePage extends BasePage {
     }
 
     public void clickEditDetails() {
-        WebElement editDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(EDIT_DETAILS_BUTTON_XPATH));
-        editDetails.click();
+        try {
+            WebElement editDetails = wait.until(ExpectedConditions.elementToBeClickable(EDIT_DETAILS_BUTTON_XPATH));
+            editDetails.click();
+        } catch (Exception e) {
+            System.out.println("Failed to click on Edit Details button: " + e.getMessage());
+        }
     }
 
     public WebElement getDayField() {

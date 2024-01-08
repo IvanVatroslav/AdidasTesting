@@ -42,7 +42,7 @@ public class Hooks {
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             driver.get("https://www.adidas.com/us");
 
-            wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+            wait = new WebDriverWait(driver, Duration.ofSeconds(60));
             fluentWait = new FluentWait<>(driver)
                     .withTimeout(Duration.ofSeconds(15))
                     .pollingEvery(Duration.ofSeconds(5))

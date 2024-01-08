@@ -31,9 +31,9 @@ public class StepsYZ {
     private final LoginService loginService;
     private List<Map<String, String>> storedAddresses;
 
-    public StepsYZ(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
+    public StepsYZ() {
+        this.driver = Hooks.getDriver();
+        this.wait = Hooks.getWait();
         this.helper = new Helper(driver);
         this.headerPage = new HeaderPage(driver);
         this.searchPage = new SearchPage(driver);
@@ -155,9 +155,9 @@ public class StepsYZ {
             String lastName = nameParts.length > 1 ? nameParts[1] : "";
 
             String[] dateParts = date.split("-");
-            int day = Integer.parseInt(dateParts[1]);
-            int month = Integer.parseInt(dateParts[2]);
-            int year = Integer.parseInt(dateParts[0]);
+            int day = Integer.parseInt(dateParts[1].trim());
+            int month = Integer.parseInt(dateParts[2].trim());
+            int year = Integer.parseInt(dateParts[0].trim());
 
             WebElement firstNameField = profilePage.getFirstNameField();
             Helper.replaceText(firstNameField, firstName);
@@ -166,7 +166,6 @@ public class StepsYZ {
             Helper.replaceText(lastNameField, lastName);
 
             profilePage.enterBirthDate(day, month, year);
-
 
             switch (outcome) {
                 case "save and display":
