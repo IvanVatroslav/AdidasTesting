@@ -1,7 +1,7 @@
 package services;
 
 import objectpage.BasePage;
-import objectpage.HeaderPage;
+import objectpage.components.Header;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -39,6 +39,9 @@ public class Helper {
     private static final By SAVED_ADDRESS_DIV_XPATH = By.xpath("//div[@data-auto-id='saved_address']"); // AddressBookPage class
     private static final By STRONG_TAG_XPATH = By.xpath(".//strong"); // AddressBookPage class
     private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]"); // AddressBookPage class
+
+    private BasePage<Header> basePage;  // An instance of BasePage to use its methods
+
 
     private static String getStateXPath(String stateName) { //AddressBookPage class
         return String.format("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '%s')]", stateName);
@@ -93,7 +96,7 @@ public class Helper {
 
     public void testNavigationMenuItems(List<String> menuItems) {
         for (String menuItemText : menuItems) {
-            By menuItemXPath = HeaderPage.getMenSubcategoryXPath(menuItemText);
+            By menuItemXPath = Header.getMenSubcategoryXPath(menuItemText);
             WebElement menuItem = driver.findElement(menuItemXPath);
             assertTrue("Menu item should be visible", menuItem.isDisplayed());
             assertEquals("Menu item text should match", menuItemText, menuItem.getText().trim());
@@ -112,7 +115,7 @@ public class Helper {
                 removeButtons.get(0).click();
                 WebElement confirmDeleteButton = wait.until(ExpectedConditions.elementToBeClickable(CONFIRM_DELETE_BUTTON_XPATH));
                 confirmDeleteButton.click();
-                BasePage.waitForModalInvisibility();
+                basePage.waitForModalInvisibility();
             } catch (StaleElementReferenceException e) {
                 System.out.println("Caught a stale element exception, retrying...");
             }
@@ -121,7 +124,7 @@ public class Helper {
 
 
     public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
-        BasePage.waitForModalInvisibility();
+        basePage.waitForModalInvisibility();
         wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH)).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(FIRST_NAME_INPUT_XPATH)).sendKeys(firstName);
         driver.findElement(LAST_NAME_INPUT_XPATH).sendKeys(lastName);
@@ -147,7 +150,7 @@ public class Helper {
 
 
     public void assertAddresses(List<Map<String, String>> expectedAddresses) {
-        BasePage.waitForModalInvisibility();
+        basePage.waitForModalInvisibility();
         List<WebElement> addressElements = driver.findElements(SAVED_ADDRESS_DIV_XPATH);
         assertEquals("Number of addresses does not match", expectedAddresses.size(), addressElements.size());
 

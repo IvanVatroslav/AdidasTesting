@@ -1,61 +1,59 @@
 package objectpage;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class BasePage {
-
-    protected static WebDriverWait wait;
-    protected static WebDriver driver;
-    public static final By MODAL_MAIN_DIV_XPATH = By.xpath("your-xpath-here");
-    private static final By COOKIES_ACCEPT_BUTTON = By.xpath("//button[@class='gl-cta gl-cta--tertiary']");
+public abstract class BasePage<T extends BasePage> {
+    protected WebDriver driver;
+    protected WebDriverWait wait;
+    private final By COOKIES_ACCEPT_BUTTON = By.xpath("//button[@class='gl-cta gl-cta--tertiary']");
+    private final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
 
     public BasePage(WebDriver driver) {
-        BasePage.driver = driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         PageFactory.initElements(driver, this);
     }
 
-    public static byte[] getScreenshot() {
-        return null;
-    }
-
-    protected void click(WebElement element) {
-        element.click();
+    public byte[] getScreenshot() {
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
     protected void enterText(WebElement element, String text) {
-        element.sendKeys(text);
-    }
-
-
-    public static void waitForModalInvisibility() {
-        new WebDriverWait(driver, Duration.ofSeconds(20))
-                .until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
-    }
-
-    public static void setDriver(WebDriver webDriver) {
-        driver = webDriver;
-    }
-
-    public static void setWait(WebDriverWait webDriverWait) {
-        wait = webDriverWait;
-    }
-
-    public static void acceptCookies() {
-        if (wait == null) {
-            throw new IllegalStateException("WebDriverWait is not initialized.");
+        try {
+            element.clear();
+            element.sendKeys(text);
+        } catch (WebDriverException e) {
+            throw new RuntimeException("Failed to enter text in element: " + e.getMessage());
         }
-        WebElement cookiesAcceptButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='gl-cta gl-cta--tertiary']")));
+    }
+
+    public void waitForModalInvisibility() {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
+    }
+
+    public void acceptCookies() {
+        WebElement cookiesAcceptButton = wait.until(ExpectedConditions.elementToBeClickable(COOKIES_ACCEPT_BUTTON));
         cookiesAcceptButton.click();
     }
 
+    boolean isElementDisplayed(WebElement element) {
+        try {
+            return element.isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 
+    protected abstract WebElement getUniqueElement();
+    protected abstract T openPage();
+
+    protected void waitForLoad() {
+        wait.withMessage("Waiting for " + getClass().getName() + " load")
+                .until(ExpectedConditions.visibilityOf(getUniqueElement()));
+    }
 }

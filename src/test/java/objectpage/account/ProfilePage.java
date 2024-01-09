@@ -1,6 +1,7 @@
-package objectpage;
+package objectpage.account;
 
 import lombok.Getter;
+import objectpage.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -12,7 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class ProfilePage extends BasePage {
+public class ProfilePage extends BasePage<ProfilePage> {
     private final By PREFERENCES_BUTTON_XPATH = By.xpath("//a[@data-auto-id='members-home-account-preferences']");
 
     private final By EDIT_DETAILS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='edit-profile-information-button-PROFILE_INFORMATION_MODAL']");
@@ -39,6 +40,16 @@ public class ProfilePage extends BasePage {
     public ProfilePage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected WebElement getUniqueElement() {
+        return null;
+    }
+
+    @Override
+    protected ProfilePage openPage() {
+        return null;
     }
 
     public void clickEditDetails() {

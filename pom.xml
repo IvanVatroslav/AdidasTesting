@@ -67,6 +67,12 @@
       <artifactId>selenium-chrome-driver</artifactId>
       <version>4.16.1</version>
     </dependency>
+      <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <version>1.2.12</version>
+          <scope>test</scope>
+      </dependency>
 
 
   </dependencies>

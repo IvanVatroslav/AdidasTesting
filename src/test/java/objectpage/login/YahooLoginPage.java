@@ -1,12 +1,15 @@
-package objectpage;
+package objectpage.login;
 
+import objectpage.BasePage;
+import objectpage.MainPage;
+import objectpage.components.Header;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class YahooLoginPage extends BasePage {
+public class YahooLoginPage extends BasePage<Header> {
 
     @FindBy(id = "login-username")
     private WebElement usernameTextBox;
@@ -26,6 +29,16 @@ public class YahooLoginPage extends BasePage {
     public YahooLoginPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected WebElement getUniqueElement() {
+        return null;
+    }
+
+    @Override
+    protected Header openPage() {
+        return null;
     }
 
     public void enterUsername(String username) {

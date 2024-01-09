@@ -1,13 +1,11 @@
 package services;
 
-import objectpage.*;
+import objectpage.login.GoogleLoginPage;
+import objectpage.login.YahooLoginPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.Duration;
-import java.util.Properties;
 
 public class LoginService {
     private WebDriver driver;
@@ -19,35 +17,28 @@ public class LoginService {
     }
 
     public void logIn() {
-        Properties prop = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
-            if (input == null) {
-                System.out.println("Sorry, unable to find config.properties");
-                return;
-            }
-            prop.load(input);
+        String loginMethod = SetupProperties.getLoginMethod();
+        String username;
+        String password;
 
-            String loginMethod = prop.getProperty("loginMethod");
-            String username = prop.getProperty("username_" + loginMethod);
-            String password = prop.getProperty("password_" + loginMethod);
-
-            if ("yahoo".equals(loginMethod)) {
-                performYahooLogin(username, password);
-            } else if ("google".equals(loginMethod)) {
-                performGoogleLogin(username, password);
-            } else {
-                System.out.println("Invalid login method specified");
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        if ("yahoo".equals(loginMethod)) {
+            username = SetupProperties.getUsernameYahoo();
+            password = SetupProperties.getPasswordYahoo();
+            performYahooLogin(username, password);
+        } else if ("google".equals(loginMethod)) {
+            username = SetupProperties.getUsernameGoogle();
+            password = SetupProperties.getPasswordGoogle();
+            performGoogleLogin(username, password);
+        } else {
+            System.out.println("Invalid login method specified");
         }
     }
 
     private void performYahooLogin(String username, String password) {
-        HeaderPage headerPage = new HeaderPage(driver);
+        ConcreteHeaderPage headerPage = new ConcreteHeaderPage(driver); // This should be a concrete subclass of HeaderPage
         headerPage.openAccountPortal();
 
-        AccountPortalModalPage accountPortalModal = new AccountPortalModalPage(driver);
+        ConcreteAccountPortalModalPage accountPortalModal = new ConcreteAccountPortalModalPage(driver); // This should be a concrete subclass of AccountPortalModalPage
         YahooLoginPage yahooLoginPage = accountPortalModal.clickYahooLogin();
         yahooLoginPage.enterUsername(username);
         yahooLoginPage.clickNextButtonLogin();
@@ -57,10 +48,10 @@ public class LoginService {
     }
 
     private void performGoogleLogin(String username, String password) {
-        HeaderPage headerPage = new HeaderPage(driver);
+        ConcreteHeaderPage headerPage = new ConcreteHeaderPage(driver); // This should be a concrete subclass of HeaderPage
         headerPage.openAccountPortal();
 
-        AccountPortalModalPage accountPortalModal = new AccountPortalModalPage(driver);
+        ConcreteAccountPortalModalPage accountPortalModal = new ConcreteAccountPortalModalPage(driver); // This should be a concrete subclass of AccountPortalModalPage
         GoogleLoginPage googleLoginPage = accountPortalModal.clickGoogleLogin();
         googleLoginPage.enterUsername(username);
         googleLoginPage.clickNextAfterUsername();

@@ -1,5 +1,6 @@
-package objectpage;
+package objectpage.account;
 
+import objectpage.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,7 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 import java.util.Random;
 
-public class PreferencesPage extends BasePage{
+public class PreferencesPage extends BasePage<PreferencesPage> {
     private WebDriver driver;
     private WebDriverWait wait;
     private Random rand = new Random();
@@ -24,6 +25,16 @@ public class PreferencesPage extends BasePage{
     public PreferencesPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected WebElement getUniqueElement() {
+        return null;
+    }
+
+    @Override
+    protected PreferencesPage openPage() {
+        return null;
     }
 
 

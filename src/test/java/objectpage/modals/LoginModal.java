@@ -1,11 +1,14 @@
-package objectpage;
+package objectpage.modals;
 
+import objectpage.BasePage;
+import objectpage.login.GoogleLoginPage;
+import objectpage.login.YahooLoginPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class LoginModalPage extends BasePage {
+public abstract class LoginModal extends BasePage {
     @FindBy(id = "loginPopup")
     private WebElement loginPopup;
 
@@ -15,7 +18,7 @@ public class LoginModalPage extends BasePage {
     @FindBy(id = "yahooLoginButton")
     private WebElement yahooLoginButton;
 
-    public LoginModalPage(WebDriver driver) {
+    public LoginModal(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
     }

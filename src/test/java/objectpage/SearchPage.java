@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class SearchPage extends BasePage {
+public class SearchPage extends BasePage<SearchPage> {
     private WebDriver driver;
     private WebDriverWait wait;
 
@@ -29,6 +29,16 @@ public class SearchPage extends BasePage {
     public SearchPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected WebElement getUniqueElement() {
+        return null;
+    }
+
+    @Override
+    protected SearchPage openPage() {
+        return null;
     }
 
     public static void searchFor(String keyword) {

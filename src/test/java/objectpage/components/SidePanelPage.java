@@ -1,12 +1,14 @@
-package objectpage;
+package objectpage.components;
 
+import objectpage.BasePage;
+import objectpage.account.MyAccountPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class SidePanelPage extends BasePage {
+public abstract class SidePanelPage extends BasePage {
 
     @FindBy(id = "side-panel-container")
     private WebElement sidePanelContainerLocator;
@@ -20,18 +22,8 @@ public class SidePanelPage extends BasePage {
     }
 
     public MyAccountPage clickAccountLink() {
-        try {
-            wait.until(ExpectedConditions.visibilityOf(accountLinkLocator));
-
-            wait.until(ExpectedConditions.elementToBeClickable(accountLinkLocator)).click();
-
-            return new MyAccountPage(driver);
-        } catch (Exception e) {
-            System.out.println("Exception occurred while trying to click on the account link: " + e.getMessage());
-            throw e;
-        }
+        wait.until(ExpectedConditions.visibilityOf(accountLinkLocator));
+        wait.until(ExpectedConditions.elementToBeClickable(accountLinkLocator)).click();
+        return new MyAccountPage(driver);
     }
-
-
-
 }

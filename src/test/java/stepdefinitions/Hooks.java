@@ -9,21 +9,22 @@ import io.cucumber.java.Scenario;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.SneakyThrows;
 import objectpage.BasePage;
+import objectpage.MainPage;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import services.SetupProperties;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 public class Hooks {
     public static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     public static ThreadLocal<WebDriverWait> wait = new ThreadLocal<>();
-    private static FluentWait<WebDriver> fluentWait;
-    private static ExtentReports extent;
+    private static FluentWait<WebDriver> fluentWait; // If used, implement; otherwise, remove
+    private static final ExtentReports extent; // Made 'extent' final
 
     static {
         ExtentSparkReporter spark = new ExtentSparkReporter("path/to/extent-report.html");
@@ -38,20 +39,25 @@ public class Hooks {
         options.addArguments("--disable-blink-features=AutomationControlled");
         WebDriver localDriver = new ChromeDriver(options);
         localDriver.manage().window().maximize();
-        localDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        localDriver.get("https://www.adidas.com/us");
-        new WebDriverWait(localDriver, Duration.ofSeconds(10)).until(
+
+        String baseUrl = SetupProperties.getMainUrl();
+        localDriver.get(baseUrl);
+        WebDriverWait explicitWait = new WebDriverWait(localDriver, Duration.ofSeconds(10));
+        explicitWait.until(
                 webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete")
         );
 
+        // Set the WebDriver for the current thread
         driver.set(localDriver);
-        wait.set(new WebDriverWait(localDriver, Duration.ofSeconds(20)));
+        wait.set(explicitWait);
 
-
-        BasePage.setDriver(localDriver);
-        BasePage.setWait(wait.get());
-        BasePage.acceptCookies();
+        // Instantiate MainPage and call acceptCookies
+        MainPage mainPage = new MainPage(localDriver);
+        mainPage.acceptCookies();
     }
+
+
+
 
     @SneakyThrows
     @After

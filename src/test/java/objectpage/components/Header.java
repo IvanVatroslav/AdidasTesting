@@ -1,6 +1,9 @@
-package objectpage;
+package objectpage.components;
 
+import objectpage.BasePage;
+import objectpage.SearchPage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -11,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class HeaderPage {
+public abstract class Header<T extends Header<T>> extends BasePage<T> {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
@@ -24,30 +27,32 @@ public class HeaderPage {
     @FindBy(xpath = "//input[@data-auto-id='searchinput-desktop']")
     private WebElement searchTextbox;
 
-    //@FindBy(xpath = "//button[@data-auto-id='account-portal-trigger']")
     @FindBy(xpath = "//a[@data-auto-id='customer-info-button']")
     private WebElement accountPortalTrigger;
 
     private static final String MEN_SUBCATEGORY_XPATH_TEMPLATE = "//a[contains(@href, '/us/men')]/div[text()='%s']";
 
-
-    public HeaderPage(WebDriver driver) {
+    public Header(WebDriver driver) {
+        super(driver);
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Corrected to use Duration
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
     }
 
-    public void hoverOverMensSection() {
+    public T hoverOverMensSection() {
         new Actions(driver).moveToElement(mensSection).perform();
+        return (T) this;
     }
 
-    public WebElement getSearchTextBox() {
+    public T enterSearchKeyword(String searchKeyword) {
         wait.until(ExpectedConditions.elementToBeClickable(searchTextbox));
-        return searchTextbox;
+        searchTextbox.sendKeys(searchKeyword);
+        return (T) this;
     }
 
-    public void openAccountPortal() {
-        wait.until(ExpectedConditions.elementToBeClickable(accountPortalTrigger)).click();
+    public SearchPage submitSearch() {
+        searchTextbox.sendKeys(Keys.ENTER);
+        return new SearchPage(driver);
     }
 
     public WebElement getHeaderFlyout() {
