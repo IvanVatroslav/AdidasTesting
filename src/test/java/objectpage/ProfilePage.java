@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class ProfilePage extends BasePage {
+    private final By PREFERENCES_BUTTON_XPATH = By.xpath("//a[@data-auto-id='members-home-account-preferences']");
 
     private final By EDIT_DETAILS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='edit-profile-information-button-PROFILE_INFORMATION_MODAL']");
     private final By DAY_FIELD_ID = By.id("date-of-birth-day");
@@ -115,4 +116,11 @@ public class ProfilePage extends BasePage {
         yearField.clear();
         yearField.sendKeys(String.valueOf(year));
     }
+
+    public PreferencesPage clicksPreferencesButton() {
+        WebElement preferencesButton = wait.until(ExpectedConditions.elementToBeClickable(PREFERENCES_BUTTON_XPATH));
+        preferencesButton.click();
+        return new PreferencesPage(driver);
+    }
+
 }

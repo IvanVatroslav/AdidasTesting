@@ -1,29 +1,37 @@
 package objectpage;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class SidePanelPage extends BasePage {
 
-    private By accountLinkLocator = By.xpath("//a[@data-testid='account-link']/span");
-    private By sidePanelContainerLocator = By.id("side-panel-container");
+    @FindBy(id = "side-panel-container")
+    private WebElement sidePanelContainerLocator;
+
+    @FindBy(xpath = "//a[@data-testid='account-link']/span")
+    private WebElement accountLinkLocator;
 
     public SidePanelPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
     }
 
-    public void clickAccountLink() {
+    public MyAccountPage clickAccountLink() {
         try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(sidePanelContainerLocator));
+            wait.until(ExpectedConditions.visibilityOf(accountLinkLocator));
 
-            WebElement dynamicAccountLink = driver.findElement(accountLinkLocator);
-            wait.until(ExpectedConditions.elementToBeClickable(dynamicAccountLink)).click();
+            wait.until(ExpectedConditions.elementToBeClickable(accountLinkLocator)).click();
+
+            return new MyAccountPage(driver);
         } catch (Exception e) {
-            System.out.println("Exception occurred: " + e.getMessage());
+            System.out.println("Exception occurred while trying to click on the account link: " + e.getMessage());
+            throw e;
         }
     }
+
+
+
 }

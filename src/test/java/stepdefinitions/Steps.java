@@ -6,6 +6,7 @@ import io.cucumber.java.en.When;
 import objectpage.*;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import services.Helper;
 import services.LoginService;
 
@@ -13,6 +14,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Steps {
+    private WebDriver driver;
+    private WebDriverWait wait;
 
     private int randomDay;
     private int randomMonth;
@@ -27,7 +30,8 @@ public class Steps {
 
 
     public Steps() {
-        WebDriver driver = Hooks.getDriver();
+        this.driver = Hooks.driver.get();
+        this.wait = Hooks.wait.get();
         this.helper = new Helper(driver);
         this.sidePanelPage = new SidePanelPage(driver);
         this.profilePage = new ProfilePage(driver);
@@ -76,7 +80,7 @@ public class Steps {
 
     @When("the user goes to the preferences section")
     public void userGoesToPreferencesSection() {
-        preferencesPage.clicksPreferencesButton();
+        profilePage.clicksPreferencesButton();
     }
 
     @When("the user changes preferences")

@@ -1,4 +1,4 @@
-@test2
+@EditPreference
 Feature: Update User Preferences in Account Settings
 
   Scenario: User edits preferences in account settings

@@ -16,7 +16,8 @@ public class MyAccountPage extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
-    public void clickOnAccountSection() {
+    public ProfilePage clickOnAccountSection() {
         wait.until(ExpectedConditions.elementToBeClickable(accountSection)).click();
+        return new ProfilePage(driver);
     }
 }

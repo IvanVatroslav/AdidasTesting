@@ -15,7 +15,6 @@ public class PreferencesPage extends BasePage{
     private WebDriverWait wait;
     private Random rand = new Random();
 
-    private final By PREFERENCES_BUTTON_XPATH = By.xpath("//a[@data-auto-id='members-home-account-preferences']");
     private final By SAVE_PREFERENCES_ID = By.id("preferences-update-CTA-product-categories");
     private final By SAVE_INTERESTS_XPATH = By.id("preferences-update-CTA-interests");
     private final String PRODUCT_CATEGORIES_XPATH = "//h5[@data-auto-id='ma-shopping-preferences-title']/following-sibling::div//div[@class='gl-carousel__content']";
@@ -27,10 +26,6 @@ public class PreferencesPage extends BasePage{
         PageFactory.initElements(driver, this);
     }
 
-    public void clicksPreferencesButton() {
-        WebElement preferencesButton = wait.until(ExpectedConditions.elementToBeClickable(PREFERENCES_BUTTON_XPATH));
-        preferencesButton.click();
-    }
 
     public void randomProductCategoriesPreferencesClick() {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(PRODUCT_CATEGORIES_XPATH)));

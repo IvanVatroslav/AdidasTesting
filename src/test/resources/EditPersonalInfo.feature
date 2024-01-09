@@ -1,4 +1,4 @@
-@test1
+@RandomBirthdate
 Feature: Edit Personal Information in User Account
 
   Scenario: User edits birth date on account page with valid data
@@ -7,7 +7,7 @@ Feature: Edit Personal Information in User Account
     And the user changes the birth date to a random date
     Then the new birth date should be saved and displayed
 
-  @test3
+  @TestPersonalInfo
   Scenario: Attempt data changes with validation
     Given the user is logged in and on the main page
     And the user navigates to the account settings page

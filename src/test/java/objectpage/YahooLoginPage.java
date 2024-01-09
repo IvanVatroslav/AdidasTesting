@@ -47,4 +47,13 @@ public class YahooLoginPage extends BasePage {
     public void clickAuthButton() {
         wait.until(ExpectedConditions.elementToBeClickable(authAgreeButton)).click();
     }
+
+    public MainPage login(String username, String password) {
+        enterUsername(username);
+        clickNextButtonLogin();
+        enterPassword(password);
+        clickLoginButton();
+        clickAuthButton();
+        return new MainPage(driver);
+    }
 }

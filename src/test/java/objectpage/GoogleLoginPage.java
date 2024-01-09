@@ -40,4 +40,12 @@ public class GoogleLoginPage extends BasePage {
     public void clickNextAfterPassword() {
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
     }
+
+    public MainPage login(String username, String password) {
+        enterUsername(username);
+        clickNextAfterUsername();
+        enterPassword(password);
+        clickNextAfterPassword();
+        return new MainPage(driver);
+    }
 }

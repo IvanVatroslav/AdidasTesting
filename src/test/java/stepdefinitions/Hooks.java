@@ -9,7 +9,7 @@ import io.cucumber.java.Scenario;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.SneakyThrows;
 import objectpage.BasePage;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -20,8 +20,8 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class Hooks {
-    private static WebDriver driver;
-    private static WebDriverWait wait;
+    public static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    public static ThreadLocal<WebDriverWait> wait = new ThreadLocal<>();
     private static FluentWait<WebDriver> fluentWait;
     private static ExtentReports extent;
 
@@ -33,37 +33,38 @@ public class Hooks {
 
     @Before
     public void setUp() {
-        if (driver == null) {
-            WebDriverManager.chromedriver().setup();
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--disable-blink-features=AutomationControlled");
-            driver = new ChromeDriver(options);
-            driver.manage().window().maximize();
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-            driver.get("https://www.adidas.com/us");
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-blink-features=AutomationControlled");
+        WebDriver localDriver = new ChromeDriver(options);
+        localDriver.manage().window().maximize();
+        localDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        localDriver.get("https://www.adidas.com/us");
+        new WebDriverWait(localDriver, Duration.ofSeconds(10)).until(
+                webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete")
+        );
 
-            wait = new WebDriverWait(driver, Duration.ofSeconds(60));
-            fluentWait = new FluentWait<>(driver)
-                    .withTimeout(Duration.ofSeconds(15))
-                    .pollingEvery(Duration.ofSeconds(5))
-                    .ignoring(NoSuchElementException.class);
+        driver.set(localDriver);
+        wait.set(new WebDriverWait(localDriver, Duration.ofSeconds(20)));
 
-            BasePage.setDriver(driver);
-            BasePage.setWait(wait);
-            BasePage.acceptCookies();
-        }
+
+        BasePage.setDriver(localDriver);
+        BasePage.setWait(wait.get());
+        BasePage.acceptCookies();
     }
 
     @SneakyThrows
     @After
     public void tearDown() {
-        if (driver != null) {
-            Thread.sleep(5000);
-            driver.quit();
-            driver = null;
+        Thread.sleep(5000);
+        WebDriver localDriver = driver.get();
+        if (localDriver != null) {
+            localDriver.quit();
         }
+        driver.remove();
+        wait.remove();
+        // Remove other ThreadLocal instances
     }
-
     @AfterStep
     public void addScreenshotOnFailure(Scenario scenario) {
         if (scenario.isFailed()) {
@@ -74,12 +75,12 @@ public class Hooks {
         }
     }
 
-    public static WebDriver getDriver() {
-        return driver;
+    public WebDriver getDriver() {
+        return driver.get();
     }
 
-    public static WebDriverWait getWait() {
-        return wait;
+    public WebDriverWait getWait() {
+        return wait.get();
     }
 
     public static FluentWait<WebDriver> getFluentWait() {
@@ -89,4 +90,6 @@ public class Hooks {
     public static ExtentReports getExtent() {
         return extent;
     }
+
+
 }

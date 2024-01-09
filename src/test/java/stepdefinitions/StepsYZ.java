@@ -22,8 +22,8 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class StepsYZ {
-    private final WebDriver driver;
-    private final WebDriverWait wait;
+    private WebDriver driver;
+    private WebDriverWait wait;
     private final Helper helper;
     private final HeaderPage headerPage;
     private final SearchPage searchPage;
@@ -32,8 +32,8 @@ public class StepsYZ {
     private List<Map<String, String>> storedAddresses;
 
     public StepsYZ() {
-        this.driver = Hooks.getDriver();
-        this.wait = Hooks.getWait();
+        this.driver = Hooks.driver.get();
+        this.wait = Hooks.wait.get();
         this.helper = new Helper(driver);
         this.headerPage = new HeaderPage(driver);
         this.searchPage = new SearchPage(driver);
