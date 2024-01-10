@@ -1,14 +1,14 @@
-package objectpage.components;
+package objectpage.nonpages.components;
 
 import objectpage.BasePage;
-import objectpage.account.MyAccountPage;
+import objectpage.pages.account.MyAccountPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public abstract class SidePanelPage extends BasePage {
+public  class SidePanel extends BasePage {
 
     @FindBy(id = "side-panel-container")
     private WebElement sidePanelContainerLocator;
@@ -16,9 +16,19 @@ public abstract class SidePanelPage extends BasePage {
     @FindBy(xpath = "//a[@data-testid='account-link']/span")
     private WebElement accountLinkLocator;
 
-    public SidePanelPage(WebDriver driver) {
+    public SidePanel(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected WebElement getUniqueElement() {
+        return null;
+    }
+
+    @Override
+    protected BasePage openPage() {
+        return null;
     }
 
     public MyAccountPage clickAccountLink() {

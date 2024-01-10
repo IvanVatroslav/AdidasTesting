@@ -1,28 +1,32 @@
-package objectpage.login;
+package objectpage.pages.login;
 
 import objectpage.BasePage;
-import objectpage.MainPage;
+import objectpage.pages.MainPage;
+import objectpage.nonpages.components.Header;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class GoogleLoginPage extends BasePage<GoogleLoginPage> {
+public class YahooLoginPage extends BasePage<Header> {
 
-    @FindBy(id = "identifierId")
-    private WebElement loginTextBox;
+    @FindBy(id = "login-username")
+    private WebElement usernameTextBox;
 
-    @FindBy(id = "identifierNext")
-    private WebElement nextButtonLogin;
+    @FindBy(id = "login-signin")
+    private WebElement loginNextButton;
 
-    @FindBy(name = "Passwd")
+    @FindBy(id = "login-passwd")
     private WebElement passwordTextBox;
 
-    @FindBy(id = "passwordNext")
+    @FindBy(id = "login-signin")
     private WebElement loginButton;
 
-    public GoogleLoginPage(WebDriver driver) {
+    @FindBy(id = "oauth2-agree")
+    private WebElement authAgreeButton;
+
+    public YahooLoginPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
     }
@@ -33,31 +37,36 @@ public class GoogleLoginPage extends BasePage<GoogleLoginPage> {
     }
 
     @Override
-    protected GoogleLoginPage openPage() {
+    protected Header openPage() {
         return null;
     }
 
     public void enterUsername(String username) {
-        wait.until(ExpectedConditions.visibilityOf(loginTextBox)).sendKeys(username);
+        wait.until(ExpectedConditions.visibilityOf(usernameTextBox)).sendKeys(username);
     }
 
-    public void clickNextAfterUsername() {
-        wait.until(ExpectedConditions.elementToBeClickable(nextButtonLogin)).click();
+    public void clickNextButtonLogin() {
+        wait.until(ExpectedConditions.elementToBeClickable(loginNextButton)).click();
     }
 
     public void enterPassword(String password) {
         wait.until(ExpectedConditions.visibilityOf(passwordTextBox)).sendKeys(password);
     }
 
-    public void clickNextAfterPassword() {
+    public void clickLoginButton() {
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
+    }
+
+    public void clickAuthButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(authAgreeButton)).click();
     }
 
     public MainPage login(String username, String password) {
         enterUsername(username);
-        clickNextAfterUsername();
+        clickNextButtonLogin();
         enterPassword(password);
-        clickNextAfterPassword();
+        clickLoginButton();
+        clickAuthButton();
         return new MainPage(driver);
     }
 }

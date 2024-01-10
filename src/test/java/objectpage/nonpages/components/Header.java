@@ -1,7 +1,7 @@
-package objectpage.components;
+package objectpage.nonpages.components;
 
 import objectpage.BasePage;
-import objectpage.SearchPage;
+import objectpage.pages.SearchPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public abstract class Header<T extends Header<T>> extends BasePage<T> {
+public  class Header<T extends Header<T>> extends BasePage<T> {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
@@ -37,6 +37,16 @@ public abstract class Header<T extends Header<T>> extends BasePage<T> {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected WebElement getUniqueElement() {
+        return null;
+    }
+
+    @Override
+    protected T openPage() {
+        return null;
     }
 
     public T hoverOverMensSection() {
@@ -67,5 +77,13 @@ public abstract class Header<T extends Header<T>> extends BasePage<T> {
     public static By getMenSubcategoryXPath(String category) {
         String xpath = String.format(MEN_SUBCATEGORY_XPATH_TEMPLATE, category);
         return By.xpath(xpath);
+    }
+
+    public WebElement getSearchTextBox() {
+        return searchTextbox;
+    }
+
+    public WebElement getAccountPortalTrigger() {
+        return accountPortalTrigger;
     }
 }

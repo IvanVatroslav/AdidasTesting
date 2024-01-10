@@ -8,13 +8,11 @@ import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.SneakyThrows;
-import objectpage.BasePage;
-import objectpage.MainPage;
+import objectpage.pages.MainPage;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import services.SetupProperties;
 
@@ -23,8 +21,8 @@ import java.time.Duration;
 public class Hooks {
     public static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     public static ThreadLocal<WebDriverWait> wait = new ThreadLocal<>();
-    private static FluentWait<WebDriver> fluentWait; // If used, implement; otherwise, remove
-    private static final ExtentReports extent; // Made 'extent' final
+
+    private static final ExtentReports extent;
 
     static {
         ExtentSparkReporter spark = new ExtentSparkReporter("path/to/extent-report.html");
@@ -40,6 +38,9 @@ public class Hooks {
         WebDriver localDriver = new ChromeDriver(options);
         localDriver.manage().window().maximize();
 
+
+        //river.manage().timeouts.implicitlyWait(10, TimeUnit.SECONDS); implicit wait maybe implement later
+
         String baseUrl = SetupProperties.getMainUrl();
         localDriver.get(baseUrl);
         WebDriverWait explicitWait = new WebDriverWait(localDriver, Duration.ofSeconds(10));
@@ -47,11 +48,9 @@ public class Hooks {
                 webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete")
         );
 
-        // Set the WebDriver for the current thread
         driver.set(localDriver);
         wait.set(explicitWait);
 
-        // Instantiate MainPage and call acceptCookies
         MainPage mainPage = new MainPage(localDriver);
         mainPage.acceptCookies();
     }
@@ -69,14 +68,16 @@ public class Hooks {
         }
         driver.remove();
         wait.remove();
-        // Remove other ThreadLocal instances
     }
     @AfterStep
     public void addScreenshotOnFailure(Scenario scenario) {
         if (scenario.isFailed()) {
-            byte[] screenshot = BasePage.getScreenshot();
+            byte[] screenshot = null; // will fix later, maybe
             if (screenshot != null) {
                 scenario.attach(screenshot, "image/png", "screenshot");
+            }
+            else{
+                scenario.log("screenshot is null");
             }
         }
     }
@@ -89,9 +90,6 @@ public class Hooks {
         return wait.get();
     }
 
-    public static FluentWait<WebDriver> getFluentWait() {
-        return fluentWait;
-    }
 
     public static ExtentReports getExtent() {
         return extent;

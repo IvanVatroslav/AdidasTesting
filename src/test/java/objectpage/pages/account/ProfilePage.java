@@ -1,4 +1,4 @@
-package objectpage.account;
+package objectpage.pages.account;
 
 import lombok.Getter;
 import objectpage.BasePage;
@@ -99,13 +99,13 @@ public class ProfilePage extends BasePage<ProfilePage> {
         addressBookLink.click();
     }
 
-    public static boolean isErrorMessageDisplayed() {
+    public boolean isErrorMessageDisplayed() {
         return waitForElement(FIRST_NAME_ERROR_XPATH) ||
                 waitForElement(LAST_NAME_ERROR_XPATH) ||
                 waitForElement(DATE_ERROR_XPATH);
     }
 
-    private static boolean waitForElement(By locator) {
+    private boolean waitForElement(By locator) {
         WebDriverWait newWait = new WebDriverWait(driver, Duration.ofSeconds(2));
         try {
             newWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
@@ -114,6 +114,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
             return false;
         }
     }
+
     public void enterBirthDate(int day, int month, int year) {
         WebElement dayField = getDayField();
         dayField.clear();

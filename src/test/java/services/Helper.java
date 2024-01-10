@@ -1,7 +1,7 @@
 package services;
 
 import objectpage.BasePage;
-import objectpage.components.Header;
+import objectpage.nonpages.components.Header;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;

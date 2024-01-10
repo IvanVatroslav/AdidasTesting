@@ -19,7 +19,7 @@ public abstract class BasePage<T extends BasePage> {
         PageFactory.initElements(driver, this);
     }
 
-    public byte[] getScreenshot() {
+    public  byte[] getScreenshot() {
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
@@ -32,7 +32,7 @@ public abstract class BasePage<T extends BasePage> {
         }
     }
 
-    public void waitForModalInvisibility() {
+    public  void waitForModalInvisibility() {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
     }
 

@@ -6,10 +6,9 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.SneakyThrows;
-import objectpage.BasePage;
-import objectpage.SearchPage;
-import objectpage.account.ProfilePage;
-import objectpage.components.Header;
+import objectpage.pages.SearchPage;
+import objectpage.pages.account.ProfilePage;
+import objectpage.nonpages.components.Header;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -28,7 +27,7 @@ public class StepsYZ {
     private WebDriver driver;
     private WebDriverWait wait;
     private final Helper helper;
-    private final Header headerPage;
+    private final Header header;
     private final SearchPage searchPage;
     private final ProfilePage profilePage;
     private final LoginService loginService;
@@ -38,7 +37,7 @@ public class StepsYZ {
         this.driver = Hooks.driver.get();
         this.wait = Hooks.wait.get();
         this.helper = new Helper(driver);
-        this.headerPage = new Header(driver);
+        this.header = new Header(driver);
         this.searchPage = new SearchPage(driver);
         this.profilePage = new ProfilePage(driver);
         this.loginService = new LoginService(driver);
@@ -58,12 +57,12 @@ public class StepsYZ {
 
     @When("I hover over the Men's section in the main menu")
     public void hoverOverMensSectionInMainMenu() {
-        headerPage.hoverOverMensSection();
+        header.hoverOverMensSection();
     }
 
     @Then("I should see the dropdown with sub-categories")
     public void verifyDropdownWithSubCategoriesIsVisible() {
-        WebElement dropdown = headerPage.getHeaderFlyout();
+        WebElement dropdown = header.getHeaderFlyout();
         wait.until(ExpectedConditions.visibilityOf(dropdown));
         assertTrue("Dropdown with sub-categories is not visible", dropdown.isDisplayed());
     }
@@ -71,7 +70,7 @@ public class StepsYZ {
     @Then("I verify the following sub-categories are correct")
     public void verifyFollowingSubCategoriesAreCorrect(List<String> subcategoryTexts) {
         for (String expectedText : subcategoryTexts) {
-            WebElement subCategoryElement = headerPage.getMenSubcategoryElement(expectedText);
+            WebElement subCategoryElement = header.getMenSubcategoryElement(expectedText);
             wait.until(ExpectedConditions.visibilityOf(subCategoryElement));
             String actualText = subCategoryElement.getText();
             assertEquals("Expected text not found: " + expectedText, expectedText, actualText);
@@ -80,7 +79,7 @@ public class StepsYZ {
 
     @When("I search for {string}")
     public void searchFor(String string) {
-        WebElement searchBox = headerPage.getSearchTextBox();
+        WebElement searchBox = header.getSearchTextBox();
         searchBox.sendKeys(string + Keys.ENTER);
     }
 
@@ -173,7 +172,7 @@ public class StepsYZ {
             switch (outcome) {
                 case "save and display":
                     profilePage.clickSaveButton();
-                    BasePage.waitForModalInvisibility();
+                    profilePage.waitForModalInvisibility();
                     String actualName = profilePage.getDisplayedName();
                     String actualDate = profilePage.getDisplayedDate();
 
@@ -183,7 +182,7 @@ public class StepsYZ {
                     assertEquals("Displayed date should match expected date", date, actualDate);
                     break;
                 case "reject":
-                    assertTrue(ProfilePage.isErrorMessageDisplayed());
+                    assertTrue(profilePage.isErrorMessageDisplayed());
                     break;
             }
         }

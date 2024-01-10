@@ -1,4 +1,4 @@
-package objectpage.account;
+package objectpage.pages.account;
 
 import objectpage.BasePage;
 import org.openqa.selenium.WebDriver;

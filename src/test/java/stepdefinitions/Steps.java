@@ -3,11 +3,10 @@ package stepdefinitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import objectpage.*;
-import objectpage.account.MyAccountPage;
-import objectpage.account.PreferencesPage;
-import objectpage.account.ProfilePage;
-import objectpage.components.SidePanelPage;
+import objectpage.nonpages.components.SidePanel;
+import objectpage.pages.account.MyAccountPage;
+import objectpage.pages.account.PreferencesPage;
+import objectpage.pages.account.ProfilePage;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,7 +25,7 @@ public class Steps {
     private int randomYear;
 
     private final Helper helper;
-    private final SidePanelPage sidePanelPage;
+    private final SidePanel sidePanel;
     private final ProfilePage profilePage;
     private final PreferencesPage preferencesPage;
     private final LoginService loginService;
@@ -37,7 +36,7 @@ public class Steps {
         this.driver = Hooks.driver.get();
         this.wait = Hooks.wait.get();
         this.helper = new Helper(driver);
-        this.sidePanelPage = new SidePanelPage(driver);
+        this.sidePanel = new SidePanel(driver);
         this.profilePage = new ProfilePage(driver);
         this.preferencesPage = new PreferencesPage(driver);
         this.loginService = new LoginService(driver);
@@ -53,7 +52,7 @@ public class Steps {
 
     @When("the user navigates to the account settings page")
     public void userNavigatesToAccountSettingsPage() {
-        sidePanelPage.clickAccountLink();
+        sidePanel.clickAccountLink();
         myAccountPage.clickOnAccountSection();
     }
 
@@ -71,7 +70,7 @@ public class Steps {
 
     @Then("the new birth date should be saved and displayed")
     public void newBirthDateShouldBeSavedAndDisplayed() {
-        BasePage.waitForModalInvisibility();
+        profilePage.waitForModalInvisibility();
         String dateString = profilePage.getDisplayedDate();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
