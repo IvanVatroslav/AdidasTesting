@@ -1,14 +1,11 @@
-@MenSectionSubcategories
-Feature: Verify Sub-Categories under Men's Section
+@MainNavigationMenu
+Feature: Verify Main Navigation Menu Functionality
 
-  Scenario: Verify specific sub-categories under Men's section
+  Scenario: Verify the visibility and correctness of each main navigation menu item
     Given I am on the homepage
-    When I hover over the Men's section in the main menu
-    Then I should see the dropdown with sub-categories
-    And I verify the following sub-categories are correct
-      | NEW & TRENDING          |
-      | SHOES                   |
-      | CLOTHING                |
-      | ACCESSORIES             |
-      | SHOP BY SPORT           |
-      | SHOP BY COLLECTION      |
+    Then I verify the visibility and correctness of each item in the navigation menu
+      | MEN         |
+      | WOMEN       |
+      | KIDS        |
+      | SALE        |
+      | 3 STRIPE LIFE |

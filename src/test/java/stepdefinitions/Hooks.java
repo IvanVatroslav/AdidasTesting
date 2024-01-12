@@ -39,11 +39,11 @@ public class Hooks {
         localDriver.manage().window().maximize();
 
 
-        //river.manage().timeouts.implicitlyWait(10, TimeUnit.SECONDS); implicit wait maybe implement later
+        //driver.manage().timeouts.implicitlyWait(10, TimeUnit.SECONDS); implicit wait maybe implement later
 
         String baseUrl = SetupProperties.getMainUrl();
         localDriver.get(baseUrl);
-        WebDriverWait explicitWait = new WebDriverWait(localDriver, Duration.ofSeconds(10));
+        WebDriverWait explicitWait = new WebDriverWait(localDriver, Duration.ofSeconds(30));
         explicitWait.until(
                 webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete")
         );

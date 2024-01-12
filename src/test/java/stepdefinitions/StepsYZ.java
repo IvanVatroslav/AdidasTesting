@@ -6,10 +6,9 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.SneakyThrows;
+import objectpage.nonpages.components.Header;
 import objectpage.pages.SearchPage;
 import objectpage.pages.account.ProfilePage;
-import objectpage.nonpages.components.Header;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -46,14 +45,21 @@ public class StepsYZ {
     @Given("I am on the homepage")
     public void onHomepage() {
         helper.checkWebPage("https://www.adidas.com/us");
-        loginService.logIn();
     }
 
     @Then("I verify the visibility and correctness of each item in the navigation menu")
     public void verifyVisibilityAndCorrectnessOfNavigationMenuItems(DataTable dataTable) {
         List<String> expectedMenuItems = dataTable.asList(String.class);
-        helper.testNavigationMenuItems(expectedMenuItems);
+        List<String> actualMenuItems = header.getNavigationCategories();
+
+        // Compare expected and actual menu items
+        assertEquals("The number of menu items should match", expectedMenuItems.size(), actualMenuItems.size());
+        for (int i = 0; i < expectedMenuItems.size(); i++) {
+            assertEquals("Menu item text should match", expectedMenuItems.get(i), actualMenuItems.get(i));
+        }
     }
+
+
 
     @When("I hover over the Men's section in the main menu")
     public void hoverOverMensSectionInMainMenu() {
@@ -92,15 +98,17 @@ public class StepsYZ {
 
     @Then("the list of products should not be empty")
     public void verifyListOfProductsIsNotEmpty() {
-        List<WebElement> productContainers = SearchPage.getSearchResults();
+
+        List<WebElement> productContainers = searchPage.getSearchResults();
         assertFalse("Product list is empty", productContainers.isEmpty());
     }
 
     @Then("all products should have the name {string}")
     public void verifyAllProductsHaveName(String string) {
-        List<WebElement> productContainers = SearchPage.getSearchResults();
+
+        List<WebElement> productContainers = searchPage.getSearchResults();
         for (WebElement container : productContainers) {
-            WebElement productNameElement = container.findElement((By) searchPage.getProductNameLocator());
+            WebElement productNameElement = container.findElement(searchPage.getProductNameLocator());
             wait.until(ExpectedConditions.visibilityOf(productNameElement));
             String actualProductName = productNameElement.getText().toLowerCase();
             assertTrue("Product name does not match: " + actualProductName, actualProductName.contains(string.toLowerCase()));

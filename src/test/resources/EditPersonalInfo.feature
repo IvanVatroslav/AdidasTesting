@@ -1,6 +1,5 @@
-@RandomBirthdate
 Feature: Edit Personal Information in User Account
-
+  @RandomBirthdate
   Scenario: User edits birth date on account page with valid data
     Given the user is logged in and on the main page
     When the user navigates to the account settings page

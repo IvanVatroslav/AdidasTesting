@@ -6,14 +6,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.Random;
 
 public class PreferencesPage extends BasePage<PreferencesPage> {
-    private WebDriver driver;
-    private WebDriverWait wait;
+
     private Random rand = new Random();
 
     private final By SAVE_PREFERENCES_ID = By.id("preferences-update-CTA-product-categories");

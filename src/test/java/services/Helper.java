@@ -1,12 +1,13 @@
 package services;
 
-import objectpage.BasePage;
 import objectpage.nonpages.components.Header;
+import objectpage.pages.account.AddressBookPage;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import stepdefinitions.Hooks;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -39,11 +40,12 @@ public class Helper {
     private static final By SAVED_ADDRESS_DIV_XPATH = By.xpath("//div[@data-auto-id='saved_address']"); // AddressBookPage class
     private static final By STRONG_TAG_XPATH = By.xpath(".//strong"); // AddressBookPage class
     private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]"); // AddressBookPage class
+    final static Logger logger = Logger.getLogger(Helper.class);
 
-    private BasePage<Header> basePage;  // An instance of BasePage to use its methods
+    private final AddressBookPage basePage; // Use wildcard if the generic type isn't important here
 
 
-    private static String getStateXPath(String stateName) { //AddressBookPage class
+    private static String getStateXPath(String stateName) { //AddressBookPage method
         return String.format("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '%s')]", stateName);
     }
 
@@ -51,7 +53,8 @@ public class Helper {
 
     public Helper(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Example timeout
+        this.basePage =new AddressBookPage(driver);
+        this.wait = Hooks.wait.get();
         this.rand = new Random();
     }
     public boolean doesElementExist(By locator) {
@@ -87,26 +90,33 @@ public class Helper {
             randomDay = rand.nextInt(31) + 1;
         }
 
-        randomYear = rand.nextInt(LocalDate.now().getYear() - 1900) + 1900 - 13;    // 13 years old or older
+        int currentYear = LocalDate.now().getYear();
+        int latestYearOfBirth = currentYear - 13; // Only 13+ years old can register
+        randomYear = rand.nextInt(latestYearOfBirth - 1900 + 1) + 1900;
         return new int[]{randomDay, randomMonth, randomYear};
     }
 
 
 
 
-    public void testNavigationMenuItems(List<String> menuItems) {
-        for (String menuItemText : menuItems) {
-            By menuItemXPath = Header.getMenSubcategoryXPath(menuItemText);
-            WebElement menuItem = driver.findElement(menuItemXPath);
-            assertTrue("Menu item should be visible", menuItem.isDisplayed());
-            assertEquals("Menu item text should match", menuItemText, menuItem.getText().trim());
+    public void testNavigationMenuItems(List<String> expectedMenuItems) {
+        // Retrieve the actual menu items from the Header
+        List<String> actualMenuItems = new Header<>(driver).getNavigationCategories();
+
+        // Check if the expected menu items are present in the actual menu items
+        for (String expectedItem : expectedMenuItems) {
+            assertTrue("Expected menu item " + expectedItem + " is not present",
+                    actualMenuItems.contains(expectedItem));
         }
     }
 
 
 
     public void removeAllAddresses() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(DELETE_ADDRESS_BUTTON_XPATH));
+        wait.until(ExpectedConditions.elementToBeClickable(DELETE_ADDRESS_BUTTON_XPATH));
         while (true) {
+
             List<WebElement> removeButtons = driver.findElements(DELETE_ADDRESS_BUTTON_XPATH);
             if (removeButtons.isEmpty()) {
                 break;
@@ -116,8 +126,10 @@ public class Helper {
                 WebElement confirmDeleteButton = wait.until(ExpectedConditions.elementToBeClickable(CONFIRM_DELETE_BUTTON_XPATH));
                 confirmDeleteButton.click();
                 basePage.waitForModalInvisibility();
+
             } catch (StaleElementReferenceException e) {
                 System.out.println("Caught a stale element exception, retrying...");
+
             }
         }
     }
@@ -161,7 +173,6 @@ public class Helper {
             String expectedFullName = expectedAddress.get("FirstName") + " " + expectedAddress.get("LastName");
             assertEquals(expectedFullName, addressElement.findElement(STRONG_TAG_XPATH).getText());
 
-            // Using the ADDRESS_DETAIL_DIV_XPATH constant
             String fullAddress = addressElement.findElement(ADDRESS_DETAIL_DIV_XPATH).getText();
             String[] addressParts = fullAddress.split("\n");
 

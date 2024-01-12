@@ -13,6 +13,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public  class Header<T extends Header<T>> extends BasePage<T> {
     private final WebDriver driver;
@@ -31,6 +33,9 @@ public  class Header<T extends Header<T>> extends BasePage<T> {
     private WebElement accountPortalTrigger;
 
     private static final String MEN_SUBCATEGORY_XPATH_TEMPLATE = "//a[contains(@href, '/us/men')]/div[text()='%s']";
+
+    @FindBy(css = "li[data-auto-id='navigation-flyout'] > a")
+    private static List<WebElement> navigationMenuItems;
 
     public Header(WebDriver driver) {
         super(driver);
@@ -85,5 +90,9 @@ public  class Header<T extends Header<T>> extends BasePage<T> {
 
     public WebElement getAccountPortalTrigger() {
         return accountPortalTrigger;
+    }
+
+    public  List<String> getNavigationCategories() {
+        return navigationMenuItems.stream().map(WebElement::getText).collect(Collectors.toList());
     }
 }

@@ -14,7 +14,6 @@ import services.Helper;
 import services.LoginService;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class Steps {
     private WebDriver driver;
@@ -73,13 +72,20 @@ public class Steps {
         profilePage.waitForModalInvisibility();
         String dateString = profilePage.getDisplayedDate();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(dateString, formatter);
+        // Split the date string into components
+        String[] dateParts = dateString.split("-");
+        int year = Integer.parseInt(dateParts[0].trim());
+        int month = Integer.parseInt(dateParts[2].trim());
+        int day = Integer.parseInt(dateParts[1].trim());
+
+        // Create a LocalDate object from the split components
+        LocalDate date = LocalDate.of(year, month, day);
 
         Assert.assertEquals("Day does not match", randomDay, date.getDayOfMonth());
         Assert.assertEquals("Month does not match", randomMonth, date.getMonthValue());
         Assert.assertEquals("Year does not match", randomYear, date.getYear());
     }
+
 
     @When("the user goes to the preferences section")
     public void userGoesToPreferencesSection() {

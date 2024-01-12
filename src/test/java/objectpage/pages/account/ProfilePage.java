@@ -130,6 +130,8 @@ public class ProfilePage extends BasePage<ProfilePage> {
     }
 
     public PreferencesPage clicksPreferencesButton() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(PREFERENCES_BUTTON_XPATH));
+
         WebElement preferencesButton = wait.until(ExpectedConditions.elementToBeClickable(PREFERENCES_BUTTON_XPATH));
         preferencesButton.click();
         return new PreferencesPage(driver);

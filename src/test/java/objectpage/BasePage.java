@@ -4,8 +4,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
+import stepdefinitions.Hooks;
 
 public abstract class BasePage<T extends BasePage> {
     protected WebDriver driver;
@@ -14,8 +13,8 @@ public abstract class BasePage<T extends BasePage> {
     private final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
 
     public BasePage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        this.driver = Hooks.driver.get();
+        this.wait = Hooks.wait.get();
         PageFactory.initElements(driver, this);
     }
 
