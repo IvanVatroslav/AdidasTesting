@@ -1,4 +1,4 @@
 package stepdefinitions.navigationsteps;
 
-public class NavigationVerificationSteps {
+public class MainNavigationMenuSteps {
 }

@@ -18,9 +18,9 @@ import org.junit.runner.RunWith;
         tags = "" +
           //     "@MainNavigationMenu"+
         //       " or @MenSectionSubcategories"+
-              "@SearchFunctionality"+
-             " or @SearchFunctionality_invalid"
-      //       " or @AddressBook"+
+         //     "@SearchFunctionality"+
+         //    " or @SearchFunctionality_invalid"
+             " @AddressBook"
     //    " or @RandomBirthdate"+
   //       " or @EditPreferences"+
 //" or @TestPersonalInfo"

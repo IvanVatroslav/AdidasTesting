@@ -2,10 +2,7 @@ package objectpage.pages.account;
 
 import lombok.Getter;
 import objectpage.BasePage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -95,8 +92,11 @@ public class ProfilePage extends BasePage<ProfilePage> {
     }
 
 
-    public void navigateToAddressBookPage() {
+    public AddressBookPage navigateToAddressBookPage() {
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.elementToBeClickable(addressBookLink));
         addressBookLink.click();
+        return new AddressBookPage(driver);
     }
 
     public boolean isErrorMessageDisplayed() {

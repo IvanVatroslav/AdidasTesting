@@ -1,7 +1,6 @@
 package stepdefinitions;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -126,28 +125,28 @@ public class StepsYZ {
         assertTrue("No results element does not exist", elementExists);
     }
 
-    @When("the user navigates to the address book page")
-    public void navigateToAddressBookPage() {
-        profilePage.navigateToAddressBookPage();
-    }
-
-    @And("the user removes any old addresses")
-    public void removeAnyOldAddresses() {
-        helper.removeAllAddresses();
-    }
-
-    @And("the user adds new addresses")
-    public void addNewAddresses(DataTable addressTable) {
-        storedAddresses = addressTable.asMaps(String.class, String.class);
-        for (Map<String, String> address : storedAddresses) {
-            helper.addNewAddress(address.get("FirstName"), address.get("LastName"), address.get("Address"), address.get("City"), address.get("State"), address.get("Zip"), address.get("Phone"));
-        }
-    }
-
-    @Then("the new addresses should be saved and displayed in the address book")
-    public void verifyNewAddressesAreSavedAndDisplayedInAddressBook() {
-        helper.assertAddresses(storedAddresses);
-    }
+//    @When("the user navigates to the address book page")
+//    public void navigateToAddressBookPage() {
+//        profilePage.navigateToAddressBookPage();
+//    }
+//
+//    @And("the user removes any old addresses")
+//    public void removeAnyOldAddresses() {
+//        helper.removeAllAddresses();
+//    }
+//
+//    @And("the user adds new addresses")
+//    public void addNewAddresses(DataTable addressTable) {
+//        storedAddresses = addressTable.asMaps(String.class, String.class);
+//        for (Map<String, String> address : storedAddresses) {
+//            helper.addNewAddress(address.get("FirstName"), address.get("LastName"), address.get("Address"), address.get("City"), address.get("State"), address.get("Zip"), address.get("Phone"));
+//        }
+//    }
+//
+//    @Then("the new addresses should be saved and displayed in the address book")
+//    public void verifyNewAddressesAreSavedAndDisplayedInAddressBook() {
+//        helper.assertAddresses(storedAddresses);
+//    }
 
     @SneakyThrows
     @When("the user attempts to change birth dates and names according to the following data")

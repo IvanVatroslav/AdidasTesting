@@ -1,4 +1,4 @@
 package stepdefinitions.accountsteps;
 
-public class PreferencesUpdateSteps {
+public class LogInSteps {
 }

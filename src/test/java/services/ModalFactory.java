@@ -1,6 +1,6 @@
 package services;
 
-import objectpage.nonpages.modals.AddressModal;
+import objectpage.nonpages.modals.AddressBookModal;
 import objectpage.nonpages.modals.CookiesModal;
 import objectpage.nonpages.modals.LoginModal;
 import objectpage.nonpages.modals.PersonalInfoModal;
@@ -18,8 +18,8 @@ public class ModalFactory {
         return new LoginModal(driver);
     }
 
-    public AddressModal createAddressModal() {
-        return new AddressModal(driver);
+    public AddressBookModal createAddressModal() {
+        return new AddressBookModal(driver);
     }
 
     public CookiesModal createCookiesModal() {

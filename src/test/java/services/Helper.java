@@ -42,13 +42,12 @@ public class Helper {
     private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]"); // AddressBookPage class
     final static Logger logger = Logger.getLogger(Helper.class);
 
-    private final AddressBookPage basePage; // Use wildcard if the generic type isn't important here
+    private final AddressBookPage basePage;
 
 
-    private static String getStateXPath(String stateName) { //AddressBookPage method
+    private String getStateXPath(String stateName) {
         return String.format("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '%s')]", stateName);
     }
-
 
 
     public Helper(WebDriver driver) {
