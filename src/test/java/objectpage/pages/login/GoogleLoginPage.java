@@ -1,6 +1,6 @@
 package objectpage.pages.login;
 
-import objectpage.BasePage;
+import objectpage.pages.BasePage;
 import objectpage.pages.MainPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

@@ -1,4 +1,4 @@
-package objectpage;
+package objectpage.pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;

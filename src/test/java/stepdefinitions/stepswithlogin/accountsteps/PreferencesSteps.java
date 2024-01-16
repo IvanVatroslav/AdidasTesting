@@ -1,4 +1,4 @@
-package stepdefinitions.accountsteps;
+package stepdefinitions.stepswithlogin.accountsteps;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

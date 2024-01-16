@@ -1,4 +1,4 @@
-package stepdefinitions.accountsteps;
+package stepdefinitions.stepswithlogin.accountsteps;
 
 import io.cucumber.java.en.When;
 import objectpage.nonpages.components.SidePanel;

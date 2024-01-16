@@ -55,15 +55,14 @@ public class Helper {
         this.rand = new Random();
     }
 
-    public boolean doesElementExist(By locator) {
+    public boolean doesElementExist(WebElement element) {
         try {
-            driver.findElement(locator);
+            wait.until(ExpectedConditions.visibilityOf(element));
             return true;
         } catch (NoSuchElementException e) {
             return false;
         }
     }
-
 
 
     public int[] getRandomDate() {
@@ -88,15 +87,6 @@ public class Helper {
         randomYear = rand.nextInt(latestYearOfBirth - 1900 + 1) + 1900;
         return new int[]{randomDay, randomMonth, randomYear};
     }
-
-
-
-
-
-
-
-
-
 
 
     public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {

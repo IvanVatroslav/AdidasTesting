@@ -1,6 +1,6 @@
 package objectpage.nonpages.modals;
 
-import objectpage.BasePage;
+import objectpage.pages.BasePage;
 import objectpage.pages.login.GoogleLoginPage;
 import objectpage.pages.login.YahooLoginPage;
 import org.openqa.selenium.WebDriver;

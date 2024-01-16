@@ -1,6 +1,6 @@
 package objectpage.pages.account;
 
-import objectpage.BasePage;
+import objectpage.pages.BasePage;
 import objectpage.nonpages.modals.AddressBookModal;
 import objectpage.nonpages.modals.DeleteAddressModal;
 import org.openqa.selenium.By;

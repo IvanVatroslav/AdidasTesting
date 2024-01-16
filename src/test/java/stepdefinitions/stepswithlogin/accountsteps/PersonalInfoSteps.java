@@ -1,4 +1,4 @@
-package stepdefinitions.accountsteps;
+package stepdefinitions.stepswithlogin.accountsteps;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;

@@ -1,6 +1,6 @@
 package objectpage.nonpages.components;
 
-import objectpage.pages.SearchPage;
+import objectpage.pages.search.SearchResultsPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -54,9 +54,9 @@ public class Header {
         return this;
     }
 
-    public SearchPage submitSearch() {
+    public SearchResultsPage submitSearch() {
         searchTextbox.sendKeys(Keys.ENTER);
-        return new SearchPage(driver);
+        return new SearchResultsPage (driver);
     }
 
     public WebElement getHeaderFlyout() {

@@ -1,4 +1,4 @@
-package stepdefinitions.accountsteps;
+package stepdefinitions.stepswithlogin;
 
 import io.cucumber.java.en.Given;
 import objectpage.pages.MainPage;
