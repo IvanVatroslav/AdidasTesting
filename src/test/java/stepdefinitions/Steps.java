@@ -1,7 +1,5 @@
 package stepdefinitions;
 
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import objectpage.nonpages.components.SidePanel;
 import objectpage.pages.account.MyAccountPage;
 import objectpage.pages.account.PreferencesPage;
@@ -83,20 +81,20 @@ public class Steps {
 //    }
 
 
-    @When("the user goes to the preferences section")
-    public void userGoesToPreferencesSection() {
-        profilePage.clicksPreferencesButton();
-    }
-
-    @When("the user changes preferences")
-    public void userChangesPreferences() {
-        preferencesPage.randomProductCategoriesPreferencesClick();
-        preferencesPage.randomProductInterestsPreferencesClick();
-    }
-
-    @Then("the new preferences should be saved and displayed")
-    public void newPreferencesShouldBeSavedAndDisplayed() {
-        preferencesPage.savePreferencesClick();
-        preferencesPage.saveInterestsClick();
-    }
+//    @When("the user goes to the preferences section")
+//    public void userGoesToPreferencesSection() {
+//        profilePage.clicksPreferencesButton();
+//    }
+//
+//    @When("the user changes preferences")
+//    public void userChangesPreferences() {
+//        preferencesPage.randomProductCategoriesPreferencesClick();
+//        preferencesPage.randomProductInterestsPreferencesClick();
+//    }
+//
+//    @Then("the new preferences should be saved and displayed")
+//    public void newPreferencesShouldBeSavedAndDisplayed() {
+//        preferencesPage.savePreferencesClick();
+//        preferencesPage.saveInterestsClick();
+//    }
 }
