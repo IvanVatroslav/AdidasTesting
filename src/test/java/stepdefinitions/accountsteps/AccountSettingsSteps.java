@@ -1,32 +1,25 @@
 package stepdefinitions.accountsteps;
 
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import objectpage.nonpages.components.SidePanel;
 import objectpage.pages.account.MyAccountPage;
-import services.Helper;
-import services.LoginService;
+import org.openqa.selenium.WebDriver;
+import stepdefinitions.Hooks;
 
 public class AccountSettingsSteps {
-    private final Helper helper;
     private final SidePanel sidePanel;
     private final MyAccountPage myAccountPage;
-    private final LoginService loginService;
+    private WebDriver driver;
 
-    public AccountSettingsSteps(Helper helper, SidePanel sidePanel, MyAccountPage myAccountPage, LoginService loginService) {
-        this.helper = helper;
-        this.sidePanel = sidePanel;
-        this.myAccountPage = myAccountPage;
-        this.loginService = loginService;
+    public AccountSettingsSteps() {
+        this.driver = Hooks.driver.get();
+        this.sidePanel = new SidePanel(driver);
+        this.myAccountPage = new MyAccountPage(driver);
     }
 
-    @Given("I am logged in and on the main page")
-    public void iAmLoggedInAndOnTheMainPage() {
-        helper.checkWebPage("https://www.adidas.com/us");
-        loginService.logIn();
-    }
 
-    @When("I navigate to the account settings page")
+
+    @When("the user navigates to the account settings page")
     public void iNavigateToTheAccountSettingsPage() {
         sidePanel.clickAccountLink();
         myAccountPage.clickOnAccountSection();

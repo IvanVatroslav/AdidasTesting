@@ -1,6 +1,5 @@
 package services;
 
-import objectpage.nonpages.components.Header;
 import objectpage.pages.account.AddressBookPage;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
@@ -15,7 +14,6 @@ import java.util.Map;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class Helper {
 
@@ -50,12 +48,13 @@ public class Helper {
     }
 
 
-    public Helper(WebDriver driver) {
-        this.driver = driver;
-        this.basePage =new AddressBookPage(driver);
+    public Helper() {
+        this.driver = Hooks.driver.get();
         this.wait = Hooks.wait.get();
+        this.basePage = new AddressBookPage(driver);
         this.rand = new Random();
     }
+
     public boolean doesElementExist(By locator) {
         try {
             driver.findElement(locator);
@@ -65,11 +64,6 @@ public class Helper {
         }
     }
 
-    public void checkWebPage(String url) {
-        wait.until(ExpectedConditions.urlToBe(url));
-        String currentUrl = driver.getCurrentUrl();
-        assertEquals("The user is not on the " + url + " page", "https://www.adidas.com/us", currentUrl);
-    }
 
 
     public int[] getRandomDate() {
@@ -98,40 +92,11 @@ public class Helper {
 
 
 
-    public void testNavigationMenuItems(List<String> expectedMenuItems) {
-        // Retrieve the actual menu items from the Header
-        List<String> actualMenuItems = new Header<>(driver).getNavigationCategories();
-
-        // Check if the expected menu items are present in the actual menu items
-        for (String expectedItem : expectedMenuItems) {
-            assertTrue("Expected menu item " + expectedItem + " is not present",
-                    actualMenuItems.contains(expectedItem));
-        }
-    }
 
 
 
-    public void removeAllAddresses() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(DELETE_ADDRESS_BUTTON_XPATH));
-        wait.until(ExpectedConditions.elementToBeClickable(DELETE_ADDRESS_BUTTON_XPATH));
-        while (true) {
 
-            List<WebElement> removeButtons = driver.findElements(DELETE_ADDRESS_BUTTON_XPATH);
-            if (removeButtons.isEmpty()) {
-                break;
-            }
-            try {
-                removeButtons.get(0).click();
-                WebElement confirmDeleteButton = wait.until(ExpectedConditions.elementToBeClickable(CONFIRM_DELETE_BUTTON_XPATH));
-                confirmDeleteButton.click();
-                basePage.waitForModalInvisibility();
 
-            } catch (StaleElementReferenceException e) {
-                System.out.println("Caught a stale element exception, retrying...");
-
-            }
-        }
-    }
 
 
     public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {

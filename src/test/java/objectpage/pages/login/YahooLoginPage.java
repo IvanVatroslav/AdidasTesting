@@ -2,14 +2,13 @@ package objectpage.pages.login;
 
 import objectpage.BasePage;
 import objectpage.pages.MainPage;
-import objectpage.nonpages.components.Header;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class YahooLoginPage extends BasePage<Header> {
+public class YahooLoginPage extends BasePage<YahooLoginPage> {
 
     @FindBy(id = "login-username")
     private WebElement usernameTextBox;
@@ -37,7 +36,7 @@ public class YahooLoginPage extends BasePage<Header> {
     }
 
     @Override
-    protected Header openPage() {
+    protected YahooLoginPage openPage() {
         return null;
     }
 

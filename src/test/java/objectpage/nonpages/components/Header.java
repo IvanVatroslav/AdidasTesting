@@ -1,6 +1,5 @@
 package objectpage.nonpages.components;
 
-import objectpage.BasePage;
 import objectpage.pages.SearchPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -11,14 +10,15 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import stepdefinitions.Hooks;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public  class Header<T extends Header<T>> extends BasePage<T> {
-    private final WebDriver driver;
-    private final WebDriverWait wait;
+public class Header {
+
+    private WebDriver driver;
+    private WebDriverWait wait;
 
     @FindBy(xpath = "//div[@data-auto-id='header-flyout']")
     private WebElement headerFlyout;
@@ -35,34 +35,23 @@ public  class Header<T extends Header<T>> extends BasePage<T> {
     private static final String MEN_SUBCATEGORY_XPATH_TEMPLATE = "//a[contains(@href, '/us/men')]/div[text()='%s']";
 
     @FindBy(css = "li[data-auto-id='navigation-flyout'] > a")
-    private static List<WebElement> navigationMenuItems;
+    private List<WebElement> navigationMenuItems;
 
     public Header(WebDriver driver) {
-        super(driver);
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.driver = Hooks.driver.get();
+        this.wait = Hooks.wait.get();
         PageFactory.initElements(driver, this);
     }
 
-    @Override
-    protected WebElement getUniqueElement() {
-        return null;
-    }
-
-    @Override
-    protected T openPage() {
-        return null;
-    }
-
-    public T hoverOverMensSection() {
+    public Header hoverOverMensSection() {
         new Actions(driver).moveToElement(mensSection).perform();
-        return (T) this;
+        return this;
     }
 
-    public T enterSearchKeyword(String searchKeyword) {
+    public Header enterSearchKeyword(String searchKeyword) {
         wait.until(ExpectedConditions.elementToBeClickable(searchTextbox));
         searchTextbox.sendKeys(searchKeyword);
-        return (T) this;
+        return this;
     }
 
     public SearchPage submitSearch() {
@@ -92,7 +81,7 @@ public  class Header<T extends Header<T>> extends BasePage<T> {
         return accountPortalTrigger;
     }
 
-    public  List<String> getNavigationCategories() {
+    public List<String> getNavigationCategories() {
         return navigationMenuItems.stream().map(WebElement::getText).collect(Collectors.toList());
     }
 }

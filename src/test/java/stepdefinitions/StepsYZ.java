@@ -4,7 +4,6 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import lombok.SneakyThrows;
 import objectpage.nonpages.components.Header;
 import objectpage.pages.SearchPage;
 import objectpage.pages.account.ProfilePage;
@@ -34,7 +33,7 @@ public class StepsYZ {
     public StepsYZ() {
         this.driver = Hooks.driver.get();
         this.wait = Hooks.wait.get();
-        this.helper = new Helper(driver);
+        this.helper = new Helper();
         this.header = new Header(driver);
         this.searchPage = new SearchPage(driver);
         this.profilePage = new ProfilePage(driver);
@@ -43,7 +42,7 @@ public class StepsYZ {
 
     @Given("I am on the homepage")
     public void onHomepage() {
-        helper.checkWebPage("https://www.adidas.com/us");
+        profilePage.checkWebPage("https://www.adidas.com/us");
     }
 
     @Then("I verify the visibility and correctness of each item in the navigation menu")
@@ -148,50 +147,50 @@ public class StepsYZ {
 //        helper.assertAddresses(storedAddresses);
 //    }
 
-    @SneakyThrows
-    @When("the user attempts to change birth dates and names according to the following data")
-    public void theUserAttemptsToChangeBirthDatesAndNames(DataTable dataTable) {
-        profilePage.clickEditDetails();
-
-        List<Map<String, String>> entries = dataTable.asMaps(String.class, String.class);
-        for (Map<String, String> entry : entries) {
-            String date = entry.get("Date");
-            String name = entry.get("Name");
-            String outcome = entry.get("Outcome");
-
-            String[] nameParts = name.split(" ", 2);
-            String firstName = nameParts[0];
-            String lastName = nameParts.length > 1 ? nameParts[1] : "";
-
-            String[] dateParts = date.split("-");
-            int day = Integer.parseInt(dateParts[1].trim());
-            int month = Integer.parseInt(dateParts[2].trim());
-            int year = Integer.parseInt(dateParts[0].trim());
-
-            WebElement firstNameField = profilePage.getFirstNameField();
-            Helper.replaceText(firstNameField, firstName);
-
-            WebElement lastNameField = profilePage.getLastNameField();
-            Helper.replaceText(lastNameField, lastName);
-
-            profilePage.enterBirthDate(day, month, year);
-
-            switch (outcome) {
-                case "save and display":
-                    profilePage.clickSaveButton();
-                    profilePage.waitForModalInvisibility();
-                    String actualName = profilePage.getDisplayedName();
-                    String actualDate = profilePage.getDisplayedDate();
-
-                    assertEquals("Displayed name should match expected name",
-                            name.toLowerCase(),
-                            actualName.toLowerCase());
-                    assertEquals("Displayed date should match expected date", date, actualDate);
-                    break;
-                case "reject":
-                    assertTrue(profilePage.isErrorMessageDisplayed());
-                    break;
-            }
-        }
-    }
+//    @SneakyThrows
+//    @When("the user attempts to change birth dates and names according to the following data")
+//    public void theUserAttemptsToChangeBirthDatesAndNames(DataTable dataTable) {
+//        profilePage.clickEditDetails();
+//
+//        List<Map<String, String>> entries = dataTable.asMaps(String.class, String.class);
+//        for (Map<String, String> entry : entries) {
+//            String date = entry.get("Date");
+//            String name = entry.get("Name");
+//            String outcome = entry.get("Outcome");
+//
+//            String[] nameParts = name.split(" ", 2);
+//            String firstName = nameParts[0];
+//            String lastName = nameParts.length > 1 ? nameParts[1] : "";
+//
+//            String[] dateParts = date.split("-");
+//            int day = Integer.parseInt(dateParts[1].trim());
+//            int month = Integer.parseInt(dateParts[2].trim());
+//            int year = Integer.parseInt(dateParts[0].trim());
+//
+//            WebElement firstNameField = profilePage.getFirstNameField();
+//            Helper.replaceText(firstNameField, firstName);
+//
+//            WebElement lastNameField = profilePage.getLastNameField();
+//            Helper.replaceText(lastNameField, lastName);
+//
+//            profilePage.enterBirthDate(day, month, year);
+//
+//            switch (outcome) {
+//                case "save and display":
+//                    profilePage.clickSaveButton();
+//                    profilePage.waitForModalInvisibility();
+//                    String actualName = profilePage.getDisplayedName();
+//                    String actualDate = profilePage.getDisplayedDate();
+//
+//                    assertEquals("Displayed name should match expected name",
+//                            name.toLowerCase(),
+//                            actualName.toLowerCase());
+//                    assertEquals("Displayed date should match expected date", date, actualDate);
+//                    break;
+//                case "reject":
+//                    assertTrue(profilePage.isErrorMessageDisplayed());
+//                    break;
+//            }
+//        }
+//    }
 }

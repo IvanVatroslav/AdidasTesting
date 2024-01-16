@@ -20,10 +20,10 @@ import org.junit.runner.RunWith;
         //       " or @MenSectionSubcategories"+
          //     "@SearchFunctionality"+
          //    " or @SearchFunctionality_invalid"
-             " @AddressBook"
+             " @AddressBook"+
     //    " or @RandomBirthdate"+
   //       " or @EditPreferences"+
-//" or @TestPersonalInfo"
+" or @TestPersonalInfo"
 )
 public class RunCucumberTest {
 

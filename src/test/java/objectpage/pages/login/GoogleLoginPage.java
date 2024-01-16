@@ -59,5 +59,6 @@ public class GoogleLoginPage extends BasePage<GoogleLoginPage> {
         enterPassword(password);
         clickNextAfterPassword();
         return new MainPage(driver);
+
     }
 }

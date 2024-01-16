@@ -55,12 +55,10 @@ public class AddressBookSteps {
                 addressBookModal.submitAddress();
                 addressBookPage.waitForModalInvisibility();
 
-                // Additional wait or check to ensure the page is ready for a new interaction
-                Thread.sleep(1000); // Replace with a more sophisticated wait if necessary
+
 
             } catch (Exception e) {
                 System.out.println("Exception occurred while adding address: " + e.getMessage());
-                // Handle or log the exception as needed
             }
         }
     }
