@@ -1,15 +1,16 @@
 package objectpage.nonpages.modals;
 
-import objectpage.pages.BasePage;
 import objectpage.pages.login.GoogleLoginPage;
 import objectpage.pages.login.YahooLoginPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class LoginModal extends BasePage {
+public class LoginModal extends BaseModal {
+
     @FindBy(id = "loginPopup")
     private WebElement loginPopup;
 
@@ -25,12 +26,12 @@ public class LoginModal extends BasePage {
     }
 
     @Override
-    protected WebElement getUniqueElement() {
-        return loginPopup;
+    protected By getModalLocator() {
+        return null;
     }
 
     @Override
-    protected BasePage openPage() {
+    protected WebElement getUniqueElement() {
         return null;
     }
 

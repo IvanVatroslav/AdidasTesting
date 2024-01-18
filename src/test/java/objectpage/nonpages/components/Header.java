@@ -1,5 +1,6 @@
 package objectpage.nonpages.components;
 
+import objectpage.nonpages.BaseComponents;
 import objectpage.pages.search.SearchResultsPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -9,16 +10,13 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import stepdefinitions.Hooks;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Header {
+public class Header extends BaseComponents {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
+
 
     @FindBy(xpath = "//div[@data-auto-id='header-flyout']")
     private WebElement headerFlyout;
@@ -38,9 +36,14 @@ public class Header {
     private List<WebElement> navigationMenuItems;
 
     public Header(WebDriver driver) {
-        this.driver = Hooks.driver.get();
-        this.wait = Hooks.wait.get();
+        super(driver);
+
         PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected WebElement getUniqueElement() {
+        return null;
     }
 
     public Header hoverOverMensSection() {

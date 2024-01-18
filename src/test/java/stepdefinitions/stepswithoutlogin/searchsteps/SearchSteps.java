@@ -8,7 +8,6 @@ import objectpage.pages.search.SearchResultsPage;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import services.Helper;
 import stepdefinitions.Hooks;
@@ -69,14 +68,9 @@ public SearchSteps() {
     }
 
     @Then("all products should have the name {string}")
-    public void verifyAllProductsHaveName(String string) {
-        List<WebElement> productContainers = searchResultsPage.getSearchResults();
-        for (WebElement container : productContainers) {
-            WebElement productNameElement = searchResultsPage.getProductNameElement(container);
-            wait.until(ExpectedConditions.visibilityOf(productNameElement));
-            String actualProductName = productNameElement.getText().toLowerCase();
-            assertTrue("Product name does not match: " + actualProductName, actualProductName.contains(string.toLowerCase()));
-        }
+    public void verifyAllProductsHaveName(String expectedName) {
+        assertTrue("Not all product names match: " + expectedName,
+                searchResultsPage.verifyAllProductNames(expectedName));
     }
 
 

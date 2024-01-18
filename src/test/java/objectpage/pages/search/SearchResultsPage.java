@@ -45,4 +45,21 @@ public class SearchResultsPage extends BasePage<SearchResultsPage> {
         wait.until(ExpectedConditions.visibilityOfAllElements(searchResults));
         return searchResults;
     }
+
+
+    public boolean verifyAllProductNames(String expectedName) {
+        wait.until(ExpectedConditions.visibilityOfAllElements(searchResults));
+
+        for (WebElement container : searchResults) {
+            WebElement productNameElement = container.findElement(productNameLocator);
+            wait.until(ExpectedConditions.visibilityOf(productNameElement));
+
+            String actualProductName = productNameElement.getText().toLowerCase();
+            if (!actualProductName.contains(expectedName.toLowerCase())) {
+                return false; // Return false immediately if any product name doesn't match
+            }
+        }
+        return true; // All product names matched
+    }
 }
+

@@ -5,16 +5,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
+public class AddressBookModal extends BaseModal {
 
-public class AddressBookModal {
-    private WebDriver driver;
-    private WebDriverWait wait;
 
-    // Locators for the modal fields
+
     private static final By FIRST_NAME_INPUT_XPATH = By.xpath("//input[@name='firstName']");
     private static final By LAST_NAME_INPUT_XPATH = By.xpath("//input[@name='lastName']");
     private static final By ADDRESS_INPUT_XPATH = By.xpath("//input[@name='address1']");
@@ -29,9 +26,19 @@ public class AddressBookModal {
 
 
     public AddressBookModal(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        this.addressBookPage = new AddressBookPage(driver);
+        super(driver);
+
+        PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected By getModalLocator() {
+        return null;
+    }
+
+    @Override
+    protected WebElement getUniqueElement() {
+        return null;
     }
 
     public void fillAddressForm(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {

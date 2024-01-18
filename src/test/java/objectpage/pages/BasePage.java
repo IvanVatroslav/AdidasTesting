@@ -37,10 +37,7 @@ public abstract class BasePage<T extends BasePage> {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(MODAL_MAIN_DIV_XPATH));
     }
 
-    public void acceptCookies() {
-        WebElement cookiesAcceptButton = wait.until(ExpectedConditions.elementToBeClickable(COOKIES_ACCEPT_BUTTON));
-        cookiesAcceptButton.click();
-    }
+
 
     boolean isElementDisplayed(WebElement element) {
         try {

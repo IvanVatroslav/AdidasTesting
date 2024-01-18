@@ -1,8 +1,8 @@
 package objectpage.pages.account;
 
-import objectpage.pages.BasePage;
 import objectpage.nonpages.modals.AddressBookModal;
 import objectpage.nonpages.modals.DeleteAddressModal;
+import objectpage.pages.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -19,19 +19,16 @@ import static org.junit.Assert.assertEquals;
 public class AddressBookPage extends BasePage<AddressBookPage> {
 
 
-    // Locators
     private static final By DELETE_ADDRESS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='delete_address']");
     private static final By CONFIRM_DELETE_BUTTON_XPATH = By.xpath("//button[@data-auto-id='confirm-delete']");
     private static final By PLUS_BUTTON_XPATH = By.xpath("//span[@data-testid='plus']");
     private static final By SAVED_ADDRESS_DIV_XPATH = By.xpath("//div[@data-auto-id='saved_address']");
     private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]"); // AddressBookPage class
     private static final By STRONG_TAG_XPATH = By.xpath(".//strong"); // AddressBookPage class
-    private DeleteAddressModal deleteModal;
 
     public AddressBookPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
-        this.deleteModal = new DeleteAddressModal(driver);
     }
 
     @Override
@@ -44,20 +41,16 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
         return null;
     }
 
-    public AddressBookModal openAddAddressModal() {
-        WebElement plusButton = wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH));
-        plusButton.click();
-        return new AddressBookModal(driver);
-    }
+
 
     public void removeAllAddresses() {
         waitForModalInvisibility();
-        wait.until(ExpectedConditions.elementToBeClickable(DELETE_ADDRESS_BUTTON_XPATH));
         // Check if there are any delete buttons on the page
         List<WebElement> removeButtons = driver.findElements(DELETE_ADDRESS_BUTTON_XPATH);
         if (removeButtons.isEmpty()) {
             return; // Exit if there are no delete buttons (i.e., no addresses to delete)
         }
+        wait.until(ExpectedConditions.elementToBeClickable(DELETE_ADDRESS_BUTTON_XPATH));
 
         // Proceed with deletion only if delete buttons are present
         for (WebElement button : removeButtons) {
@@ -65,8 +58,8 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
                 wait.until(ExpectedConditions.visibilityOf(button));
                 wait.until(ExpectedConditions.elementToBeClickable(button));
                 button.click();
-
-                deleteModal.confirmDelete();
+                DeleteAddressModal confirmDeleteAddressModal = new DeleteAddressModal(driver);
+                confirmDeleteAddressModal.confirmDelete();
 
                 waitForModalInvisibility();
                 // Wait briefly to allow the DOM to update after each deletion
@@ -77,15 +70,11 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
     }
 
 
-    public AddressBookModal openAddressModal() {
-        waitForModalInvisibility(); // Assuming this method is part of AddressBookPage
-       // wait.until(ExpectedConditions.visibilityOfElementLocated(PLUS_BUTTON_XPATH));
-
-        //   WebElement plusButton = wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH));
-        //plusButton.click();
-
-        driver.findElement(PLUS_BUTTON_XPATH).click();
-        return new AddressBookModal(driver); // Assuming this is the correct way to instantiate AddressBookModal
+    public AddressBookModal openAddAddressModal() {
+        WebElement plusButton = wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH));
+        plusButton.click();
+        // Add any necessary waits for the modal to open here
+        return new AddressBookModal(driver);
     }
 
 
