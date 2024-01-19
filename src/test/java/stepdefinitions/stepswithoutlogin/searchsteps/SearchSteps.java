@@ -1,5 +1,6 @@
 package stepdefinitions.stepswithoutlogin.searchsteps;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import objectpage.nonpages.components.Header;
@@ -86,7 +87,6 @@ public SearchSteps() {
         boolean elementExists = helper.doesElementExist(noResultsLocator);
         assertTrue("No results element does not exist", elementExists);
     }
-
 
 
 

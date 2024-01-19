@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
+import java.util.Random;
 
 public class SearchResultsPage extends BasePage<SearchResultsPage> {
     @FindBy(xpath = "//div[@id='main-content']//div[@data-auto-id='product_container']")
@@ -61,5 +62,26 @@ public class SearchResultsPage extends BasePage<SearchResultsPage> {
         }
         return true; // All product names matched
     }
+
+    public ItemPage clickRandomProduct() {
+        List<WebElement> visibleProducts = getSearchResults();
+        if (visibleProducts.isEmpty()) {
+            throw new IllegalStateException("No products to select.");
+        }
+
+        // Randomly select a product
+        Random random = new Random();
+        int randomIndex = random.nextInt(visibleProducts.size());
+        WebElement randomProduct = visibleProducts.get(randomIndex);
+
+        // Click the selected product
+        wait.until(ExpectedConditions.elementToBeClickable(randomProduct)).click();
+
+        // Return the new ItemPage object
+        return new ItemPage(driver);
+    }
+
 }
+
+
 
