@@ -1,12 +1,11 @@
 package stepdefinitions.stepswithoutlogin.searchsteps;
 
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import objectpage.nonpages.components.Header;
+import objectpage.nonpages.components.SidePanel;
 import objectpage.pages.search.NoResultsPage;
 import objectpage.pages.search.SearchResultsPage;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -28,13 +27,14 @@ private NoResultsPage noResultsPage;
 private SearchResultsPage searchResultsPage;
 private Header header;
 private Helper helper;
+private final SidePanel sidePanel;
 public SearchSteps() {
         this.driver = Hooks.driver.get();
         this.wait = Hooks.wait.get();
 
         this.noResultsPage = new NoResultsPage(driver);
         this.searchResultsPage = new SearchResultsPage(driver);
-
+        this.sidePanel = new SidePanel(driver);
         this.header = new Header(driver);
         this.helper = new Helper();
         }
@@ -49,10 +49,18 @@ public SearchSteps() {
 
 
     @When("I search for {string}")
-    public void searchFor(String string) {
-        WebElement searchBox = header.getSearchTextBox();
-        searchBox.sendKeys(string + Keys.ENTER);
+    public void searchFor(String searchString) {
+        // Check if the side panel is open and close it if necessary
+        if (sidePanel.isPanelOpen()) {
+            sidePanel.closeSidePanel();
+        }
+
+        // Now wait for the search box to be clickable and perform the search action
+        header.searchFor(searchString);
     }
+
+
+
 
     @Then("the search results page should open")
     public void verifySearchResultsPageOpens() {

@@ -1,23 +1,30 @@
 package objectpage.nonpages;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.NoSuchElementException;
 import stepdefinitions.Hooks;
+
+import java.time.Duration;
 
 public abstract class BaseComponents {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
-    public BaseComponents(WebDriver driver) {
+    protected BaseComponents(WebDriver driver) {
         this.driver = Hooks.driver.get();
         this.wait = Hooks.wait.get();
         PageFactory.initElements(driver, this);
     }
-
+    protected BaseComponents(WebDriver driver, boolean waitForLoad) {
+        this(driver);
+        if (waitForLoad) {
+            waitForLoad();
+        }
+    }
     protected abstract WebElement getUniqueElement();
 
     public void waitForPresence() {
@@ -35,4 +42,11 @@ public abstract class BaseComponents {
             return false;
         }
     }
+
+    protected void waitForLoad() {
+        new WebDriverWait(driver, Duration.ofSeconds(10L)).withMessage("Waiting for " + getClass().getName() + " load")
+                .until(ExpectedConditions.visibilityOf(getUniqueElement()));
+    }
+
+
 }

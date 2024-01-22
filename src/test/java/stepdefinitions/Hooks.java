@@ -9,7 +9,6 @@ import io.cucumber.java.Scenario;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.SneakyThrows;
 import objectpage.nonpages.modals.CookiesModal;
-import objectpage.pages.MainPage;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -52,7 +51,6 @@ public class Hooks {
         driver.set(localDriver);
         wait.set(explicitWait);
 
-        MainPage mainPage = new MainPage(localDriver);
         CookiesModal cookiesModal = new CookiesModal(localDriver);
         cookiesModal.acceptCookies();
     }

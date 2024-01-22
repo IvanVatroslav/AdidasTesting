@@ -1,6 +1,4 @@
 
-Sure, I can modify the test case to include a scenario outline similar to the one you provided. Here's the revised test case:
-
 Feature: Shopping Cart Functionality with Scenario Outline
 
   @ShoppingCart
@@ -16,7 +14,7 @@ Feature: Shopping Cart Functionality with Scenario Outline
     And the user removes all products from the bag
     Then the bag should be empty
     When the user logs out
-    Then the user should be redirected to the homepage
+    Then the user should be redirected to the login page
     Examples:
       | search_keyword |
       | SAMBA OG SHOES |

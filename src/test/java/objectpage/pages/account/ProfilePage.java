@@ -24,6 +24,9 @@ public class ProfilePage extends BasePage<ProfilePage> {
     private static final By LAST_NAME_ERROR_XPATH = By.xpath("//div[@data-auto-id='personal-info:lastName-error']");
     private static final By DATE_ERROR_XPATH = By.xpath("//div[@class='gl-form-hint gl-form-hint--error']");
 
+    private final By LOG_OUT_BUTTON_XPATH = By.xpath("//a[@data-auto-id='members-home-account-log-out']");
+
+
     @FindBy(xpath = "//a[@data-auto-id='members-home-account-address-book']")
     private WebElement addressBookLink;
 
@@ -135,6 +138,20 @@ public class ProfilePage extends BasePage<ProfilePage> {
         WebElement preferencesButton = wait.until(ExpectedConditions.elementToBeClickable(PREFERENCES_BUTTON_XPATH));
         preferencesButton.click();
         return new PreferencesPage(driver);
+    }
+
+    public AccountLoginPage clickLogOutButton() {
+        try {
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(LOG_OUT_BUTTON_XPATH));
+            WebElement logOutButton = wait.until(ExpectedConditions.elementToBeClickable(LOG_OUT_BUTTON_XPATH));
+
+            logOutButton.click();
+            return new AccountLoginPage(driver);
+        } catch (Exception e) {
+            System.out.println("Failed to click on Log Out button: " + e.getMessage());
+            return null;
+        }
     }
 
 }

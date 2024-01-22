@@ -9,11 +9,8 @@ import stepdefinitions.Hooks;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import static org.junit.Assert.assertEquals;
 
 public class Helper {
 
@@ -89,18 +86,6 @@ public class Helper {
     }
 
 
-    public void addNewAddress(String firstName, String lastName, String streetAddress, String city, String state, String zipCode, String phoneNumber) {
-        basePage.waitForModalInvisibility();
-        wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH)).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(FIRST_NAME_INPUT_XPATH)).sendKeys(firstName);
-        driver.findElement(LAST_NAME_INPUT_XPATH).sendKeys(lastName);
-        driver.findElement(ADDRESS_INPUT_XPATH).sendKeys(streetAddress);
-        driver.findElement(CITY_INPUT_XPATH).sendKeys(city);
-        selectSpecificState(state);
-        driver.findElement(ZIPCODE_INPUT_XPATH).sendKeys(zipCode);
-        driver.findElement(PHONE_NUMBER_INPUT_XPATH).sendKeys(phoneNumber);
-        driver.findElement(ARROW_RIGHT_LONG_BUTTON_XPATH).click();
-    }
 
 
     public void selectSpecificState(String stateName) {
@@ -115,28 +100,7 @@ public class Helper {
     }
 
 
-    public void assertAddresses(List<Map<String, String>> expectedAddresses) {
-        basePage.waitForModalInvisibility();
-        List<WebElement> addressElements = driver.findElements(SAVED_ADDRESS_DIV_XPATH);
-        assertEquals("Number of addresses does not match", expectedAddresses.size(), addressElements.size());
 
-        for (int i = 0; i < expectedAddresses.size(); i++) {
-            Map<String, String> expectedAddress = expectedAddresses.get(i);
-            WebElement addressElement = addressElements.get(i);
-
-            String expectedFullName = expectedAddress.get("FirstName") + " " + expectedAddress.get("LastName");
-            assertEquals(expectedFullName, addressElement.findElement(STRONG_TAG_XPATH).getText());
-
-            String fullAddress = addressElement.findElement(ADDRESS_DETAIL_DIV_XPATH).getText();
-            String[] addressParts = fullAddress.split("\n");
-
-            assertEquals(expectedAddress.get("Address"), addressParts[0]);
-            String expectedStateAbbreviation = convertStateNameToAbbreviation(expectedAddress.get("State"));
-            String expectedCityStateZip = expectedAddress.get("City") + ", " + expectedStateAbbreviation + ", " + expectedAddress.get("Zip") + ", US";
-            assertEquals(expectedCityStateZip, addressParts[1]);
-            assertEquals(expectedAddress.get("Phone"), addressParts[2]);
-        }
-    }
 
 
     private String convertStateNameToAbbreviation(String stateName) {

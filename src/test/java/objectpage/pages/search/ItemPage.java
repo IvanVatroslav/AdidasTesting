@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ItemPage extends BasePage<ItemPage> {
+    private final By addToBagButtonLocator = By.xpath("//button[@data-auto-id='add-to-bag']");
 
     public ItemPage(WebDriver driver) {
         super(driver);
@@ -46,6 +47,13 @@ public class ItemPage extends BasePage<ItemPage> {
         }
         WebElement randomSizeOption = sizeOptions.get(new Random().nextInt(sizeOptions.size()));
         wait.until(ExpectedConditions.elementToBeClickable(randomSizeOption)).click();
+        return this;
+    }
+
+
+    public ItemPage addToBag() {
+        WebElement addToBagButton = wait.until(ExpectedConditions.elementToBeClickable(addToBagButtonLocator));
+        addToBagButton.click();
         return this;
     }
 }

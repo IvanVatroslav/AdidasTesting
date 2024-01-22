@@ -2,10 +2,7 @@ package objectpage.nonpages.components;
 
 import objectpage.nonpages.BaseComponents;
 import objectpage.pages.search.SearchResultsPage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -77,14 +74,33 @@ public class Header extends BaseComponents {
     }
 
     public WebElement getSearchTextBox() {
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.visibilityOf(searchTextbox));
         return searchTextbox;
     }
 
+
     public WebElement getAccountPortalTrigger() {
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.visibilityOf(accountPortalTrigger));
         return accountPortalTrigger;
     }
 
     public List<String> getNavigationCategories() {
         return navigationMenuItems.stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+
+    public Header searchFor(String keyword) {
+        // Re-find the search box each time to avoid staleness
+        wait.ignoring(StaleElementReferenceException.class).until(driver -> {
+            if (searchTextbox.isDisplayed() && searchTextbox.isEnabled()) {
+                searchTextbox.clear();
+                searchTextbox.sendKeys(keyword + Keys.ENTER);
+                return true;
+            }
+            return false;
+        });
+        return this;
     }
 }

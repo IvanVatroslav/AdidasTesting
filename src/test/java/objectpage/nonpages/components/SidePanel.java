@@ -12,11 +12,15 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.List;
+
 public class SidePanel extends BaseComponents {
     private static final Logger logger = Logger.getLogger(SidePanel.class);
 
     @FindBy(id = "side-panel-container")
     private WebElement sidePanelContainerLocator;
+    @FindBy(xpath = "//button[@data-testid='side-panel-title-close']")
+    private WebElement closeSidePanelButton;
 
     private final By accountLinkBy = By.xpath("//a[@data-testid='account-link']/span");
 
@@ -28,11 +32,18 @@ public class SidePanel extends BaseComponents {
 
     @Override
     protected WebElement getUniqueElement() {
-        return null;
+        List<WebElement> sidePanelElements = driver.findElements(By.xpath("//div[@data-testid='sidepanel-container']"));
+        if (!sidePanelElements.isEmpty()) {
+            return sidePanelElements.get(0); // Return the first element if the list is not empty
+        } else {
+            return null; // Return null if the side panel is not found
+        }
     }
+
 
     @SneakyThrows
     public MyAccountPage clickAccountLink() {
+
         wait.until(ExpectedConditions.visibilityOf(sidePanelContainerLocator));
         wait.ignoring(StaleElementReferenceException.class)
                 .until(ExpectedConditions.visibilityOfElementLocated(accountLinkBy));
@@ -46,4 +57,21 @@ public class SidePanel extends BaseComponents {
 
         return new MyAccountPage(driver);
     }
+
+    public void closeSidePanel() {
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.visibilityOf(closeSidePanelButton));
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.elementToBeClickable(closeSidePanelButton));
+
+        closeSidePanelButton.click();
+
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.invisibilityOf(closeSidePanelButton));
+    }
+
+    public boolean isPanelOpen() {
+        return getUniqueElement() != null;
+    }
+
 }

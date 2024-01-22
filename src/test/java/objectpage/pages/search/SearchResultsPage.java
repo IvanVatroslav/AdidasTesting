@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Random;
 
 public class SearchResultsPage extends BasePage<SearchResultsPage> {
-    @FindBy(xpath = "//div[@id='main-content']//div[@data-auto-id='product_container']")
+    @FindBy(className = "glass-product-card-container")
     private List<WebElement> searchResults;
 
-    // This is a locator for the product name within each product container.
-    private final By productNameLocator = By.xpath(".//p[@class='glass-product-card__title']");
+    private final String productLinkSelector = "a[data-auto-id='glass-hockeycard-link']";
+    private final By productNameLocator = By.className("glass-product-card__title");
 
     public SearchResultsPage(WebDriver driver) {
         super(driver);
@@ -37,51 +37,39 @@ public class SearchResultsPage extends BasePage<SearchResultsPage> {
     }
 
     public WebElement getProductNameElement(WebElement container) {
-        // Find and return the product name element within the given container.
         return container.findElement(productNameLocator);
     }
 
     public List<WebElement> getSearchResults() {
-        // This will wait until all elements in the searchResults list are visible.
         wait.until(ExpectedConditions.visibilityOfAllElements(searchResults));
         return searchResults;
     }
-
 
     public boolean verifyAllProductNames(String expectedName) {
         wait.until(ExpectedConditions.visibilityOfAllElements(searchResults));
 
         for (WebElement container : searchResults) {
             WebElement productNameElement = container.findElement(productNameLocator);
-            wait.until(ExpectedConditions.visibilityOf(productNameElement));
 
             String actualProductName = productNameElement.getText().toLowerCase();
             if (!actualProductName.contains(expectedName.toLowerCase())) {
-                return false; // Return false immediately if any product name doesn't match
+                return false;
             }
         }
-        return true; // All product names matched
+        return true;
     }
 
     public ItemPage clickRandomProduct() {
-        List<WebElement> visibleProducts = getSearchResults();
-        if (visibleProducts.isEmpty()) {
+        if (searchResults.isEmpty()) {
             throw new IllegalStateException("No products to select.");
         }
 
-        // Randomly select a product
         Random random = new Random();
-        int randomIndex = random.nextInt(visibleProducts.size());
-        WebElement randomProduct = visibleProducts.get(randomIndex);
+        WebElement randomContainer = searchResults.get(random.nextInt(searchResults.size()));
+        WebElement productLink = randomContainer.findElement(By.cssSelector(productLinkSelector));
 
-        // Click the selected product
-        wait.until(ExpectedConditions.elementToBeClickable(randomProduct)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(productLink)).click();
 
-        // Return the new ItemPage object
         return new ItemPage(driver);
     }
-
 }
-
-
-
