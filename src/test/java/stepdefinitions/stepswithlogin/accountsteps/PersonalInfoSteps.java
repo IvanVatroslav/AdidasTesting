@@ -5,6 +5,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.SneakyThrows;
 import objectpage.nonpages.components.SidePanel;
+import objectpage.nonpages.modals.PersonalInfoModal;
 import objectpage.pages.account.MyAccountPage;
 import objectpage.pages.account.ProfilePage;
 import org.junit.Assert;
@@ -28,6 +29,7 @@ public class PersonalInfoSteps {
     private final ProfilePage profilePage;
     private final SidePanel sidePanel;
     private final MyAccountPage myAccountPage;
+    private final PersonalInfoModal personalInfoModal;
     private int randomDay;
     private int randomMonth;
     private int randomYear;
@@ -38,6 +40,7 @@ public class PersonalInfoSteps {
         this.profilePage = new ProfilePage(driver);
         this.sidePanel = new SidePanel(driver);
         this.myAccountPage = new MyAccountPage(driver);
+        this.personalInfoModal = new PersonalInfoModal(driver);
     }
 
 
@@ -50,8 +53,8 @@ public class PersonalInfoSteps {
         randomDay = randomDate[0];
         randomMonth = randomDate[1];
         randomYear = randomDate[2];
-        profilePage.enterBirthDate(randomDay, randomMonth, randomYear);
-        profilePage.clickSaveButton();
+        personalInfoModal.enterBirthDate(randomDay, randomMonth, randomYear);
+        personalInfoModal.clickSaveButton();
     }
 
     @Then("the new birth date should be saved and displayed")
@@ -59,13 +62,11 @@ public class PersonalInfoSteps {
         profilePage.waitForModalInvisibility();
         String dateString = profilePage.getDisplayedDate();
 
-        // Split the date string into components
         String[] dateParts = dateString.split("-");
         int year = Integer.parseInt(dateParts[0].trim());
         int month = Integer.parseInt(dateParts[2].trim());
         int day = Integer.parseInt(dateParts[1].trim());
 
-        // Create a LocalDate object from the split components
         LocalDate date = LocalDate.of(year, month, day);
 
         Assert.assertEquals("Day does not match", randomDay, date.getDayOfMonth());
@@ -94,17 +95,17 @@ public class PersonalInfoSteps {
             int month = Integer.parseInt(dateParts[2].trim());
             int year = Integer.parseInt(dateParts[0].trim());
 
-            WebElement firstNameField = profilePage.getFirstNameField();
+            WebElement firstNameField = personalInfoModal.getFirstNameField();
             helper.replaceText(firstNameField, firstName);
 
-            WebElement lastNameField = profilePage.getLastNameField();
+            WebElement lastNameField = personalInfoModal.getLastNameField();
             helper.replaceText(lastNameField, lastName);
 
-            profilePage.enterBirthDate(day, month, year);
+            personalInfoModal.enterBirthDate(day, month, year);
 
             switch (outcome) {
                 case "save and display":
-                    profilePage.clickSaveButton();
+                    personalInfoModal.clickSaveButton();
                     profilePage.waitForModalInvisibility();
                     String actualName = profilePage.getDisplayedName();
                     String actualDate = profilePage.getDisplayedDate();
@@ -115,7 +116,7 @@ public class PersonalInfoSteps {
                     assertEquals("Displayed date should match expected date", date, actualDate);
                     break;
                 case "reject":
-                    assertTrue(profilePage.isErrorMessageDisplayed());
+                    assertTrue(personalInfoModal.isErrorMessageDisplayed());
                     break;
             }
         }

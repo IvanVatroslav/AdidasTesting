@@ -17,4 +17,4 @@ Feature: Shopping Cart Functionality with Scenario Outline
     Then the user should be redirected to the login page
     Examples:
       | search_keyword |
-      | SAMBA OG SHOES |
+      | SAMBA OG |

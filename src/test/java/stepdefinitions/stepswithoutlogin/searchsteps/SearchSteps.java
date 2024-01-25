@@ -50,12 +50,6 @@ public SearchSteps() {
 
     @When("I search for {string}")
     public void searchFor(String searchString) {
-        // Check if the side panel is open and close it if necessary
-        if (sidePanel.isPanelOpen()) {
-            sidePanel.closeSidePanel();
-        }
-
-        // Now wait for the search box to be clickable and perform the search action
         header.searchFor(searchString);
     }
 
@@ -64,10 +58,11 @@ public SearchSteps() {
 
     @Then("the search results page should open")
     public void verifySearchResultsPageOpens() {
-        String expectedUrlPattern = "https://www.adidas.com/us/search?q=";
-        String currentUrl = driver.getCurrentUrl();
-        assertTrue("The user is not on a search page", currentUrl.startsWith(expectedUrlPattern));
+        String expectedUrl = "https://www.adidas.com/us/search?q=";
+
+        searchResultsPage.checkWebPage(expectedUrl);
     }
+
 
     @Then("the list of products should not be empty")
     public void verifyListOfProductsIsNotEmpty() {
@@ -79,7 +74,7 @@ public SearchSteps() {
     @Then("all products should have the name {string}")
     public void verifyAllProductsHaveName(String expectedName) {
         assertTrue("Not all product names match: " + expectedName,
-                searchResultsPage.verifyAllProductNames(expectedName));
+               searchResultsPage.verifyAllProductNames(expectedName));
     }
 
 

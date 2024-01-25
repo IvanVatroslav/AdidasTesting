@@ -12,8 +12,5 @@ public abstract class BaseModal extends BaseComponents {
 
     protected abstract By getModalLocator();
 
-    // Utilize the inherited methods from BaseComponents. If modal-specific behavior is needed,
-    // these methods can be overridden here.
 
-    // Additional modal-specific methods can be added here
 }

@@ -1,8 +1,6 @@
 package objectpage.nonpages;
 
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -47,6 +45,14 @@ public abstract class BaseComponents {
         new WebDriverWait(driver, Duration.ofSeconds(10L)).withMessage("Waiting for " + getClass().getName() + " load")
                 .until(ExpectedConditions.visibilityOf(getUniqueElement()));
     }
-
+    private boolean waitForElement(By locator) {
+        WebDriverWait newWait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        try {
+            newWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
 
 }

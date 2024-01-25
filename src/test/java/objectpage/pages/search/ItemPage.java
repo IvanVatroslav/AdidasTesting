@@ -12,7 +12,11 @@ import java.util.Random;
 
 public class ItemPage extends BasePage<ItemPage> {
     private final By addToBagButtonLocator = By.xpath("//button[@data-auto-id='add-to-bag']");
-
+    private final By colorOptionsLocator = By.xpath("//div[@data-testid='sidebar-color-chooser']" +
+            "//div[contains(@class,'color-chooser-grid')]" +
+            "//a[not(contains(@class, 'out-of-stock')) and not(contains(@class, 'hidden'))]");
+    private final By sizeOptionsLocator = By.xpath("//section[@data-testid='buy-section']" +
+            "//button[contains(@class, 'size___') and not(contains(@class, 'size--unavailable'))]");
     public ItemPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
@@ -20,28 +24,34 @@ public class ItemPage extends BasePage<ItemPage> {
 
     @Override
     protected WebElement getUniqueElement() {
-        // Replace with an actual unique element from ItemPage.
         return null;
     }
 
     @Override
     protected ItemPage openPage() {
-        // Implement the logic to open this page, if needed.
         return null;
     }
 
     public ItemPage selectRandomColor() {
-        List<WebElement> colorOptions = driver.findElements(By.xpath("//div[@data-testid='sidebar-color-chooser']//div[contains(@class,'color-chooser-grid')]//a[not(contains(@class, 'out-of-stock')) and not(contains(@class, 'hidden'))]"));
+
+        List<WebElement> colorOptions = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(colorOptionsLocator));
+
         if (colorOptions.isEmpty()) {
             throw new IllegalStateException("No color options available.");
         }
+
+        wait.until(ExpectedConditions.elementToBeClickable(colorOptionsLocator));
+
+        colorOptions = driver.findElements(colorOptionsLocator);
+
         WebElement randomColorOption = colorOptions.get(new Random().nextInt(colorOptions.size()));
-        wait.until(ExpectedConditions.elementToBeClickable(randomColorOption)).click();
+        randomColorOption.click();
         return this;
     }
 
+
     public ItemPage selectRandomSize() {
-        List<WebElement> sizeOptions = driver.findElements(By.xpath("//section[@data-testid='buy-section']//button[contains(@class, 'size___') and not(contains(@class, 'size--unavailable'))]"));
+        List<WebElement> sizeOptions = driver.findElements(sizeOptionsLocator);
         if (sizeOptions.isEmpty()) {
             throw new IllegalStateException("No size options available.");
         }

@@ -25,7 +25,6 @@ public MainNavigationMenuSteps() {
         List<String> expectedMenuItems = dataTable.asList(String.class);
         List<String> actualMenuItems = header.getNavigationCategories();
 
-        // Compare expected and actual menu items
         assertEquals("The number of menu items should match", expectedMenuItems.size(), actualMenuItems.size());
         for (int i = 0; i < expectedMenuItems.size(); i++) {
             assertEquals("Menu item text should match", expectedMenuItems.get(i), actualMenuItems.get(i));

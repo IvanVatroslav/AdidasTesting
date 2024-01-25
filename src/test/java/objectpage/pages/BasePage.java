@@ -6,6 +6,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import stepdefinitions.Hooks;
 
+import java.time.Duration;
+
 import static org.junit.Assert.assertEquals;
 
 public abstract class BasePage<T extends BasePage> {
@@ -55,10 +57,19 @@ public abstract class BasePage<T extends BasePage> {
                 .until(ExpectedConditions.visibilityOf(getUniqueElement()));
     }
 
-    public void checkWebPage(String url) {
-        wait.until(ExpectedConditions.urlToBe(url));
+    public void checkWebPage(String expectedUrl) {
+        wait.until(ExpectedConditions.urlToBe(expectedUrl));
         String currentUrl = driver.getCurrentUrl();
-        assertEquals("The user is not on the " + url + " page", "https://www.adidas.com/us", currentUrl);
+        assertEquals("The user is not on the expected page: " + expectedUrl, expectedUrl, currentUrl);
     }
 
+    private boolean waitForElement(By locator) {
+        WebDriverWait newWait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        try {
+            newWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
 }

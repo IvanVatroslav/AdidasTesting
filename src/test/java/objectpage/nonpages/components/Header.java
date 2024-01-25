@@ -92,7 +92,7 @@ public class Header extends BaseComponents {
 
 
     public Header searchFor(String keyword) {
-        // Re-find the search box each time to avoid staleness
+
         wait.ignoring(StaleElementReferenceException.class).until(driver -> {
             if (searchTextbox.isDisplayed() && searchTextbox.isEnabled()) {
                 searchTextbox.clear();

@@ -1,12 +1,16 @@
 package services;
 
 import objectpage.pages.account.AddressBookPage;
-import org.apache.log4j.Logger;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import stepdefinitions.Hooks;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,30 +23,10 @@ public class Helper {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    //temporary place for these constants
-    private static final By DELETE_ADDRESS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='delete_address']"); // AddressBookPage class
-    private static final By CONFIRM_DELETE_BUTTON_XPATH = By.xpath("//button[@data-auto-id='confirm-delete']"); // AddressBookPage class
-    private static final By PLUS_BUTTON_XPATH = By.xpath("//span[@data-testid='plus']"); // AddressBookPage class
-    private static final By FIRST_NAME_INPUT_XPATH = By.xpath("//input[@name='firstName']"); // AddressBookPage class
-    private static final By LAST_NAME_INPUT_XPATH = By.xpath("//input[@name='lastName']"); // AddressBookPage class
-    private static final By ADDRESS_INPUT_XPATH = By.xpath("//input[@name='address1']"); // AddressBookPage class
-    private static final By CITY_INPUT_XPATH = By.xpath("//input[@name='city']"); // AddressBookPage class
-    private static final By ZIPCODE_INPUT_XPATH = By.xpath("//input[@name='zipcode']"); // AddressBookPage class
-    private static final By PHONE_NUMBER_INPUT_XPATH = By.xpath("//input[@name='phoneNumber']"); // AddressBookPage class
-    private static final By ARROW_RIGHT_LONG_BUTTON_XPATH = By.xpath("//span[@data-testid='arrow-right-long']"); // AddressBookPage class
-    private static final By COMBOBOX_DIV_XPATH = By.xpath("//div[@role='combobox']"); // AddressBookPage class
-    private static final By CHECKOUT_DROPDOWN_LIST_XPATH = By.id("gl-dropdown-custom__listbox--checkout-dropdown"); // AddressBookPage class
-    private static final By SAVED_ADDRESS_DIV_XPATH = By.xpath("//div[@data-auto-id='saved_address']"); // AddressBookPage class
-    private static final By STRONG_TAG_XPATH = By.xpath(".//strong"); // AddressBookPage class
-    private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]"); // AddressBookPage class
-    final static Logger logger = Logger.getLogger(Helper.class);
+    final static Logger logger = LogManager.getLogger(Helper.class);
 
     private final AddressBookPage basePage;
 
-
-    private String getStateXPath(String stateName) {
-        return String.format("//ul[@id='gl-dropdown-custom__listbox--checkout-dropdown']/li[contains(text(), '%s')]", stateName);
-    }
 
 
     public Helper() {
@@ -88,17 +72,6 @@ public class Helper {
 
 
 
-    public void selectSpecificState(String stateName) {
-        WebElement dropdown = driver.findElement(COMBOBOX_DIV_XPATH);
-        dropdown.click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(CHECKOUT_DROPDOWN_LIST_XPATH));
-
-        String stateXPath = getStateXPath(stateName);
-        WebElement stateOption = driver.findElement(By.xpath(stateXPath));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", stateOption);
-        stateOption.click();
-    }
-
 
 
 
@@ -114,6 +87,17 @@ public class Helper {
     public static void replaceText(WebElement element, String text) {
         element.sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
     }
+
+
+    public static String takeScreenshot(WebDriver driver, String screenshotName) throws IOException {
+        TakesScreenshot newScreen = (TakesScreenshot) driver;
+        File src = newScreen.getScreenshotAs(OutputType.FILE);
+        String dest = System.getProperty("user.dir") + "/Screenshots/" + screenshotName + ".png";
+        File target = new File(dest);
+        FileUtils.copyFile(src, target);
+        return dest;
+    }
+
 }
 
 

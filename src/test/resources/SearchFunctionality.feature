@@ -8,8 +8,8 @@ Feature: Search Functionality Verification
     Then the list of products should not be empty
     Then all products should have the name '<search_keyword>'
     Examples:
-      | search_keyword    |
-      | SAMBA OG SHOES    |
+      | search_keyword |
+      | SAMBA OG       |
 
   @SearchFunctionality_invalid
   Scenario: Verify search results for an invalid keyword

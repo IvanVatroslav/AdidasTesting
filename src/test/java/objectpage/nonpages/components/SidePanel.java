@@ -3,7 +3,8 @@ package objectpage.nonpages.components;
 import lombok.SneakyThrows;
 import objectpage.nonpages.BaseComponents;
 import objectpage.pages.account.MyAccountPage;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -15,7 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
 public class SidePanel extends BaseComponents {
-    private static final Logger logger = Logger.getLogger(SidePanel.class);
+    final static Logger logger = LogManager.getLogger(SidePanel.class);
 
     @FindBy(id = "side-panel-container")
     private WebElement sidePanelContainerLocator;
@@ -34,9 +35,9 @@ public class SidePanel extends BaseComponents {
     protected WebElement getUniqueElement() {
         List<WebElement> sidePanelElements = driver.findElements(By.xpath("//div[@data-testid='sidepanel-container']"));
         if (!sidePanelElements.isEmpty()) {
-            return sidePanelElements.get(0); // Return the first element if the list is not empty
+            return sidePanelElements.get(0);
         } else {
-            return null; // Return null if the side panel is not found
+            return null;
         }
     }
 

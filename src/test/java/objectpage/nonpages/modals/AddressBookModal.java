@@ -21,7 +21,7 @@ public class AddressBookModal extends BaseModal {
     private static final By ARROW_RIGHT_LONG_BUTTON_XPATH = By.xpath("//span[@data-testid='arrow-right-long']");
     private static final By COMBOBOX_DIV_XPATH = By.xpath("//div[@role='combobox']");
 
-    private static final By CHECKOUT_DROPDOWN_LIST_XPATH = By.id("gl-dropdown-custom__listbox--checkout-dropdown"); // AddressBookPage class
+    private static final By CHECKOUT_DROPDOWN_LIST_XPATH = By.id("gl-dropdown-custom__listbox--checkout-dropdown");
     private AddressBookPage addressBookPage;
 
 

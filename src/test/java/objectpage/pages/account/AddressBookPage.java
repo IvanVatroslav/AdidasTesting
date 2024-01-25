@@ -20,11 +20,10 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
 
 
     private static final By DELETE_ADDRESS_BUTTON_XPATH = By.xpath("//button[@data-auto-id='delete_address']");
-    private static final By CONFIRM_DELETE_BUTTON_XPATH = By.xpath("//button[@data-auto-id='confirm-delete']");
     private static final By PLUS_BUTTON_XPATH = By.xpath("//span[@data-testid='plus']");
     private static final By SAVED_ADDRESS_DIV_XPATH = By.xpath("//div[@data-auto-id='saved_address']");
-    private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]"); // AddressBookPage class
-    private static final By STRONG_TAG_XPATH = By.xpath(".//strong"); // AddressBookPage class
+    private static final By ADDRESS_DETAIL_DIV_XPATH = By.xpath(".//div[contains(@class, 'gl-vspace-bpall-small')]");
+    private static final By STRONG_TAG_XPATH = By.xpath(".//strong");
 
     public AddressBookPage(WebDriver driver) {
         super(driver);
@@ -45,14 +44,12 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
 
     public void removeAllAddresses() {
         waitForModalInvisibility();
-        // Check if there are any delete buttons on the page
         List<WebElement> removeButtons = driver.findElements(DELETE_ADDRESS_BUTTON_XPATH);
         if (removeButtons.isEmpty()) {
-            return; // Exit if there are no delete buttons (i.e., no addresses to delete)
+            return;
         }
         wait.until(ExpectedConditions.elementToBeClickable(DELETE_ADDRESS_BUTTON_XPATH));
 
-        // Proceed with deletion only if delete buttons are present
         for (WebElement button : removeButtons) {
             try {
                 wait.until(ExpectedConditions.visibilityOf(button));
@@ -62,7 +59,6 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
                 confirmDeleteAddressModal.confirmDelete();
 
                 waitForModalInvisibility();
-                // Wait briefly to allow the DOM to update after each deletion
             } catch (StaleElementReferenceException e) {
                 System.out.println("Caught a stale element exception, retrying...");
             }
@@ -73,7 +69,6 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
     public AddressBookModal openAddAddressModal() {
         WebElement plusButton = wait.until(ExpectedConditions.elementToBeClickable(PLUS_BUTTON_XPATH));
         plusButton.click();
-        // Add any necessary waits for the modal to open here
         return new AddressBookModal(driver);
     }
 
