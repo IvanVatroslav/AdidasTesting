@@ -8,8 +8,6 @@ import stepdefinitions.Hooks;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 public class MainNavigationMenuSteps {
 
 private WebDriver driver;
@@ -23,12 +21,7 @@ public MainNavigationMenuSteps() {
     @Then("I verify the visibility and correctness of each item in the navigation menu")
     public void verifyVisibilityAndCorrectnessOfNavigationMenuItems(DataTable dataTable) {
         List<String> expectedMenuItems = dataTable.asList(String.class);
-        List<String> actualMenuItems = header.getNavigationCategories();
-
-        assertEquals("The number of menu items should match", expectedMenuItems.size(), actualMenuItems.size());
-        for (int i = 0; i < expectedMenuItems.size(); i++) {
-            assertEquals("Menu item text should match", expectedMenuItems.get(i), actualMenuItems.get(i));
-        }
+        header.verifyNavigationMenuItems(expectedMenuItems);
     }
 
 

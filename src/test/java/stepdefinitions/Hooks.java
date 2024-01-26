@@ -47,7 +47,6 @@ public class Hooks {
 
         ExtentTest test = extent.createTest(scenario.getName());
         extentTest.set(test);
-        //driver.manage().timeouts.implicitlyWait(10, TimeUnit.SECONDS); implicit wait maybe implement later
 
         String baseUrl = SetupProperties.getMainUrl();
         localDriver.get(baseUrl);
@@ -86,23 +85,16 @@ public class Hooks {
             WebDriver localDriver = driver.get();
             if (localDriver != null) {
                 try {
-                    // Take a screenshot
                     File screenshotFile = ((TakesScreenshot) localDriver).getScreenshotAs(OutputType.FILE);
-                    // Use your custom method to get the directory path
                     String screenshotDirectory = getScreenshotDir();
-                    // Generate a unique file name for the screenshot
                     String screenshotFileName = "Screenshot_" + scenario.getName() + "_" + System.currentTimeMillis() + ".png";
-                    // Define the complete path for the screenshot
                     String screenshotPath = screenshotDirectory + screenshotFileName;
-                    // Save the screenshot to the specified path
                     File destinationPath = new File(screenshotPath);
                     FileUtils.copyFile(screenshotFile, destinationPath);
 
-                    // Attach the screenshot to the extent report
                     extentTest.get().fail("Failure Screenshot",
                             MediaEntityBuilder.createScreenCaptureFromPath(destinationPath.getAbsolutePath()).build());
 
-                    // Also attaching the screenshot to the Cucumber report
                     byte[] screenshot = FileUtils.readFileToByteArray(destinationPath);
                     scenario.attach(screenshot, "image/png", "screenshot");
 

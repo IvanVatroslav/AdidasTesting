@@ -1,16 +1,16 @@
 package objectpage.nonpages.modals;
 
 import lombok.Getter;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
 
 public class PersonalInfoModal extends BaseModal {
     @Getter
@@ -42,7 +42,6 @@ public class PersonalInfoModal extends BaseModal {
     protected WebElement getUniqueElement() {
         return null;
     }
-
 
 
     public WebElement getDayField() {
@@ -98,4 +97,44 @@ public class PersonalInfoModal extends BaseModal {
         WebElement saveButton = driver.findElement(SAVE_BUTTON_XPATH);
         saveButton.click();
     }
+
+
+    public void changeBirthDateAndName(Map<String, String> entry) {
+        String date = entry.get("Date");
+        String name = entry.get("Name");
+        String outcome = entry.get("Outcome");
+
+        String[] nameParts = name.split(" ", 2);
+        String firstName = nameParts[0];
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
+        String[] dateParts = date.split("-");
+        int day = Integer.parseInt(dateParts[1].trim());
+        int month = Integer.parseInt(dateParts[2].trim());
+        int year = Integer.parseInt(dateParts[0].trim());
+
+        clearAndSendKeys(firstNameField, firstName);
+        if (!lastName.isEmpty()) {
+            clearAndSendKeys(lastNameField, lastName);
+        }
+
+        enterBirthDate(day, month, year);
+
+        if ("save and display".equals(outcome)) {
+            clickSaveButton();
+        } else if ("reject".equals(outcome)) {
+            assertTrue(isErrorMessageDisplayed());
+        }
+
+
+
+        }
+
+
+    protected void clearAndSendKeys(WebElement element, String text) {
+        element.sendKeys(Keys.CONTROL + "a");
+        element.sendKeys(text);
+    }
+
 }
+

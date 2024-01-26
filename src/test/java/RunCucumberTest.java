@@ -16,15 +16,15 @@ import org.junit.runner.RunWith;
         monochrome = true,
         dryRun = false,
         tags = "" +
-          //     "@MainNavigationMenu"+
-           //   " or @MenSectionSubcategories"+
-        //      "@SearchFunctionality"+
-         //   " or @SearchFunctionality_invalid"
-         //  " or @AddressBook"
-     //   " or @RandomBirthdate"+
-  //   " or @EditPreferences"
-//" or @EditPersonalInfo"
-        "@ShoppingCart"
+            //  "@MainNavigationMenu"+
+            //  " or @MenSectionSubcategories"+
+            //  " or @SearchFunctionality"+
+         //   " or @SearchFunctionality_invalid"+
+        //   "@AddressBook"+
+      //  "@RandomBirthdate"
+    // " or @EditPreferences"+
+"@EditPersonalInfo"
+     //   " or @ShoppingCart"
 )
 public class RunCucumberTest {
 

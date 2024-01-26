@@ -3,81 +3,53 @@ package stepdefinitions.stepswithoutlogin.searchsteps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import objectpage.nonpages.components.Header;
-import objectpage.nonpages.components.SidePanel;
 import objectpage.pages.search.NoResultsPage;
 import objectpage.pages.search.SearchResultsPage;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import services.Helper;
 import stepdefinitions.Hooks;
-
-import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SearchSteps {
 
+    private NoResultsPage noResultsPage;
+    private SearchResultsPage searchResultsPage;
+    private Header header;
+    private Helper helper;
 
-private WebDriver driver;
-private WebDriverWait wait;
-
-private NoResultsPage noResultsPage;
-private SearchResultsPage searchResultsPage;
-private Header header;
-private Helper helper;
-private final SidePanel sidePanel;
-public SearchSteps() {
-        this.driver = Hooks.driver.get();
-        this.wait = Hooks.wait.get();
+    public SearchSteps() {
+        WebDriver driver = Hooks.driver.get();
+        WebDriverWait wait = Hooks.wait.get();
 
         this.noResultsPage = new NoResultsPage(driver);
         this.searchResultsPage = new SearchResultsPage(driver);
-        this.sidePanel = new SidePanel(driver);
         this.header = new Header(driver);
         this.helper = new Helper();
-        }
-
-
-
-
-
-
-
-
-
+    }
 
     @When("I search for {string}")
     public void searchFor(String searchString) {
         header.searchFor(searchString);
     }
 
-
-
-
     @Then("the search results page should open")
     public void verifySearchResultsPageOpens() {
         String expectedUrl = "https://www.adidas.com/us/search?q=";
-
-        searchResultsPage.checkWebPage(expectedUrl);
+        assertTrue("Search results page did not open", searchResultsPage.isPageUrlCorrect(expectedUrl));
     }
-
 
     @Then("the list of products should not be empty")
     public void verifyListOfProductsIsNotEmpty() {
-
-        List<WebElement> productContainers = searchResultsPage.getSearchResults();
-        assertFalse("Product list is empty", productContainers.isEmpty());
+        assertFalse("Product list is empty", searchResultsPage.isProductListEmpty());
     }
 
     @Then("all products should have the name {string}")
     public void verifyAllProductsHaveName(String expectedName) {
-        assertTrue("Not all product names match: " + expectedName,
-               searchResultsPage.verifyAllProductNames(expectedName));
+        assertTrue("Not all product names match: " + expectedName, searchResultsPage.doAllProductsHaveName(expectedName));
     }
-
-
 
     @When("I search for an invalid keyword")
     public void searchForInvalidKeyword() {
@@ -86,11 +58,6 @@ public SearchSteps() {
 
     @Then("a no results page should be displayed")
     public void verifyNoResultsPageIsDisplayed() {
-        WebElement noResultsLocator = noResultsPage.getNoResultsMessageLocator();
-        boolean elementExists = helper.doesElementExist(noResultsLocator);
-        assertTrue("No results element does not exist", elementExists);
+        assertTrue("No results element does not exist", noResultsPage.isNoResultsMessageDisplayed());
     }
-
-
-
 }

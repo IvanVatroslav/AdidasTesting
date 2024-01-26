@@ -1,5 +1,6 @@
 package objectpage.pages.account;
 
+import objectpage.nonpages.modals.PersonalInfoModal;
 import objectpage.pages.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -8,6 +9,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.time.LocalDate;
 
 public class ProfilePage extends BasePage<ProfilePage> {
     private final By PREFERENCES_BUTTON_XPATH = By.xpath("//a[@data-auto-id='members-home-account-preferences']");
@@ -23,11 +26,13 @@ public class ProfilePage extends BasePage<ProfilePage> {
 
     @FindBy(xpath = "//a[@data-auto-id='members-home-account-address-book']")
     private WebElement addressBookLink;
+private final PersonalInfoModal personalInfoModal;
 
 
     public ProfilePage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
+        personalInfoModal = new PersonalInfoModal(driver);
     }
 
     @Override
@@ -50,15 +55,14 @@ public class ProfilePage extends BasePage<ProfilePage> {
     }
 
 
-
-
-
     public String getDisplayedName() {
+        waitForModalInvisibility();
         WebElement nameElement = wait.until(ExpectedConditions.visibilityOfElementLocated(DISPLAYED_NAME_LOCATOR));
         return nameElement.getText();
     }
 
     public String getDisplayedDate() {
+        waitForModalInvisibility();
         WebElement dateElement = wait.until(ExpectedConditions.visibilityOfElementLocated(DISPLAYED_DATE_LOCATOR));
         return dateElement.getText();
     }
@@ -72,9 +76,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
     }
 
 
-
-
-
     public PreferencesPage clicksPreferencesButton() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(PREFERENCES_BUTTON_XPATH));
 
@@ -83,18 +84,35 @@ public class ProfilePage extends BasePage<ProfilePage> {
         return new PreferencesPage(driver);
     }
 
-    public AccountLoginPage clickLogOutButton() {
+    public AccountLogoutPage clickLogOutButton() {
         try {
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(LOG_OUT_BUTTON_XPATH));
             WebElement logOutButton = wait.until(ExpectedConditions.elementToBeClickable(LOG_OUT_BUTTON_XPATH));
 
             logOutButton.click();
-            return new AccountLoginPage(driver);
+            return new AccountLogoutPage(driver);
         } catch (Exception e) {
             System.out.println("Failed to click on Log Out button: " + e.getMessage());
             return null;
         }
     }
+        public void setRandomBirthDateAndSave ( int day, int month, int year){
+            clickEditDetails();
+            personalInfoModal.enterBirthDate(day, month, year);
+            personalInfoModal.clickSaveButton();
 
-}
+        }
+    public LocalDate getDisplayedBirthDate() {
+        waitForModalInvisibility();
+        String dateString = getDisplayedDate();
+
+        String[] dateParts = dateString.split("-");
+        int year = Integer.parseInt(dateParts[0].trim());
+        int month = Integer.parseInt(dateParts[2].trim());
+        int day = Integer.parseInt(dateParts[1].trim());
+
+        return LocalDate.of(year, month, day);
+    }
+    }
+

@@ -3,8 +3,6 @@ package objectpage.nonpages.components;
 import lombok.SneakyThrows;
 import objectpage.nonpages.BaseComponents;
 import objectpage.pages.account.MyAccountPage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +14,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
 public class SidePanel extends BaseComponents {
-    final static Logger logger = LogManager.getLogger(SidePanel.class);
 
     @FindBy(id = "side-panel-container")
     private WebElement sidePanelContainerLocator;

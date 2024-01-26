@@ -1,9 +1,9 @@
 package stepdefinitions.stepswithlogin.accountsteps;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import objectpage.nonpages.modals.AddressBookModal;
 import objectpage.pages.account.AddressBookPage;
 import objectpage.pages.account.ProfilePage;
 import org.openqa.selenium.WebDriver;
@@ -30,7 +30,7 @@ public class AddressBookSteps {
         profilePage.navigateToAddressBookPage();
     }
 
-    @When("the user removes any old addresses")
+    @And("the user removes any old addresses")
     public void removeAllAddresses() {
         addressBookPage.removeAllAddresses();
     }
@@ -38,29 +38,7 @@ public class AddressBookSteps {
     @When("the user adds new addresses")
     public void addNewAddress(DataTable addressTable) {
         storedAddresses = addressTable.asMaps(String.class, String.class);
-
-        for (Map<String, String> address : storedAddresses) {
-            try {
-                AddressBookModal addressBookModal = addressBookPage.openAddAddressModal();
-
-                addressBookModal.fillAddressForm(
-                        address.get("FirstName"),
-                        address.get("LastName"),
-                        address.get("Address"),
-                        address.get("City"),
-                        address.get("State"),
-                        address.get("Zip"),
-                        address.get("Phone"));
-
-                addressBookModal.submitAddress();
-                addressBookPage.waitForModalInvisibility();
-
-
-
-            } catch (Exception e) {
-                System.out.println("Exception occurred while adding address: " + e.getMessage());
-            }
-        }
+        addressBookPage.addAddresses(storedAddresses);
     }
 
 

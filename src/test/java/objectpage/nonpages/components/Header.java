@@ -11,6 +11,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertEquals;
+
 public class Header extends BaseComponents {
 
 
@@ -102,5 +104,30 @@ public class Header extends BaseComponents {
             return false;
         });
         return this;
+    }
+
+    public void verifyNavigationMenuItems(List<String> expectedItems) {
+        List<String> actualMenuItems = getNavigationCategories();
+
+        assertEquals("The number of menu items should match", expectedItems.size(), actualMenuItems.size());
+        for (int i = 0; i < expectedItems.size(); i++) {
+            assertEquals("Menu item text should match", expectedItems.get(i), actualMenuItems.get(i));
+        }
+    }
+
+
+    public boolean isMensDropdownVisible() {
+        WebElement dropdown = getHeaderFlyout();
+        wait.until(ExpectedConditions.visibilityOf(dropdown));
+        return dropdown.isDisplayed();
+    }
+
+    public void verifyMensSubcategories(List<String> expectedSubcategories) {
+        for (String expectedText : expectedSubcategories) {
+            WebElement subCategoryElement = getMenSubcategoryElement(expectedText);
+            wait.until(ExpectedConditions.visibilityOf(subCategoryElement));
+            String actualText = subCategoryElement.getText();
+            assertEquals("Expected text not found: " + expectedText, expectedText, actualText);
+        }
     }
 }

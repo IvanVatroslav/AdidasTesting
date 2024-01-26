@@ -1,5 +1,7 @@
 package objectpage.nonpages;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,6 +13,7 @@ import java.time.Duration;
 public abstract class BaseComponents {
     protected WebDriver driver;
     protected WebDriverWait wait;
+    protected final Logger logger = LogManager.getLogger(getClass());
 
     protected BaseComponents(WebDriver driver) {
         this.driver = Hooks.driver.get();
@@ -54,5 +57,8 @@ public abstract class BaseComponents {
             return false;
         }
     }
-
+  protected  void clearAndSendKeys(WebElement element, String text) {
+        element.clear();
+        element.sendKeys(text);
+    }
 }

@@ -5,7 +5,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import stepdefinitions.Hooks;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.time.Duration;
 
 import static org.junit.Assert.assertEquals;
@@ -13,8 +14,8 @@ import static org.junit.Assert.assertEquals;
 public abstract class BasePage<T extends BasePage> {
     protected WebDriver driver;
     protected WebDriverWait wait;
-    private final By COOKIES_ACCEPT_BUTTON = By.xpath("//button[@class='gl-cta gl-cta--tertiary']");
     private final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
+    protected final Logger logger = LogManager.getLogger(getClass());
 
     public BasePage(WebDriver driver) {
         this.driver = Hooks.driver.get();
@@ -71,5 +72,10 @@ public abstract class BasePage<T extends BasePage> {
         } catch (TimeoutException e) {
             return false;
         }
+    }
+
+    void clearAndSendKeys(WebElement element, String text) {
+        element.clear();
+        element.sendKeys(text);
     }
 }

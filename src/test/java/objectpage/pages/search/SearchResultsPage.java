@@ -1,8 +1,6 @@
 package objectpage.pages.search;
 
 import objectpage.pages.BasePage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -22,7 +20,6 @@ public class SearchResultsPage extends BasePage<SearchResultsPage> {
 
     private final String productLinkSelector = "a[data-auto-id='glass-hockeycard-link']";
     private final By productNameLocator = By.className("glass-product-card__title");
-    private static final Logger logger = LogManager.getLogger(SearchResultsPage.class);
 
     public SearchResultsPage(WebDriver driver) {
         super(driver);
@@ -91,5 +88,38 @@ public class SearchResultsPage extends BasePage<SearchResultsPage> {
             throw e;
         }
     }
+    public boolean isPageUrlCorrect(String expectedUrlSubstring) {
+        try {
+            return wait.until(driver -> driver.getCurrentUrl().contains(expectedUrlSubstring));
+        } catch (TimeoutException e) {
+            logger.error("Timeout waiting for URL to contain: " + expectedUrlSubstring);
+            return false;
+        }
+    }
+
+    public boolean isProductListEmpty() {
+        try {
+            wait.until(ExpectedConditions.visibilityOfAllElements(searchResults));
+            return searchResults.isEmpty();
+        } catch (TimeoutException e) {
+            logger.error("Timeout waiting for product list to be visible.");
+            return true;
+        }
+    }
+    // Method to verify all products contain the expected name.
+    public boolean doAllProductsHaveName(String expectedName) {
+        wait.until(ExpectedConditions.visibilityOfAllElements(searchResults));
+        for (WebElement container : searchResults) {
+            WebElement productNameElement = getProductNameElement(container);
+            wait.until(ExpectedConditions.visibilityOf(productNameElement));
+            String actualProductName = productNameElement.getText().toLowerCase().trim();
+            if (!actualProductName.contains(expectedName.toLowerCase().trim())) {
+                logger.error("Product name does not match. Expected: " + expectedName + ", Found: " + actualProductName);
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
 

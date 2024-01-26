@@ -2,6 +2,7 @@ package objectpage.pages.search;
 
 import objectpage.pages.BasePage;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -36,5 +37,14 @@ public class NoResultsPage extends BasePage<NoResultsPage> {
     public WebElement getNoResultsMessageLocator() {
 wait.until(ExpectedConditions.visibilityOf(NO_RESULTS_MESSAGE_LOCATOR));
     return NO_RESULTS_MESSAGE_LOCATOR;
+    }
+
+    public boolean isNoResultsMessageDisplayed() {
+        try {
+            return wait.until(ExpectedConditions.visibilityOf(NO_RESULTS_MESSAGE_LOCATOR)).isDisplayed();
+        } catch (TimeoutException e) {
+            logger.error("Timeout waiting for 'No Results' message to be visible.");
+            return false;
+        }
     }
 }

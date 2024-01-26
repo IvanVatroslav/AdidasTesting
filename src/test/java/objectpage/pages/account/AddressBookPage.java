@@ -44,7 +44,7 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
 
     public void removeAllAddresses() {
         waitForModalInvisibility();
-        List<WebElement> removeButtons = driver.findElements(DELETE_ADDRESS_BUTTON_XPATH);
+        List<WebElement> removeButtons = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(DELETE_ADDRESS_BUTTON_XPATH));
         if (removeButtons.isEmpty()) {
             return;
         }
@@ -113,5 +113,27 @@ public class AddressBookPage extends BasePage<AddressBookPage> {
         stateAbbreviations.put("Maine", "ME");
 
         return stateAbbreviations.getOrDefault(stateName, stateName);
+    }
+
+    public void addAddresses(List<Map<String, String>> addresses) {
+        for (Map<String, String> address : addresses) {
+            try {
+                AddressBookModal addressBookModal = this.openAddAddressModal();
+
+                addressBookModal.fillAddressForm(
+                        address.get("FirstName"),
+                        address.get("LastName"),
+                        address.get("Address"),
+                        address.get("City"),
+                        address.get("State"),
+                        address.get("Zip"),
+                        address.get("Phone"));
+
+                addressBookModal.submitAddress();
+                this.waitForModalInvisibility();
+            } catch (Exception e) {
+                logger.error("Exception occurred while adding address: " + e.getMessage());
+            }
+        }
     }
 }
