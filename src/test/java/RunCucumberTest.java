@@ -18,13 +18,13 @@ import org.junit.runner.RunWith;
         tags = "" +
             //  "@MainNavigationMenu"+
             //  " or @MenSectionSubcategories"+
-            //  " or @SearchFunctionality"+
-         //   " or @SearchFunctionality_invalid"+
+              "@SearchFunctionality"+
+            " or @SearchFunctionality_invalid"+
         //   "@AddressBook"+
       //  "@RandomBirthdate"
     // " or @EditPreferences"+
-"@EditPersonalInfo"
-     //   " or @ShoppingCart"
+//"@EditPersonalInfo"
+        " or @ShoppingCart"
 )
 public class RunCucumberTest {
 

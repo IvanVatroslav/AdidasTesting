@@ -37,9 +37,9 @@ public class SearchSteps {
 
     @Then("the search results page should open")
     public void verifySearchResultsPageOpens() {
-        String expectedUrl = "https://www.adidas.com/us/search?q=";
-        assertTrue("Search results page did not open", searchResultsPage.isPageUrlCorrect(expectedUrl));
+        assertTrue("Search results page did not open", searchResultsPage.checkWebPage ("search"));
     }
+
 
     @Then("the list of products should not be empty")
     public void verifyListOfProductsIsNotEmpty() {

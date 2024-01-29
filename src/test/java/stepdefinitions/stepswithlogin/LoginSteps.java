@@ -21,7 +21,7 @@ public class LoginSteps {
 
         @Given("the user is logged in and on the main page")
         public void userIsLoggedInAndOnMainPage() {
-            mainPage.checkWebPage("https://www.adidas.com/us");
+            mainPage.checkWebPage();
             loginService.logIn();
         }
     }

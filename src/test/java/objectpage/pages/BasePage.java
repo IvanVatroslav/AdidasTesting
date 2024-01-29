@@ -1,12 +1,14 @@
 package objectpage.pages;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import services.SetupProperties;
 import stepdefinitions.Hooks;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import java.time.Duration;
 
 import static org.junit.Assert.assertEquals;
@@ -16,6 +18,7 @@ public abstract class BasePage<T extends BasePage> {
     protected WebDriverWait wait;
     private final By MODAL_MAIN_DIV_XPATH = By.xpath("//div[@class='gl-modal__main']");
     protected final Logger logger = LogManager.getLogger(getClass());
+    protected String baseUrl = SetupProperties.getMainUrl();
 
     public BasePage(WebDriver driver) {
         this.driver = Hooks.driver.get();
@@ -58,13 +61,13 @@ public abstract class BasePage<T extends BasePage> {
                 .until(ExpectedConditions.visibilityOf(getUniqueElement()));
     }
 
-    public void checkWebPage(String expectedUrl) {
-        wait.until(ExpectedConditions.urlToBe(expectedUrl));
+    public void checkWebPage() {
+        wait.until(ExpectedConditions.urlToBe(baseUrl));
         String currentUrl = driver.getCurrentUrl();
-        assertEquals("The user is not on the expected page: " + expectedUrl, expectedUrl, currentUrl);
+        assertEquals("The user is not on the main page: " + baseUrl, baseUrl, currentUrl);
     }
 
-    private boolean waitForElement(By locator) {
+    protected boolean waitForElement(By locator) {
         WebDriverWait newWait = new WebDriverWait(driver, Duration.ofSeconds(2));
         try {
             newWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
@@ -73,8 +76,7 @@ public abstract class BasePage<T extends BasePage> {
             return false;
         }
     }
-
-    void clearAndSendKeys(WebElement element, String text) {
+    protected void clearAndSendKeys(WebElement element, String text) {
         element.clear();
         element.sendKeys(text);
     }

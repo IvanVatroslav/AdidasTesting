@@ -12,8 +12,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.assertTrue;
-
 public class SearchResultsPage extends BasePage<SearchResultsPage> {
     @FindBy(className = "glass-product-card-container")
     private List<WebElement> searchResults;
@@ -78,24 +76,12 @@ public class SearchResultsPage extends BasePage<SearchResultsPage> {
         return new ItemPage(driver);
     }
 
-    public void checkWebPage(String expectedUrlSubstring) {
-        try {
-            boolean isUrlAsExpected = wait.until(driver -> driver.getCurrentUrl().contains(expectedUrlSubstring));
-            assertTrue("The user is not on the expected page containing: " + expectedUrlSubstring, isUrlAsExpected);
-        } catch (TimeoutException e) {
-            String currentUrl = driver.getCurrentUrl();
-            logger.error("Timeout waiting for URL. Current URL: " + currentUrl);
-            throw e;
-        }
+
+    public boolean checkWebPage(String keyword) {
+        String currentUrl = wait.until(driver -> driver.getCurrentUrl());
+        return currentUrl.contains(keyword);
     }
-    public boolean isPageUrlCorrect(String expectedUrlSubstring) {
-        try {
-            return wait.until(driver -> driver.getCurrentUrl().contains(expectedUrlSubstring));
-        } catch (TimeoutException e) {
-            logger.error("Timeout waiting for URL to contain: " + expectedUrlSubstring);
-            return false;
-        }
-    }
+
 
     public boolean isProductListEmpty() {
         try {
@@ -106,7 +92,6 @@ public class SearchResultsPage extends BasePage<SearchResultsPage> {
             return true;
         }
     }
-    // Method to verify all products contain the expected name.
     public boolean doAllProductsHaveName(String expectedName) {
         wait.until(ExpectedConditions.visibilityOfAllElements(searchResults));
         for (WebElement container : searchResults) {

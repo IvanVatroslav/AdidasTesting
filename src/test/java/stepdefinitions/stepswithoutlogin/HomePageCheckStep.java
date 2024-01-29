@@ -25,6 +25,6 @@ public class HomePageCheckStep {
 
     @Given("I am on the homepage")
     public void onHomepage() {
-        mainPage.checkWebPage("https://www.adidas.com/us");
+        mainPage.checkWebPage();
     }
 }
